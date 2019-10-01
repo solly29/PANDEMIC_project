@@ -44,24 +44,23 @@ public class MainThread implements Runnable{
 	public void run() {
 		// TODO Auto-generated method stub
 		while(true) {
-			LoginServer = new Login(gameSocket, chatSocket); //·Î±×ÀÎ °´Ã¼ »ı¼º
+			LoginServer = new Login(gameSocket, chatSocket); //ë¡œê·¸ì¸ ê°ì²´ ìƒì„±
 			try {
-				if(LoginServer.loginCheck()) {//·Î±×ÀÎ Ã¼Å©
-					//¼º°ø
+				if(LoginServer.loginCheck()) {//ë¡œê·¸ì¸ ì²´í¬
+					//ì„±ê³µ
 					name = LoginServer.getName();
-					output.writeUTF("·Î±×ÀÎ ¼º°ø");
-					lobbyServer = new LobbyServer(gameSocket, chatSocket, name);//¼º°øÇÏ¸é ·Îºñ °´Ã¼»ı¼º
+					output.writeUTF("ë¡œê·¸ì¸ ì„±ê³µ");
+					lobbyServer = new LobbyServer(gameSocket, chatSocket, name);//ì„±ê³µí•˜ë©´ ë¡œë¹„ ê°ì²´ìƒì„±
 				}else {
-					System.out.println("½ÇÆĞ");
-					output.writeUTF("·Î±×ÀÎ ½ÇÆĞ");
+					System.out.println("ì‹¤íŒ¨");
+					output.writeUTF("ë¡œê·¸ì¸ ì‹¤íŒ¨");
 				}
+				
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
-				System.out.println("½ÇÆĞ");
+				System.out.println("ì‹¤íŒ¨");
 				break;
 			}finally {
-				
 			}
 			
 		}
