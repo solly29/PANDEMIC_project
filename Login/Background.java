@@ -21,30 +21,30 @@ public class Background extends JFrame {
 	JScrollPane scrollPane;
 	ImageIcon icon;
 
-	JButton login = new JButton("Login"); // ·Î±×ÀÎ ¹öÆ°
-	JButton exit = new JButton("EXIT"); // ³ª°¡±â ¹öÆ°
-	JButton join = new JButton("È¸¿ø°¡ÀÔ"); // È¸¿ø°¡ÀÔ ¹öÆ°
-	JButton find = new JButton("ID/PWD Ã£±â"); // ID/PWD Ã£±â ¹öÆ°
+	JButton login = new JButton("Login"); // ë¡œê·¸ì¸ ë²„íŠ¼
+	JButton exit = new JButton("EXIT"); // ë‚˜ê°€ê¸° ë²„íŠ¼
+	JButton join = new JButton("íšŒì›ê°€ì…"); // íšŒì›ê°€ì… ë²„íŠ¼
+	JButton find = new JButton("ID/PWD ì°¾ê¸°"); // ID/PWD ì°¾ê¸° ë²„íŠ¼
 
 	public Background() {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setExtendedState(MAXIMIZED_BOTH); // ÀüÃ¼È­¸é
-		setUndecorated(true); // ¸ÇÀ§¿¡ ÁÙ ¾ø¾Ö±â
+		setExtendedState(MAXIMIZED_BOTH); // ì „ì²´í™”ë©´
+		setUndecorated(true); // ë§¨ìœ„ì— ì¤„ ì—†ì• ê¸°
 		setVisible(true);
 
 		icon = new ImageIcon("C:\\image\\background.png");
 
-		// ¹è°æ Panel »ı¼ºÈÄ ÄÁÅÙÃ÷ÆäÀÎÀ¸·Î ÁöÁ¤
+		// ë°°ê²½ Panel ìƒì„±í›„ ì»¨í…ì¸ í˜ì¸ìœ¼ë¡œ ì§€ì •
 		JPanel background = new JPanel() {
 
 			public void paintComponent(Graphics g) {
 
 				Dimension d = getSize();
 
-				g.drawImage(icon.getImage(), 0, 0, d.width, d.height, null); // ÄÄÆ÷³ÍÆ® »çÀÌÁî¿¡ ¸Â°Ô
+				g.drawImage(icon.getImage(), 0, 0, d.width, d.height, null); // ì»´í¬ë„ŒíŠ¸ ì‚¬ì´ì¦ˆì— ë§ê²Œ
 
-				setOpaque(false); // ±×¸²À» Ç¥½ÃÇÏ°Ô ¼³Á¤,Åõ¸íÇÏ°Ô Á¶Àı
+				setOpaque(false); // ê·¸ë¦¼ì„ í‘œì‹œí•˜ê²Œ ì„¤ì •,íˆ¬ëª…í•˜ê²Œ ì¡°ì ˆ
 				super.paintComponent(g);
 			}
 
@@ -65,22 +65,22 @@ public class Background extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				dispose();
 			}
-		});
+		}); // ë‚˜ê°€ê¸° ë²„íŠ¼ ëˆ„ë¥´ë©´ ì°½ êº¼ì§
 
 		join.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				new joinE();
 			}
-		});
+		}); // íšŒì›ê°€ì… ëˆ„ë¥´ë©´ íšŒì›ê°€ì… ì°½ ë¶ˆëŸ¬ì˜´
 
-		loginmenu.add(login); // ³»Á¤º¸ Á¦¸ñ Ãß°¡
+		loginmenu.add(login); // ë‚´ì •ë³´ ì œëª© ì¶”ê°€
 		loginmenu.add(exit);
 		loginmenu.add(join);
 		loginmenu.add(find);
 		loginmenu.add(id);
 		loginmenu.add(pwd);
 
-		Font RLfont, ChatFont, PFfont; // ÆùÆ® Ãß°¡ Â÷·Ê´ë·Î ¹æ¸ñ·Ï,Ã¤ÆÃ,³»Á¤º¸
+		Font RLfont, ChatFont, PFfont; // í°íŠ¸ ì¶”ê°€ ì°¨ë¡€ëŒ€ë¡œ ë°©ëª©ë¡,ì±„íŒ…,ë‚´ì •ë³´
 
 		RLfont = new Font("Serif", Font.BOLD, 50);
 
@@ -101,12 +101,12 @@ public class Background extends JFrame {
 
 		background.setBounds(0, 0, 1960, 1080);
 
-		login.setOpaque(false); // Åõ¸íÇÏ°Ô
+		login.setOpaque(false); // íˆ¬ëª…í•˜ê²Œ
 
 		exit.setOpaque(false);
-		// exit.setBorderPainted(false);// ¿Ü°û¼±¾ø¾Ö±â
-		// exit.setContentAreaFilled(false);// ³»¿ë¿µ¿ª Ã¤¿ì±â ¾ø¾Ö±â
-		// exit.setFocusPainted(false);// ¼±ÅÃ‰çÀ»¶§ Å×µÎ¸® »ç¿ë ¾ÈÇÔ
+		// exit.setBorderPainted(false);// ì™¸ê³½ì„ ì—†ì• ê¸°
+		// exit.setContentAreaFilled(false);// ë‚´ìš©ì˜ì—­ ì±„ìš°ê¸° ì—†ì• ê¸°
+		// exit.setFocusPainted(false);// ì„ íƒÂ‰ç‘›ë»‘ í…Œë‘ë¦¬ ì‚¬ìš© ì•ˆí•¨
 
 		join.setOpaque(false);
 		join.setBorderPainted(false);
@@ -129,17 +129,17 @@ public class Background extends JFrame {
 
 		add(background);
 
-		setVisible(true); // ÇØ°á°úÁ¦ Ã¤ÆÃÃ¢ Å©±âÁ¶Àı, ¹è°æ»çÁø³Ö±â(ÀüºÎ)
+		setVisible(true); // í•´ê²°ê³¼ì œ ì±„íŒ…ì°½ í¬ê¸°ì¡°ì ˆ, ë°°ê²½ì‚¬ì§„ë„£ê¸°(ì „ë¶€)
 
 	}
 }
 
-class joinE extends JFrame {
+class joinE extends JFrame // íšŒì›ê°€ì… ì°½ ë§Œë“œëŠ” í´ë˜ìŠ¤ {
 
 	public joinE() {
 
 		JButton Jexit = new JButton("exit");
-		setTitle("È¸¿ø°¡ÀÔ");
+		setTitle("íšŒì›ê°€ì…");
 		setSize(500, 600);
 		setLocation(0, 120);
 		getContentPane().setLayout(null);
@@ -150,7 +150,7 @@ class joinE extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				dispose();
 			}
-		});
+		});//íšŒì›ê°€ì… ì°½ì— ìˆëŠ” ë²„íŠ¼ ëˆ„ë¥´ë©´ ì°½ ì¢…ë£Œ
 		
 		Jexit.setBounds(100,10,100,50);
 		getContentPane().add(Jexit);
@@ -159,41 +159,3 @@ class joinE extends JFrame {
 	}
 }
 
-/*
- * @Override 
- * public void actionPerformed(ActionEvent e) { // TODO Auto-generated
- * method stub
- * 
- * if(e.getSource() == join) je = new joinE(e.getActionCommand() + "¹öÆ°");
- * 
- * 
- * }
- * 
- * }
- * 
- * class joinE extends JDialog{
- * 
- * JLabel jlb = new JLabel("");
- * 
- * public joinE(String str){
- * 
- * getContentPane().add(jlb);
- * 
- * 
- * 
- * jlb.setText(str.toString());
- * 
- * 
- * 
- * this.setSize(200,100);
- * 
- * this.setModal(true);
- * 
- * this.setVisible(true);
- * 
- * 
- * 
- * }
- * 
- * }
- */
