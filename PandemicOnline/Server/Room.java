@@ -1,69 +1,56 @@
-  
 package Server;
 
 import java.io.DataOutputStream;
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.Hashtable;
 
 /*
- * 룸에 있는 모든 유저를 담고있다. 그리고 그 유저의 정보, 제어권을 가지고있다
+ * 방에 대한 클래스이다.
+ * 각 방마다 이 room클래스를 생성을 하고
+ * 여기서는 방의 모든 정보, 제어권?을 갖는다.
  */
 
-public class UserList{
-	//dataOutputStream은 다른 스트림과는 다르게 자료형 그대로 가지고온다.
-	//ex) int형으로 데이터를 보내면 int형으로 받을수 있다.
-	private Hashtable<String, DataOutputStream> user = new Hashtable<String, DataOutputStream>();
-	private Hashtable<String, DataOutputStream> userChat = new Hashtable<String, DataOutputStream>();
+public class Room{
+	private UserList user = null;
+	private String roomName = "";
 	
-	public UserList() {
+	public Room() {
 		// TODO Auto-generated constructor stub
 	}
-	
-	//가장 처음 방을 만들때 해당 닉네임에 대한 유저의 출력 스트림을 hashmap에 모아둔다.(키는 닉네임 벨류는 출력스트림)
-	public UserList(String name) {
-		DataOutputStream output;
-		try {
-			output = new DataOutputStream(LobbyServer.userList.get(name)[0].getOutputStream());
-			user.put(name, output);
-			output = new DataOutputStream(LobbyServer.userList.get(name)[1].getOutputStream());
-			userChat.put(name, output);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	//해당 닉네임 또는 아이디의 유저를 유저 클레스로 추가한다.(방을 생성을 할경우)
+	public Room(String name) {
+		// TODO Auto-generated constructor stub
+		System.out.println(name);
+		user = new UserList(name);//유저 객체를 생성
+	}
+	//방에 입장할경우 이 메소드를 이용해서 유저 클래스로 추가한다.
+	public void RoomUserListAdd(String name) {
+		System.out.println(name);
+		user.userAdd(name);
 	}
 	
-	//기존의 방에 유저를 추가할때
-	public void userAdd(String name) {
-		DataOutputStream output;
-		try {
-			output = new DataOutputStream(LobbyServer.userList.get(name)[0].getOutputStream());
-			user.put(name, output);
-			output = new DataOutputStream(LobbyServer.userList.get(name)[1].getOutputStream());
-			userChat.put(name, output);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void RoomUserListDel(String name) {
+		user.userDel(name);
 	}
 	
-	public void userDel(String name) {
-		user.remove(name);
-		userChat.remove(name);
+	public void setRoomName(String str) {
+		roomName = str;
 	}
 	
-	//이건 쓸지는 모르겠지만 해당 유저의 출력스트림을 반환한다.
-	/*public DataOutputStream getUserList(String name){
-		return user.get(name);
-	}*/
+	public String getRoomName() {
+		return roomName;
+	}
 	
-	//방의 유저의 리스트를 반환한다.
+	//이건 보류(방장 시스템)
+	public String GetKing() {
+		return user.getUserList().keySet().iterator().next();
+	}
+	
+	//내 방에 있는 유저들의 정보를 가져온다.
 	public Hashtable<String, DataOutputStream> getUserList(){
-		return user;
+		return user.getUserList();
 	}
 	
 	public Hashtable<String, DataOutputStream> getUserListChat(){
-		return userChat;
+		return user.getUserListChat();
 	}
 }
