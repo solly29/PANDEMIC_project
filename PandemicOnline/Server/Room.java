@@ -1,12 +1,12 @@
-package testServer;
+package Server;
 
 import java.io.DataOutputStream;
 import java.util.Hashtable;
 
 /*
- * ¹æ¿¡ ´ëÇÑ Å¬·¡½ºÀÌ´Ù.
- * °¢ ¹æ¸¶´Ù ÀÌ roomÅ¬·¡½º¸¦ »ı¼ºÀ» ÇÏ°í
- * ¿©±â¼­´Â ¹æÀÇ ¸ğµç Á¤º¸, Á¦¾î±Ç?À» °®´Â´Ù.
+ * ë°©ì— ëŒ€í•œ í´ë˜ìŠ¤ì´ë‹¤.
+ * ê° ë°©ë§ˆë‹¤ ì´ roomí´ë˜ìŠ¤ë¥¼ ìƒì„±ì„ í•˜ê³ 
+ * ì—¬ê¸°ì„œëŠ” ë°©ì˜ ëª¨ë“  ì •ë³´, ì œì–´ê¶Œ?ì„ ê°–ëŠ”ë‹¤.
  */
 
 public class Room{
@@ -16,13 +16,13 @@ public class Room{
 	public Room() {
 		// TODO Auto-generated constructor stub
 	}
-	//ÇØ´ç ´Ğ³×ÀÓ ¶Ç´Â ¾ÆÀÌµğÀÇ À¯Àú¸¦ À¯Àú Å¬·¹½º·Î Ãß°¡ÇÑ´Ù.(¹æÀ» »ı¼ºÀ» ÇÒ°æ¿ì)
+	//í•´ë‹¹ ë‹‰ë„¤ì„ ë˜ëŠ” ì•„ì´ë””ì˜ ìœ ì €ë¥¼ ìœ ì € í´ë ˆìŠ¤ë¡œ ì¶”ê°€í•œë‹¤.(ë°©ì„ ìƒì„±ì„ í• ê²½ìš°)
 	public Room(String name) {
 		// TODO Auto-generated constructor stub
 		System.out.println(name);
-		user = new UserList(name);//À¯Àú °´Ã¼¸¦ »ı¼º
+		user = new UserList(name);//ìœ ì € ê°ì²´ë¥¼ ìƒì„±
 	}
-	//¹æ¿¡ ÀÔÀåÇÒ°æ¿ì ÀÌ ¸Ş¼Òµå¸¦ ÀÌ¿ëÇØ¼­ À¯Àú Å¬·¡½º·Î Ãß°¡ÇÑ´Ù.
+	//ë°©ì— ì…ì¥í• ê²½ìš° ì´ ë©”ì†Œë“œë¥¼ ì´ìš©í•´ì„œ ìœ ì € í´ë˜ìŠ¤ë¡œ ì¶”ê°€í•œë‹¤.
 	public void RoomUserListAdd(String name) {
 		System.out.println(name);
 		user.userAdd(name);
@@ -40,12 +40,12 @@ public class Room{
 		return roomName;
 	}
 	
-	//ÀÌ°Ç º¸·ù(¹æÀå ½Ã½ºÅÛ)
+	//ì´ê±´ ë³´ë¥˜(ë°©ì¥ ì‹œìŠ¤í…œ)
 	public String GetKing() {
 		return user.getUserList().keySet().iterator().next();
 	}
 	
-	//³» ¹æ¿¡ ÀÖ´Â À¯ÀúµéÀÇ Á¤º¸¸¦ °¡Á®¿Â´Ù.
+	//ë‚´ ë°©ì— ìˆëŠ” ìœ ì €ë“¤ì˜ ì •ë³´ë¥¼ ê°€ì ¸ì˜¨ë‹¤.
 	public Hashtable<String, DataOutputStream> getUserList(){
 		return user.getUserList();
 	}
