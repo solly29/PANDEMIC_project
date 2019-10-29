@@ -1,4 +1,4 @@
-package testServer;
+package Server;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -7,9 +7,9 @@ import java.net.Socket;
 import java.util.Hashtable;
 
 public class ChatServer implements Runnable{
-	//Ã¤ÆÃ ¼­¹öÀÌ´Ù
+	//ì±„íŒ… ì„œë²„ì´ë‹¤
 	private int roomNum = 0;
-	private Hashtable<String, DataOutputStream> list = null;//À¯Àú ¸®½ºÆ® º¸³»±â¿ë
+	private Hashtable<String, DataOutputStream> list = null;//ìœ ì € ë¦¬ìŠ¤íŠ¸ ë³´ë‚´ê¸°ìš©
 	private DataInputStream input = null;
 	private Socket s;
 	private String name; 
@@ -19,15 +19,15 @@ public class ChatServer implements Runnable{
 	}
 	
 	/*
-	 * ¿©±â¼­´Â ·ëÀÇ ¹øÈ£¿Í ´Ğ³×ÀÓÀ» ¹Ş°í
-	 * ÀüÃ¼ ·ë ¸®½ºÆ®¿¡¼­ ·ë ¹øÈ£¿¡ ´ëÇÑ ·ë °´Ã¼¸¦ °¡Áö°í ¿À°í
-	 * ÀüÃ¼ À¯Àú ¸®½ºÆ® °´Ã¼¿¡¼­ ´Ğ³×ÀÓ¿¡ ´ëÇÑ ¼ÒÄÏÀ» °¡Áö°í ¿Â´Ù.
+	 * ì—¬ê¸°ì„œëŠ” ë£¸ì˜ ë²ˆí˜¸ì™€ ë‹‰ë„¤ì„ì„ ë°›ê³ 
+	 * ì „ì²´ ë£¸ ë¦¬ìŠ¤íŠ¸ì—ì„œ ë£¸ ë²ˆí˜¸ì— ëŒ€í•œ ë£¸ ê°ì²´ë¥¼ ê°€ì§€ê³  ì˜¤ê³ 
+	 * ì „ì²´ ìœ ì € ë¦¬ìŠ¤íŠ¸ ê°ì²´ì—ì„œ ë‹‰ë„¤ì„ì— ëŒ€í•œ ì†Œì¼“ì„ ê°€ì§€ê³  ì˜¨ë‹¤.
 	 */
 	
 	public ChatServer(int num, String name) {
 		// TODO Auto-generated constructor stub
 		this.name = name;
-		//³ªÀÇ ¼ÒÄÏ°ú ÀÔ·Â½ºÆ®¸²À» ¹Ş´Â´Ù.
+		//ë‚˜ì˜ ì†Œì¼“ê³¼ ì…ë ¥ìŠ¤íŠ¸ë¦¼ì„ ë°›ëŠ”ë‹¤.
 		s = LobbyServer.userList.get(name)[1];
 		try {
 			input = new DataInputStream(s.getInputStream());
@@ -36,12 +36,12 @@ public class ChatServer implements Runnable{
 			e.printStackTrace();
 		}
 		
-		//ÇØ´ç ¹æ ¹øÈ£¿¡ ´ëÇÑ ·ë°´Ã¼¾È¿¡ À¯ÀúµéÀÇ ¸®½ºÆ®¸¦ °¡Áö°í¿Â´Ù.
+		//í•´ë‹¹ ë°© ë²ˆí˜¸ì— ëŒ€í•œ ë£¸ê°ì²´ì•ˆì— ìœ ì €ë“¤ì˜ ë¦¬ìŠ¤íŠ¸ë¥¼ ê°€ì§€ê³ ì˜¨ë‹¤.
 		roomNum = num;
 		list = MainServer.roomList.get(roomNum).getUserListChat();
 	}
 	
-	//À¯Àú ¸®½ºÆ®¿¡ ¹ŞÀº ÀÔ·Â Á¤º¸¸¦ º¸³½´Ù.
+	//ìœ ì € ë¦¬ìŠ¤íŠ¸ì— ë°›ì€ ì…ë ¥ ì •ë³´ë¥¼ ë³´ë‚¸ë‹¤.
 	public void sendAll(String str) {
 		for(DataOutputStream out : list.values()) {
 			try {
@@ -58,31 +58,31 @@ public class ChatServer implements Runnable{
 		// TODO Auto-generated method stub
 		
 		/*
-		 * ÀÏ´Ü Ã¤ÆÃ¸¸ ±¸ÇöÇÔ! 
-		 * Å¬¶ó¿¡¼­ º¸³¾¶§ ÅÂ±×¸¦ ÀÌ¿ë?
-		 * Ã¤ÆÃÀº [Ã¤ÆÃ]
-		 * Á¦¾î´Â [Á¦¾î]
-		 * ÀÌ·¸°Ô?
+		 * ì¼ë‹¨ ì±„íŒ…ë§Œ êµ¬í˜„í•¨! 
+		 * í´ë¼ì—ì„œ ë³´ë‚¼ë•Œ íƒœê·¸ë¥¼ ì´ìš©?
+		 * ì±„íŒ…ì€ [ì±„íŒ…]
+		 * ì œì–´ëŠ” [ì œì–´]
+		 * ì´ë ‡ê²Œ?
 		 */
 		try {
 			while(true) {
 				
-				String str = input.readUTF();   // Å¬¶óÀÌ¾ğÆ®·ÎºÎÅÍ Ã¤ÆÃ ¹Ş¾Æ¿È
-				if(str.substring(0,4).equals("[Á¦¾î]") && str.substring(4).equals("stop")) {
+				String str = input.readUTF();   // í´ë¼ì´ì–¸íŠ¸ë¡œë¶€í„° ì±„íŒ… ë°›ì•„ì˜´
+				if(str.substring(0,4).equals("[ì œì–´]") && str.substring(4).equals("stop")) {
 					break;
 				}
 				else {
 					str = str.substring(4);
 				}
-				if(input == null) break;   // ÀÔ·ÂÀÌ ¾Æ¹«°Íµµ µé¾î¿ÀÁö ¾ÊÀ¸¸é Å»Ãâ
+				if(input == null || str == null) break;   // ì…ë ¥ì´ ì•„ë¬´ê²ƒë„ ë“¤ì–´ì˜¤ì§€ ì•Šìœ¼ë©´ íƒˆì¶œ
 				sendAll(name+">"+str);
 			}
 		}catch (Exception e) {
 			// TODO: handle exception
 		}finally {
-			MainServer.roomList.get(roomNum).RoomUserListDel(name);//¹æ¿¡ À¯Àú »èÁ¦
+			MainServer.roomList.get(roomNum).RoomUserListDel(name);//ë°©ì— ìœ ì € ì‚­ì œ
 			System.out.println(MainServer.roomList.get(roomNum).getUserListChat());
-			if(!MainServer.roomList.get(roomNum).getUserList().isEmpty())
+			if(MainServer.roomList.get(roomNum).getUserListChat().isEmpty())
 				MainServer.roomList.remove(roomNum);
 		}
 	}
