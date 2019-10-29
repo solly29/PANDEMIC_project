@@ -1,4 +1,4 @@
-package testServer;
+package Server;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
-public class ClientReceiverThread implements Runnable{   // Ã¤ÆÃ ³»¿ª È­¸é¿¡ Ãâ·Â
+public class ClientReceiverThread implements Runnable{   // ì±„íŒ… ë‚´ì—­ í™”ë©´ì— ì¶œë ¥
 	Socket socket;
 	public ClientReceiverThread(Socket socket) {
 		this.socket = socket;
@@ -23,7 +23,7 @@ public class ClientReceiverThread implements Runnable{   // Ã¤ÆÃ ³»¿ª È­¸é¿¡ Ãâ·
 		try {
 			DataInputStream reader = new DataInputStream(socket.getInputStream());
 			while(true) {
-				String str = reader.readUTF();   // Ã¤ÆÃ ³»¿ª ÀÔ·Â
+				String str = reader.readUTF();   // ì±„íŒ… ë‚´ì—­ ì…ë ¥
 				if(str == null) break;
 				System.out.println(str);
 			}
