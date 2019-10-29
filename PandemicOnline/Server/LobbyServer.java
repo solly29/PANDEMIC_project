@@ -1,6 +1,7 @@
-package testServer;
+package Server;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Hashtable;
@@ -11,6 +12,7 @@ public class LobbyServer{
 	private Socket gameSocket = null;
 	private Socket chatSocket = null;
 	private DataInputStream input = null;
+	private DataOutputStream output = null;
 	private String name;
 	private Runnable ChatRun;
 	private Thread ChatTh;
@@ -27,18 +29,19 @@ public class LobbyServer{
 		
 		try {
 			input = new DataInputStream(gameSocket.getInputStream());
+			output = new DataOutputStream(gameSocket.getOutputStream());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		//·Îºñ¿¡ Á¢¼ÓÇÑ ¸ğµç À¯ÀúµéÀÇ ¼ÒÄÏÁ¤º¸¸¦ ´ã´Â´Ù.
-		//±×¸®°í ´Ğ³×ÀÓ ¶Ç´Â ¾ÆÀÌµğ¸¦ ÀúÀåÇÑ´Ù.
+		//ë¡œë¹„ì— ì ‘ì†í•œ ëª¨ë“  ìœ ì €ë“¤ì˜ ì†Œì¼“ì •ë³´ë¥¼ ë‹´ëŠ”ë‹¤.
+		//ê·¸ë¦¬ê³  ë‹‰ë„¤ì„ ë˜ëŠ” ì•„ì´ë””ë¥¼ ì €ì¥í•œë‹¤.
 		this.name = name;
 		Socket[] s = {gameSocket, chatSocket};
 		userList.put(name,s);
 		
-		//·Îºñ Ã¤ÆÃÀ» ÇÏ±â À§ÇØ¼­ ¹æ¹øÈ£ 0¹øÀº ·Îºñ Ã¤ÆÃÀ¸·Î ÇÑ´Ù.
+		//ë¡œë¹„ ì±„íŒ…ì„ í•˜ê¸° ìœ„í•´ì„œ ë°©ë²ˆí˜¸ 0ë²ˆì€ ë¡œë¹„ ì±„íŒ…ìœ¼ë¡œ í•œë‹¤.
 		if(MainServer.roomList.containsKey(0)) {
 			MainServer.roomList.get(0).RoomUserListAdd(name);
 		}
@@ -46,30 +49,30 @@ public class LobbyServer{
 			MainServer.roomList.put(0,new Room(name));
 		}
 		
-		//¹æ ¹øÈ£ 0¹øÀ¸·Î Ã¤ÆÃ ½º·¹µå¸¦ ¸¸µç´Ù.
+		//ë°© ë²ˆí˜¸ 0ë²ˆìœ¼ë¡œ ì±„íŒ… ìŠ¤ë ˆë“œë¥¼ ë§Œë“ ë‹¤.
 		ChatRun = new ChatServer(0, name);
 		ChatTh = new Thread(ChatRun);
 		ChatTh.start();
 		
 		/*
-		 * ·Îºñ¿¡ Á¢¼ÓÇÑ À¯Àú°¡ ¹æÀ» »ı¼ºÇÏ°Å³ª ÀÔÀå¿¡ ´ëÇÑ ¹İº¹¹®ÀÌ´Ù.
-		 * ÀÌ°Ç ¹Ù²ğ¼ö ÀÖÁö¸¸ ÀÏ´Ü »ı¼ºÇÏ¸é create ·Îºñ¿¡¼­ ³ª°¡¸é exit ±×¿Ü ´Ù¸¥°ÍÀÌ µé¾î¿À¸é ¹æ ÀÔÀåÀ¸·Î º»´Ù.
-		 * ¹æ ¹øÈ£´Â 1ºÎÅÍ ¼øÂ÷ÀûÀ¸·Î Áõ°¡ÇÏ°í
-		 * »ı¼ºÇÏ¸é roomNumberÀÇ ¼ıÀÚ·Î ¸ŞÀÎ¼­¹ö¿¡ roomList¿¡ Å°´Â ¹æ ¹øÈ£ º§·ù´Â ·ë °´Ã¼¸¦ »ı¼ºÇÑ´Ù.
-		 * ÀÔÀåÀÏ°æ¿ì ¹æÀÇ Á¤º¸(¹æ ¹øÈ£, ¹æÀÌ¸§?, ºñ¹ø)À» ¹Ş¾Æ¼­ ±×¿¡ ¸Â´Â room °´Ã¼¸¦ È£ÃâÇÑ´Ù. ±×¸®°í À¯Àú¸¦ Ãß°¡ÇÑ´Ù.
+		 * ë¡œë¹„ì— ì ‘ì†í•œ ìœ ì €ê°€ ë°©ì„ ìƒì„±í•˜ê±°ë‚˜ ì…ì¥ì— ëŒ€í•œ ë°˜ë³µë¬¸ì´ë‹¤.
+		 * ì´ê±´ ë°”ë€”ìˆ˜ ìˆì§€ë§Œ ì¼ë‹¨ ìƒì„±í•˜ë©´ create ë¡œë¹„ì—ì„œ ë‚˜ê°€ë©´ exit ê·¸ì™¸ ë‹¤ë¥¸ê²ƒì´ ë“¤ì–´ì˜¤ë©´ ë°© ì…ì¥ìœ¼ë¡œ ë³¸ë‹¤.
+		 * ë°© ë²ˆí˜¸ëŠ” 1ë¶€í„° ìˆœì°¨ì ìœ¼ë¡œ ì¦ê°€í•˜ê³ 
+		 * ìƒì„±í•˜ë©´ roomNumberì˜ ìˆ«ìë¡œ ë©”ì¸ì„œë²„ì— roomListì— í‚¤ëŠ” ë°© ë²ˆí˜¸ ë²¨ë¥˜ëŠ” ë£¸ ê°ì²´ë¥¼ ìƒì„±í•œë‹¤.
+		 * ì…ì¥ì¼ê²½ìš° ë°©ì˜ ì •ë³´(ë°© ë²ˆí˜¸, ë°©ì´ë¦„?, ë¹„ë²ˆ)ì„ ë°›ì•„ì„œ ê·¸ì— ë§ëŠ” room ê°ì²´ë¥¼ í˜¸ì¶œí•œë‹¤. ê·¸ë¦¬ê³  ìœ ì €ë¥¼ ì¶”ê°€í•œë‹¤.
 		 * 
-		 * À§ °úÁ¤ÀÌ ³¡³ª¸é °ÔÀÓ·ëÀ¸·Î ÀÔÀåÇÏ°Ô µÈ´Ù.
-		 * °ÔÀÓ ·ë¿¡¼­´Â ·ë°´Ã¼¾È¿¡ ÀÖ´Â À¯Àúµé¸¸ Åë½Å, Ã¤ÆÃÀÌ °¡´ÉÇÏ°ÔµÈ´Ù.
+		 * ìœ„ ê³¼ì •ì´ ëë‚˜ë©´ ê²Œì„ë£¸ìœ¼ë¡œ ì…ì¥í•˜ê²Œ ëœë‹¤.
+		 * ê²Œì„ ë£¸ì—ì„œëŠ” ë£¸ê°ì²´ì•ˆì— ìˆëŠ” ìœ ì €ë“¤ë§Œ í†µì‹ , ì±„íŒ…ì´ ê°€ëŠ¥í•˜ê²Œëœë‹¤.
 		 * 
-		 * +¹æÀÌ »èÁ¦µÇ¾úÀ»¶§ Å¬·¡½º³ª ¸Ş¼Òµåµµ ¸¸µé¾î¾ßµÊ!!
+		 * +ë°©ì´ ì‚­ì œë˜ì—ˆì„ë•Œ í´ë˜ìŠ¤ë‚˜ ë©”ì†Œë“œë„ ë§Œë“¤ì–´ì•¼ë¨!!
 		 */
 		while(true) {
 			try {
 				String str = input.readUTF();
 				if(str.equals("Create")) {
-					System.out.println("»ı¼º");
+					System.out.println("ìƒì„±");
 					int num = 0;
-					synchronized (this) {//¹æ ¹øÈ£´Â µ¿±âÈ­ÇØ¾ßµÈ´Ù.
+					synchronized (this) {//ë°© ë²ˆí˜¸ëŠ” ë™ê¸°í™”í•´ì•¼ëœë‹¤.
 						num = RoomNumber++;
 						MainServer.roomList.put(num, new Room(name));
 					}
@@ -77,10 +80,11 @@ public class LobbyServer{
 				}else if(str.equals("exit")){
 					return;
 				}else if(str.equals("refresh")) {
-					//»õ·Î°íÄ§(¹æ¹øÈ£¶û ¹æÀÌ¸§À» º¸³»Áà¾ßÇÑ´Ù.)
+					//ìƒˆë¡œê³ ì¹¨(ë°©ë²ˆí˜¸ë‘ ë°©ì´ë¦„ì„ ë³´ë‚´ì¤˜ì•¼í•œë‹¤.)
+					output.writeUTF(MainServer.roomList.keySet().toString());
 				}
 				else {
-					System.out.println("ÀÔÀå");
+					System.out.println("ì…ì¥");
 					int rNumber = Integer.parseInt(input.readUTF());
 					System.out.println(rNumber);
 					MainServer.roomList.get(rNumber).RoomUserListAdd(name);
