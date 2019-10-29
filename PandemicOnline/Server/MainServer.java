@@ -1,4 +1,4 @@
-package testServer;
+package Server;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -17,16 +17,16 @@ public class MainServer {
 	public MainServer() {
 		
 		try {
-			System.out.println("½ÇÇà");
+			System.out.println("ì‹¤í–‰");
 			sSocket1 = new ServerSocket(9002);
 			sSocket2 = new ServerSocket(9003);
 			
 			while(true) {
 				Socket gameSocket = sSocket1.accept();
 				Socket chatSocket = sSocket2.accept();
-				System.out.println("¼­¹ö Á¢¼Ó");
+				System.out.println("ì„œë²„ ì ‘ì†");
 				
-				//´ÙÁß Åë½Å, Á¢¼ÓÀ» À§ÇØ ½º·¹µå¸¦ ¾¸
+				//ë‹¤ì¤‘ í†µì‹ , ì ‘ì†ì„ ìœ„í•´ ìŠ¤ë ˆë“œë¥¼ ì”€
 				runThread = new MainThread(gameSocket, chatSocket);
 				mainThread = new Thread(runThread);
 				mainThread.start();
@@ -34,7 +34,7 @@ public class MainServer {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			System.out.println("Á¢¼Ó ½ÇÆĞ");
+			System.out.println("ì ‘ì† ì‹¤íŒ¨");
 		}
 	}
 
