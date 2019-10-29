@@ -14,10 +14,9 @@ public class Client extends JFrame{
 	public static void main(String[] args) {
 		System.out.println("hi");
 		
-		// ?†Œì¼? ?ƒ?„±
 		try {
-			gsocket = new Socket("39.127.8.134", 9002);
-			socket2 = new Socket("39.127.8.134", 9003);
+			gsocket = new Socket("127.0.0.1", 9002);
+			socket2 = new Socket("127.0.0.1", 9003);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -26,7 +25,6 @@ public class Client extends JFrame{
 		
 		new Client(gsocket, socket2);
 	}
-	// ì¹´ë“œ ? ˆ?´?•„?›ƒ?œ¼ë¡? ?”„? ˆ?„ ë³??™˜
 	private CardLayout cards = new CardLayout();
 	
 	public Client(Socket gsocket, Socket socket2) { 
@@ -34,7 +32,7 @@ public class Client extends JFrame{
 		setPreferredSize(new Dimension(1920,1080));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	//	setLayout(cards);
-		add(new Login(gsocket, socket2));//±ÔÁø
+		add(new Login(gsocket, socket2));//ê·œì§„
 		setResizable(false); 
 		setVisible(true); 
 		//getContentPane().add("One", new Login(this, socket)); 
