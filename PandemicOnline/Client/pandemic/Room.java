@@ -25,7 +25,7 @@ import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 
 public class Room extends JPanel {
-//JFrameÀÇ ±âº» Ã¢Àº 1920,1080ÀÌ´Ù. ¹İ¶òÇÏ¸é 960 540.
+//JFrameì˜ ê¸°ë³¸ ì°½ì€ 1920,1080ì´ë‹¤. ë°˜ëµí•˜ë©´ 960 540.
 	Chat chat;
 	UserList user;
 	CharacterList character;
@@ -38,7 +38,6 @@ public class Room extends JPanel {
 		this.gsocket = gsocket;
 		this.socket2 = socket2;
 		
-		System.out.println("È®ÀÎ!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 		setLayout(null);
 		setPreferredSize(new Dimension(1920, 1080));
 		// setLayout(new GridLayout(2, 2, 10, 10));//GridLayout Version
@@ -64,7 +63,7 @@ public class Room extends JPanel {
 			background = ImageIO.read(new File(background_path));
 		} catch (IOException e) {
 			e.printStackTrace();
-			System.out.println("ÀÚ¹Ù ¹è°æÀÌ¹ÌÁö¸¦ ºÒ·¯¿ÀÁö ¸øÇß½À´Ï´Ù.");
+			System.out.println("ìë°” ë°°ê²½ì´ë¯¸ì§€ë¥¼ ë¶ˆëŸ¬ì˜¤ì§€ ëª»í–ˆìŠµë‹ˆë‹¤.");
 		}
 		setVisible(true);
 	}
@@ -78,7 +77,7 @@ public class Room extends JPanel {
 			// this.setBackground(Color.YELLOW);
 			setPreferredSize(new Dimension(880, 500));
 			for (int i = 0; i < 4; i++) {
-				list[i] = new JButton(i + "À¯Àú");
+				list[i] = new JButton(i + "ìœ ì €");
 				this.add(list[i]);
 			}
 		}
@@ -108,8 +107,8 @@ public class Room extends JPanel {
 
 	class Chat extends JPanel implements ActionListener {
 
-		JTextField textField;// ¿ì¸®°¡ ±ÛÀÚ¸¦ Ä¡´Â °÷
-		JTextArea textArea;// ¿ì¸®°¡ Ä£ ±ÛÀÚ°¡ º¸ÀÌ´Â °÷
+		JTextField textField;// ìš°ë¦¬ê°€ ê¸€ìë¥¼ ì¹˜ëŠ” ê³³
+		JTextArea textArea;// ìš°ë¦¬ê°€ ì¹œ ê¸€ìê°€ ë³´ì´ëŠ” ê³³
 		JScrollPane scroll;
 
 		public Chat() {
@@ -132,7 +131,7 @@ public class Room extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			String text = textField.getText();
-			String temp_nickName = "±è¿µ±Ù";
+			String temp_nickName = "ê¹€ì˜ê·¼";
 			textArea.append(temp_nickName + " : " + text + "\n");
 			textField.selectAll();
 			textArea.setCaretPosition(textArea.getDocument().getLength());
@@ -191,8 +190,8 @@ public class Room extends JPanel {
 		JFrame f = new JFrame();
 		f.add(new Room());
 		f.setSize(1920, 1080);
-		f.setResizable(false);// ÀÚ¹Ù Å©±â º¯°æ ±İÁö
-		f.setLocationRelativeTo(null);// Ã¢ Á¤Áß¾Ó ¹èÄ¡
+		f.setResizable(false);// ìë°” í¬ê¸° ë³€ê²½ ê¸ˆì§€
+		f.setLocationRelativeTo(null);// ì°½ ì •ì¤‘ì•™ ë°°ì¹˜
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setVisible(true);
 	}*/
