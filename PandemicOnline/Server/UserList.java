@@ -1,5 +1,5 @@
   
-package testServer;
+package Server;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -7,12 +7,12 @@ import java.util.HashMap;
 import java.util.Hashtable;
 
 /*
- * ·ë¿¡ ÀÖ´Â ¸ğµç À¯Àú¸¦ ´ã°íÀÖ´Ù. ±×¸®°í ±× À¯ÀúÀÇ Á¤º¸, Á¦¾î±ÇÀ» °¡Áö°íÀÖ´Ù
+ * ë£¸ì— ìˆëŠ” ëª¨ë“  ìœ ì €ë¥¼ ë‹´ê³ ìˆë‹¤. ê·¸ë¦¬ê³  ê·¸ ìœ ì €ì˜ ì •ë³´, ì œì–´ê¶Œì„ ê°€ì§€ê³ ìˆë‹¤
  */
 
 public class UserList{
-	//dataOutputStreamÀº ´Ù¸¥ ½ºÆ®¸²°ú´Â ´Ù¸£°Ô ÀÚ·áÇü ±×´ë·Î °¡Áö°í¿Â´Ù.
-	//ex) intÇüÀ¸·Î µ¥ÀÌÅÍ¸¦ º¸³»¸é intÇüÀ¸·Î ¹ŞÀ»¼ö ÀÖ´Ù.
+	//dataOutputStreamì€ ë‹¤ë¥¸ ìŠ¤íŠ¸ë¦¼ê³¼ëŠ” ë‹¤ë¥´ê²Œ ìë£Œí˜• ê·¸ëŒ€ë¡œ ê°€ì§€ê³ ì˜¨ë‹¤.
+	//ex) intí˜•ìœ¼ë¡œ ë°ì´í„°ë¥¼ ë³´ë‚´ë©´ intí˜•ìœ¼ë¡œ ë°›ì„ìˆ˜ ìˆë‹¤.
 	private Hashtable<String, DataOutputStream> user = new Hashtable<String, DataOutputStream>();
 	private Hashtable<String, DataOutputStream> userChat = new Hashtable<String, DataOutputStream>();
 	
@@ -20,7 +20,7 @@ public class UserList{
 		// TODO Auto-generated constructor stub
 	}
 	
-	//°¡Àå Ã³À½ ¹æÀ» ¸¸µé¶§ ÇØ´ç ´Ğ³×ÀÓ¿¡ ´ëÇÑ À¯ÀúÀÇ Ãâ·Â ½ºÆ®¸²À» hashmap¿¡ ¸ğ¾ÆµĞ´Ù.(Å°´Â ´Ğ³×ÀÓ º§·ù´Â Ãâ·Â½ºÆ®¸²)
+	//ê°€ì¥ ì²˜ìŒ ë°©ì„ ë§Œë“¤ë•Œ í•´ë‹¹ ë‹‰ë„¤ì„ì— ëŒ€í•œ ìœ ì €ì˜ ì¶œë ¥ ìŠ¤íŠ¸ë¦¼ì„ hashmapì— ëª¨ì•„ë‘”ë‹¤.(í‚¤ëŠ” ë‹‰ë„¤ì„ ë²¨ë¥˜ëŠ” ì¶œë ¥ìŠ¤íŠ¸ë¦¼)
 	public UserList(String name) {
 		DataOutputStream output;
 		try {
@@ -34,7 +34,7 @@ public class UserList{
 		}
 	}
 	
-	//±âÁ¸ÀÇ ¹æ¿¡ À¯Àú¸¦ Ãß°¡ÇÒ¶§
+	//ê¸°ì¡´ì˜ ë°©ì— ìœ ì €ë¥¼ ì¶”ê°€í• ë•Œ
 	public void userAdd(String name) {
 		DataOutputStream output;
 		try {
@@ -53,12 +53,12 @@ public class UserList{
 		userChat.remove(name);
 	}
 	
-	//ÀÌ°Ç ¾µÁö´Â ¸ğ¸£°ÚÁö¸¸ ÇØ´ç À¯ÀúÀÇ Ãâ·Â½ºÆ®¸²À» ¹İÈ¯ÇÑ´Ù.
+	//ì´ê±´ ì“¸ì§€ëŠ” ëª¨ë¥´ê² ì§€ë§Œ í•´ë‹¹ ìœ ì €ì˜ ì¶œë ¥ìŠ¤íŠ¸ë¦¼ì„ ë°˜í™˜í•œë‹¤.
 	/*public DataOutputStream getUserList(String name){
 		return user.get(name);
 	}*/
 	
-	//¹æÀÇ À¯ÀúÀÇ ¸®½ºÆ®¸¦ ¹İÈ¯ÇÑ´Ù.
+	//ë°©ì˜ ìœ ì €ì˜ ë¦¬ìŠ¤íŠ¸ë¥¼ ë°˜í™˜í•œë‹¤.
 	public Hashtable<String, DataOutputStream> getUserList(){
 		return user;
 	}
