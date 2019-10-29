@@ -88,7 +88,7 @@ public class Login extends JPanel implements ActionListener {
 		exit.setOpaque(false);
 		// exit.setBorderPainted(false);// 외곽선없애기
 		// exit.setContentAreaFilled(false);// 내용영역 채우기 없애기
-		// exit.setFocusPainted(false);// 선택瑛뻑 테두리 사용 안함
+		// exit.setFocusPainted(false);// 테두리 사용 안함
 
 		join.setOpaque(false);
 		join.setBorderPainted(false);
@@ -180,7 +180,7 @@ class joinE extends JFrame // 회원가입 창 만드는 클래스
 	}
 }
 
-class findE extends JFrame // 회원가입 창 만드는 클래스
+class findE extends JFrame //  회원가입 창 만드는 클래스
 {
 	public findE() {
 
