@@ -9,6 +9,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Arrays;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -44,7 +45,7 @@ public class Lobby extends JPanel {
 		setSize(1920, 1080);
 		setLayout(null);
 		add(new Profile()).setBounds(190, 730, 310, 320);
-		add(new RoomList()).setBounds(475, 170, 1000, 465);
+		add(new RoomList(gsocket, csocket)).setBounds(475, 170, 1000, 465);
 		add(new Chat(csocket)).setBounds(510, 730, 1230, 320);
 		setVisible(true);
 	}
@@ -58,10 +59,10 @@ public class Lobby extends JPanel {
 class Profile extends JPanel {
 	public Profile() {
 		setLayout(null);
-		JLabel label1 = new JLabel("³»Á¤º¸"); // ³»Á¤º¸ Ã¢ Á¦¸ñ?
-		// this.setBounds(190, 730, 310, 320);//½Äº°¿ë
-		this.setOpaque(false); // ÆÇ³Ú ¾Èº¸ÀÌ°ÔÇÏ±â
-		// this.setBackground(Color.green);//½Äº°¿ë
+		JLabel label1 = new JLabel("ë‚´ì •ë³´"); // ë‚´ì •ë³´ ì°½ ì œëª©?
+		// this.setBounds(190, 730, 310, 320);//ì‹ë³„ìš©
+		this.setOpaque(false); // íŒë„¬ ì•ˆë³´ì´ê²Œí•˜ê¸°
+		// this.setBackground(Color.green);//ì‹ë³„ìš©
 		this.add(label1);
 		label1.setBounds(0, 0, 100, 70);
 		setVisible(true);
@@ -72,46 +73,87 @@ class RoomList extends JPanel {
 	ImageIcon Make = new ImageIcon(Client.class.getResource("../Lobby_Image/Make.png"));
 	ImageIcon Search = new ImageIcon(Client.class.getResource("../Lobby_Image/Search.png"));
 	ImageIcon Re = new ImageIcon(Client.class.getResource("../Lobby_Image/Refresh.png"));
-
-	public RoomList() {
+	Socket gsocket, csocket;
+	DataInputStream input;
+	DataOutputStream output;
+	JLabel la = new JLabel();
+	String list;
+	
+	public RoomList(Socket gsocket, Socket csocket) {
+		this.gsocket = gsocket;
+		this.csocket = csocket;
+		
+		try {
+			input = new DataInputStream(gsocket.getInputStream());
+			output = new DataOutputStream(gsocket.getOutputStream());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		setLayout(null);
-		JButton RoomMake = new JButton(Make); // ¹æ¸¸µé±â ¹öÆ°Ãß°¡
-		JButton RoomSearch = new JButton(Search); // ¹æÃ£±â ¹öÆ°Ãß°¡
-		JButton Refresh = new JButton(Re); // »õ·Î°íÄ§¹öÆ° Ãß°¡
+		JButton RoomMake = new JButton(Make); // ë°©ë§Œë“¤ê¸° ë²„íŠ¼ì¶”ê°€
+		JButton RoomSearch = new JButton(Search); // ë°©ì°¾ê¸° ë²„íŠ¼ì¶”ê°€
+		JButton Refresh = new JButton(Re); // ìƒˆë¡œê³ ì¹¨ë²„íŠ¼ ì¶”ê°€
 
-		RoomMake.setContentAreaFilled(false); // ¹öÆ° ³»¿ë¿µ¿ª Ã¤¿ìÁö¾Ê±â,ÀÌ¹ÌÁö·Î ÇØ³ùÀ¸´Ï±ñ
+		RoomMake.setContentAreaFilled(false); // ë²„íŠ¼ ë‚´ìš©ì˜ì—­ ì±„ìš°ì§€ì•Šê¸°,ì´ë¯¸ì§€ë¡œ í•´ë†¨ìœ¼ë‹ˆê¹
 		RoomSearch.setContentAreaFilled(false);
 		Refresh.setContentAreaFilled(false);
-		RoomMake.setBorderPainted(false); // ¹öÆ° Å×µÎ¸® ¾ø¾Ö±â
+		RoomMake.setBorderPainted(false); // ë²„íŠ¼ í…Œë‘ë¦¬ ì—†ì• ê¸°
 		RoomSearch.setBorderPainted(false);
 		Refresh.setBorderPainted(false);
-		RoomMake.setFocusPainted(false); // ´­·¶À»¶§ Å×µÎ¸® ¾È¶ß°Ô
+		RoomMake.setFocusPainted(false); // ëˆŒë €ì„ë•Œ í…Œë‘ë¦¬ ì•ˆëœ¨ê²Œ
 		RoomSearch.setFocusPainted(false);
 		Refresh.setFocusPainted(false);
-		// ¹è¿­·Î ÁÙÀÌÀÚ
+		// ë°°ì—´ë¡œ ì¤„ì´ì
 		RoomMake.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				try {
+					output.writeUTF("Create");
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				new makeRoom();
 			}
 		});
-		// this.setBounds(475, 170, 1000, 465);//½Äº°¿ë
+		
+		Refresh.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					output.writeUTF("refresh");
+					list = input.readUTF();
+					list = list.substring(1, list.length()-4);
+					String[] list2 = list.split(", ");
+					la.setText(Arrays.toString(list2));
+					System.out.println(list);
+					
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		// this.setBounds(475, 170, 1000, 465);//ì‹ë³„ìš©
 		
 		this.setOpaque(false);
-		this.add(RoomMake); // ¹æ¸¸µé±â ¹öÆ° Àû¿ë
-		this.add(RoomSearch); // ¹æÃ£±â ¹öÆ° Àû¿ë
-		this.add(Refresh); // »õ·Î°íÄ§ ¹öÆ° Àû¿ë
+		this.add(RoomMake); // ë°©ë§Œë“¤ê¸° ë²„íŠ¼ ì ìš©
+		this.add(RoomSearch); // ë°©ì°¾ê¸° ë²„íŠ¼ ì ìš©
+		this.add(Refresh); // ìƒˆë¡œê³ ì¹¨ ë²„íŠ¼ ì ìš©
+		this.add(la);
+		la.setBounds(500,200,100,100);
 		RoomMake.setBounds(0, 0, 250, 100);
 		RoomSearch.setBounds(270, 0, 410, 100);
 		Refresh.setBounds(700, 0, 300, 100);
-		// this.setBackground(Color.blue);//½Äº°¿ë
+		// this.setBackground(Color.blue);//ì‹ë³„ìš©
 		setVisible(true);
 	}
 }
 
-class makeRoom extends JFrame { // ¹æ¸¸µé±â ´©¸£¸é ¶ß´Â Ã¢
+class makeRoom extends JFrame { // ë°©ë§Œë“¤ê¸° ëˆ„ë¥´ë©´ ëœ¨ëŠ” ì°½
 
 	public makeRoom() {
-		setTitle("¹æ¸¸µé±â");
+		setTitle("ë°©ë§Œë“¤ê¸°");
 		setSize(500, 300);
 		this.setBackground(Color.green);
 		setResizable(false);
@@ -121,7 +163,7 @@ class makeRoom extends JFrame { // ¹æ¸¸µé±â ´©¸£¸é ¶ß´Â Ã¢
 	}
 }
 
-class MkRoomBg extends JPanel { // ¹æ¸¸µé±â Ã¢¿¡ ³ÖÀ» ¹è°æ ÆĞ³Î
+class MkRoomBg extends JPanel { // ë°©ë§Œë“¤ê¸° ì°½ì— ë„£ì„ ë°°ê²½ íŒ¨ë„
 	public MkRoomBg() {
 		JLabel label = new JLabel("123");
 		this.add(label);
@@ -132,10 +174,10 @@ class MkRoomBg extends JPanel { // ¹æ¸¸µé±â Ã¢¿¡ ³ÖÀ» ¹è°æ ÆĞ³Î
 	}
 }
 
-class MKRP extends JPanel { // ¹æ¸¸µé±â Ã¢¿¡ ±â´ÉÇÒ ÆĞ³Î
+class MKRP extends JPanel { // ë°©ë§Œë“¤ê¸° ì°½ì— ê¸°ëŠ¥í•  íŒ¨ë„
 	public MKRP() {
-		JLabel RoomID = new JLabel("¹æ ÀÌ¸§ "); // ¹æÀÌ¸§ ÀûÀ¸¶ó´Â ±ÛÀÚ
-		JLabel RoomPW = new JLabel("ºñ¹Ğ¹øÈ£"); // ºñ¹Ğ¹øÈ£ ÀûÀ¸¶ó´Â ±ÛÀÚ
+		JLabel RoomID = new JLabel("ë°© ì´ë¦„ "); // ë°©ì´ë¦„ ì ìœ¼ë¼ëŠ” ê¸€ì
+		JLabel RoomPW = new JLabel("ë¹„ë°€ë²ˆí˜¸"); // ë¹„ë°€ë²ˆí˜¸ ì ìœ¼ë¼ëŠ” ê¸€ì
 		RoomID.setBounds(100, 100, 50, 50);
 		RoomPW.setBounds(150, 150, 50, 50);
 		this.add(RoomID);
@@ -154,10 +196,10 @@ class Chat extends JPanel {
 	public Chat(Socket csocket) {
 		
 		setLayout(null);
-		// setBounds(510, 730, 1230, 320);//½Äº°¿ë
-		this.setOpaque(false); // ÆÇ³Ú ¾Èº¸ÀÌ°ÔÇÏ±â
-		JTextField ChatField = new JTextField(); // Ã¤ÆÃÄ¡´Â ÇÊµå
-		JTextArea ChatList = new JTextArea(20, 20); // Ã¤ÆÃÀÌ Ç¥½ÃµÇ´Â ¿µ¿ª
+		// setBounds(510, 730, 1230, 320);//ì‹ë³„ìš©
+		this.setOpaque(false); // íŒë„¬ ì•ˆë³´ì´ê²Œí•˜ê¸°
+		JTextField ChatField = new JTextField(); // ì±„íŒ…ì¹˜ëŠ” í•„ë“œ
+		JTextArea ChatList = new JTextArea(20, 20); // ì±„íŒ…ì´ í‘œì‹œë˜ëŠ” ì˜ì—­
 		ChatList.setEditable(false);
 		JScrollPane scroll;
 		scroll = new JScrollPane(ChatList);
@@ -180,7 +222,7 @@ class Chat extends JPanel {
 				JTextField t = (JTextField) e.getSource();
 				//ChatList.append(t.getText() + "\n");
 				try {
-					output.writeUTF("[Ã¤ÆÃ]"+t.getText());
+					output.writeUTF("[ì±„íŒ…]"+t.getText());
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -188,7 +230,7 @@ class Chat extends JPanel {
 				t.setText("");
 			}
 		});
-		this.setOpaque(false); // ÆÇ³Ú ¾Èº¸ÀÌ°ÔÇÏ±â
+		this.setOpaque(false); // íŒë„¬ ì•ˆë³´ì´ê²Œí•˜ê¸°
 		scroll.setBounds(0, 0, 1230, 285);
 		// ChatList.setBounds(0, 0, 1200, 200);
 		ChatField.setBounds(0, 290, 1230, 30);
