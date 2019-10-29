@@ -1,4 +1,4 @@
-package testServer;
+package Server;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -19,7 +19,7 @@ public class Login{
 		gameSocket = s1;
 		chatSocket = s2;
 		
-		//ÀÓÀÇÀÇ À¯Àú
+		//ì„ì˜ì˜ ìœ ì €
 		IdPassword.put("admin","1234");
 		IdPassword.put("user","1234");
 		IdPassword.put("user2","1234");
@@ -55,14 +55,14 @@ public class Login{
 		
 		
 		if(IdPassword.containsKey(ID)) {
-			System.out.println("ID È®ÀÎ");
+			System.out.println("ID í™•ì¸");
 			/*Set set = IdPassword.entrySet();
 			System.out.println(set);
 			set = IdPassword.keySet();
 			System.out.println(set);
 			System.out.println((String)IdPassword.get(ID));*/
 			if(PW.equals(IdPassword.get(ID))) {
-				System.out.println("PW ÀÏÄ¡");
+				System.out.println("PW ì¼ì¹˜");
 				return true;
 			}
 			return false;
@@ -73,7 +73,7 @@ public class Login{
 	}
 	
 	public boolean join() {
-		System.out.println("È®ÀÎ2");
+		System.out.println("í™•ì¸2");
 		ID = null;
 		PW = null;
 		
