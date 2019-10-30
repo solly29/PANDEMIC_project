@@ -19,6 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 public class Lobby extends JPanel {
 
@@ -26,6 +27,7 @@ public class Lobby extends JPanel {
 	Socket gsocket, csocket;
 	DataInputStream input;
 	DataOutputStream output;
+	JFrame top;
 	
 	
 
@@ -33,6 +35,8 @@ public class Lobby extends JPanel {
 		this.gsocket = gsocket;
 		this.csocket = csocket;
 		
+		top = Login.getTop();
+		System.out.println(top+ "1");
 		try {
 			input = new DataInputStream(gsocket.getInputStream());
 			output = new DataOutputStream(gsocket.getOutputStream());
@@ -45,9 +49,10 @@ public class Lobby extends JPanel {
 		setSize(1920, 1080);
 		setLayout(null);
 		add(new Profile()).setBounds(190, 730, 310, 320);
-		add(new RoomList(gsocket, csocket)).setBounds(475, 170, 1000, 465);
+		add(new RoomList(gsocket, csocket, top)).setBounds(475, 170, 1000, 465);
 		add(new Chat(csocket)).setBounds(510, 730, 1230, 320);
 		setVisible(true);
+		 
 	}
 
 	public void paintComponent(Graphics g) {
@@ -78,10 +83,12 @@ class RoomList extends JPanel {
 	DataOutputStream output;
 	JLabel la = new JLabel();
 	String list;
+	JFrame top;
 	
-	public RoomList(Socket gsocket, Socket csocket) {
+	public RoomList(Socket gsocket, Socket csocket, JFrame top) {
 		this.gsocket = gsocket;
 		this.csocket = csocket;
+		this.top = top;
 		
 		try {
 			input = new DataInputStream(gsocket.getInputStream());
@@ -114,7 +121,7 @@ class RoomList extends JPanel {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				new makeRoom();
+				new makeRoom(top);
 			}
 		});
 		
@@ -150,9 +157,11 @@ class RoomList extends JPanel {
 	}
 }
 
-class makeRoom extends JFrame { // 방만들기 누르면 뜨는 창
-
-	public makeRoom() {
+class makeRoom extends JFrame implements ActionListener{ // 방만들기 누르면 뜨는 창
+	JFrame top;
+	Socket gsocket, csocket;
+	public makeRoom(JFrame top) {
+		this.top = top;
 		setTitle("방만들기");
 		setSize(500, 300);
 		this.setBackground(Color.green);
@@ -160,7 +169,21 @@ class makeRoom extends JFrame { // 방만들기 누르면 뜨는 창
 		setLocationRelativeTo(null);
 		// setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
+		JButton MKRB = new JButton();
+		MKRB.add(new JLabel("눌러"));
+		MKRB.addActionListener(this);
+		this.add(MKRB);
+		
 	}
+ public void actionPerformed(ActionEvent e) {
+			//JFrame top=(JFrame)SwingUtilities.getWindowAncestor(Lobby);
+	System.out.println(top);		
+	 top.getContentPane().removeAll();				
+			top.getContentPane().add(new Room(gsocket, csocket));
+			top.revalidate();
+			top.repaint();
+			this.dispose();
+	     }
 }
 
 class MkRoomBg extends JPanel { // 방만들기 창에 넣을 배경 패널
