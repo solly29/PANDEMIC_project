@@ -28,7 +28,7 @@ public class Login extends JPanel implements ActionListener {
 	JButton exit = new JButton("EXIT"); // 나가기 버튼
 	JButton join = new JButton("회원가입"); // 회원가입 버튼
 	JButton find = new JButton("ID/PWD 찾기"); // ID/PWD 찾기 버튼
-	
+	private static  JFrame top;
 	JTextField idtext;
 	JTextField pwdtext;
 	
@@ -144,7 +144,7 @@ public class Login extends JPanel implements ActionListener {
 			}
 			
 			if(str.equals("true")) {
-				JFrame top=(JFrame)SwingUtilities.getWindowAncestor(this);
+				top=(JFrame)SwingUtilities.getWindowAncestor(this);
 				top.getContentPane().removeAll();
 				
 				top.getContentPane().add(new Lobby(gsocket, socket2));
@@ -154,6 +154,9 @@ public class Login extends JPanel implements ActionListener {
 			
 			
 		}
+	}
+	public static JFrame getTop() {
+		return top;
 	}
 }
 
