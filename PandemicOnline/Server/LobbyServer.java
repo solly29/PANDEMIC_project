@@ -7,8 +7,8 @@ import java.net.Socket;
 import java.util.Hashtable;
 
 public class LobbyServer{
-	public static Hashtable<String, Socket[]> userList = new Hashtable<String, Socket[]>();
-	private static int RoomNumber = 1;
+	public static Hashtable<String, Socket[]> userList = new Hashtable<String, Socket[]>();//모든 유저의 리스트(아이디와 소켓이 들어간다.)
+	private static int RoomNumber = 1;//
 	private Socket gameSocket = null;
 	private Socket chatSocket = null;
 	private DataInputStream input = null;
