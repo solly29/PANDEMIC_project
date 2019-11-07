@@ -15,7 +15,7 @@ public class GameRoom extends MainThread{
 	private int roomNum = 0;
 	private Hashtable<String, DataOutputStream> list = null;//유저 리스트 보내기용
 	private DataInputStream input = null;
-	private Socket s;
+	private Socket gsocket;
 	private String name; 
 	private Runnable ChatRun;
 	private Thread ChatTh;
@@ -34,9 +34,9 @@ public class GameRoom extends MainThread{
 		// TODO Auto-generated constructor stub
 		this.name = name;
 		//나의 소켓과 입력스트림을 받는다.
-		s = LobbyServer.userList.get(name)[1];
+		gsocket = LobbyServer.userList.get(name)[0];
 		try {
-			input = new DataInputStream(s.getInputStream());
+			input = new DataInputStream(gsocket.getInputStream());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -44,13 +44,13 @@ public class GameRoom extends MainThread{
 		
 		//해당 방 번호에 대한 룸객체안에 유저들의 리스트를 가지고온다.
 		roomNum = num;
-		list = MainServer.roomList.get(roomNum).getUserList();
+		list = MainServer.roomList.get(roomNum).getUserListGame();
 		
 		/*게임 서버를 만들경우 채팅은 스레드로 처리한다.
-		 * 나중에는 주석처리 지우기
+		 * 나중에는 주석처리 지우기*/
 		ChatRun = new ChatServer(roomNum, name);
 		ChatTh = new Thread(ChatRun);
-		ChatTh.start();*/
+		ChatTh.start();
 		
 		/*
 		 * 이 부분부터 서비스 시작이다.
@@ -58,17 +58,21 @@ public class GameRoom extends MainThread{
 		 */
 		try {
 			while(true) {
+				
 				String str = input.readUTF();   // 클라이언트로부터 채팅 받아옴
-				if(input == null) break;   // 입력이 아무것도 들어오지 않으면 탈출
-				sendAll(name+">"+str);
+				System.out.println(str);
+				if(str.equals("start"))
+					System.out.println("게임시작");
 			}
 		}catch (Exception e) {
 			// TODO: handle exception
 		}finally {
 			MainServer.roomList.get(roomNum).RoomUserListDel(name);//방에 유저 삭제
-			
-			if(!MainServer.roomList.get(roomNum).getUserList().isEmpty())
+			System.out.println(MainServer.roomList.get(roomNum).getUserListChat());
+			if(MainServer.roomList.get(roomNum).getUserListChat().isEmpty()) {
+				System.out.println("샂게함");
 				MainServer.roomList.remove(roomNum);
+			}
 		}
 	}
 	
@@ -76,6 +80,7 @@ public class GameRoom extends MainThread{
 	public void sendAll(String str) {
 		for(DataOutputStream out : list.values()) {
 			try {
+				System.out.println(str);
 				out.writeUTF(str);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
