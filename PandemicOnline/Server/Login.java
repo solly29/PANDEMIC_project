@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.Set;
 
 public class Login{
-	private static HashMap<String, String> IdPassword = new HashMap<String, String>();
 	private DataInputStream input = null;
 	private Socket gameSocket = null;
 	private Socket chatSocket = null;
@@ -20,10 +19,10 @@ public class Login{
 		chatSocket = s2;
 		
 		//임의의 유저
-		IdPassword.put("admin","1234");
-		IdPassword.put("user","1234");
-		IdPassword.put("user2","1234");
-		IdPassword.put("user3","1234");
+		MainServer.IdPassword.put("admin","1234");
+		MainServer.IdPassword.put("user","1234");
+		MainServer.IdPassword.put("user2","1234");
+		MainServer.IdPassword.put("user3","1234");
 		try {
 			input = new DataInputStream(gameSocket.getInputStream());
 		} catch (IOException e) {
@@ -54,14 +53,9 @@ public class Login{
 		System.out.println("login");
 		
 		
-		if(IdPassword.containsKey(ID)) {
+		if(MainServer.IdPassword.containsKey(ID)) {
 			System.out.println("ID 확인");
-			/*Set set = IdPassword.entrySet();
-			System.out.println(set);
-			set = IdPassword.keySet();
-			System.out.println(set);
-			System.out.println((String)IdPassword.get(ID));*/
-			if(PW.equals(IdPassword.get(ID))) {
+			if(PW.equals(MainServer.IdPassword.get(ID))) {
 				System.out.println("PW 일치");
 				return true;
 			}
@@ -71,7 +65,7 @@ public class Login{
 			return false;
 		}
 	}
-	
+	//회원가입
 	public boolean join() {
 		System.out.println("확인2");
 		ID = null;
@@ -88,11 +82,11 @@ public class Login{
 		}
 		
 		
-		if(IdPassword.containsKey(ID)) {
+		if(MainServer.IdPassword.containsKey(ID)) {
 			return false;
 		}
 		else {
-			IdPassword.put(ID, PW);
+			MainServer.IdPassword.put(ID, PW);
 			System.out.println(ID+ " " + PW);
 			return true;
 		}
