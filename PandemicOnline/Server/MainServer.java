@@ -11,7 +11,8 @@ public class MainServer {
 	private ServerSocket sSocket2 = null;
 	private Runnable runThread = null;
 	private Thread mainThread = null;
-	public static Hashtable<Integer, Room> roomList = new Hashtable<Integer, Room>();
+	public static Hashtable<Integer, Room> roomList = new Hashtable<Integer, Room>();//룸 리스트
+	public static HashMap<String, String> IdPassword = new HashMap<String, String>();//로그인
 	
 	
 	public MainServer() {
@@ -20,6 +21,7 @@ public class MainServer {
 			System.out.println("실행");
 			sSocket1 = new ServerSocket(9002);
 			sSocket2 = new ServerSocket(9003);
+			
 			
 			while(true) {
 				Socket gameSocket = sSocket1.accept();
