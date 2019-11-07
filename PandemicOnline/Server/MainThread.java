@@ -57,8 +57,7 @@ public class MainThread implements Runnable {
 						lobbyServer = new LobbyServer(gameSocket, chatSocket, name);
 					} else
 						output.writeUTF("false");// 성공하면 로비 객체생성
-				}
-				else if (str1.equals("join")) {
+				} else if (str1.equals("join")) {// 회원가입
 					if (LoginServer.join()) {
 						output.writeUTF("true");
 					} else
