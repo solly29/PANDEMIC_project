@@ -1,39 +1,38 @@
 package pandemic;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.io.BufferedReader;
 import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.Socket;
-
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JTextArea;
-import javax.swing.border.LineBorder;
-import javax.swing.border.TitledBorder;
 
-class ClientReceiverThread implements Runnable{   // Ã¤ÆÃ ³»¿ª È­¸é¿¡ Ãâ·Â
+class ClientReceiverThread implements Runnable{
 	Socket socket;
 	JTextArea ChatList;
 	public ClientReceiverThread(Socket socket, JTextArea ChatList) {
 		this.socket = socket;
 		this.ChatList = ChatList;
+		System.out.println(ChatList);
 	}
 	
 	public void run() {   
 		try {
-			DataInputStream reader = new DataInputStream(socket.getInputStream());
+			
+			System.out.println("CRT start");
 			while(true) {
+				DataInputStream reader = new DataInputStream(socket.getInputStream());
 				System.out.println(socket);
-				String str = reader.readUTF();   // Ã¤ÆÃ ³»¿ª ÀÔ·Â
-				if(reader == null) break;
-				ChatList.append(str + "\n");
+				String str = reader.readUTF();
+				System.out.println(str);
+				if(str.equals("[ì œì–´]stop") || reader == null) {
+					System.out.println("CRT end");
+					break;
+				}
+				else {
+					ChatList.append(str + "\n");
+				}
 			}
 		}catch (Exception e) {
 			// TODO: handle exception
-			System.out.println(e.getMessage());
+			System.out.println(e);
 		}
 	}
 }
