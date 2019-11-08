@@ -13,6 +13,7 @@ public class ChatServer implements Runnable{
 	private DataInputStream input = null;
 	private Socket s;
 	private String name; 
+	private DataOutputStream output = null;
 	
 	public ChatServer() {
 		// TODO Auto-generated constructor stub
@@ -31,6 +32,7 @@ public class ChatServer implements Runnable{
 		s = LobbyServer.userList.get(name)[1];
 		try {
 			input = new DataInputStream(s.getInputStream());
+			output = new DataOutputStream(s.getOutputStream());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -68,7 +70,16 @@ public class ChatServer implements Runnable{
 			while(true) {
 				
 				String str = input.readUTF();   // 클라이언트로부터 채팅 받아옴
-				if(str.substring(0,4).equals("[제어]") && str.substring(4).equals("stop")) {
+				System.out.println(str);
+				if(str.substring(0,4).equals("[제어]")) {
+					System.out.println("chatserver end");
+					try {
+						output.writeUTF("[제어]stop");
+						System.out.println("chatserver2 end");
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					break;
 				}
 				else {
@@ -82,8 +93,11 @@ public class ChatServer implements Runnable{
 		}finally {
 			MainServer.roomList.get(roomNum).RoomUserListDel(name);//방에 유저 삭제
 			System.out.println(MainServer.roomList.get(roomNum).getUserListChat());
-			if(MainServer.roomList.get(roomNum).getUserListChat().isEmpty())
+			if(MainServer.roomList.get(roomNum).getUserListChat().isEmpty()) {
+				System.out.println("샂게함");
 				MainServer.roomList.remove(roomNum);
+			}
+			
 		}
 	}
 
