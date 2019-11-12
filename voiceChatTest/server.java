@@ -22,13 +22,13 @@ public class server {
 
 		int port = 9003;
 
-		// Å¬¶óÀÌ¾ğÆ®¿¡°Ô DatagramPacketÀ» Àü¼ÛÇÏ°Å³ª ¼ö½ÅÇÏ±â À§ÇØ DatagramSocket °´Ã¼ »ı¼º
+		// í´ë¼ì´ì–¸íŠ¸ì—ê²Œ DatagramPacketì„ ì „ì†¡í•˜ê±°ë‚˜ ìˆ˜ì‹ í•˜ê¸° ìœ„í•´ DatagramSocket ê°ì²´ ìƒì„±
 
 		// DatagramSocket dsock = null;
 
 		try {
 
-			System.out.println("Á¢¼Ó ´ë±â»óÅÂÀÔ´Ï´Ù.");
+			System.out.println("ì ‘ì† ëŒ€ê¸°ìƒíƒœì…ë‹ˆë‹¤.");
 
 			dsock = new DatagramSocket(port);
 
@@ -50,7 +50,7 @@ public class server {
 				 * String msg = new String(receivePacket.getData(), 0,
 				 * receivePacket.getLength());
 				 * 
-				 * System.out.println("Àü¼Û ¹ŞÀº ¹®ÀÚ¿­ : " + msg);
+				 * System.out.println("ì „ì†¡ ë°›ì€ ë¬¸ìì—´ : " + msg);
 				 * 
 				 * if(msg.equals("quit")) break;
 				 */
@@ -84,7 +84,7 @@ public class server {
 					user.put(receivePacket.getAddress(), receivePacket.getPort());
 					for (InetAddress ip : user.keySet()) {
 						
-						if(!ip.equals(receivePacket.getAddress())) {
+						//if(!ip.equals(receivePacket.getAddress())) {
 						sendPacket = new DatagramPacket(receivePacket.getData(), receivePacket.getData().length, ip,
 								user.get(ip));
 							try {
@@ -93,7 +93,7 @@ public class server {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
-						}
+						//}
 					}
 				}
 
