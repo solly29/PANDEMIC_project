@@ -27,32 +27,33 @@ public class client implements Runnable{
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     AudioFormat format = null;
 	public client() {
+		
 		// TODO Auto-generated constructor stub
 		
 		format = new AudioFormat(8000.0f, 16, 1, true, false);
         TargetDataLine microphone;
         
         
-		 String ip = "220.88.247.12";
+		 String ip = "59.24.76.229";
 
          int port = 9003;
 
-         InetAddress inetaddr = null;//ip°¡ µé¾î°£´Ù.
+         InetAddress inetaddr = null;//ipï¿½ï¿½ ï¿½ï¿½î°£ï¿½ï¿½.
 
          try{
 
-                inetaddr = InetAddress.getByName(ip);//ip¸¦ ³Ö°í
+                inetaddr = InetAddress.getByName(ip);//ipï¿½ï¿½ ï¿½Ö°ï¿½
 
          }catch(UnknownHostException e){
 
-                System.out.println("Àß¸øµÈ µµ¸ÞÀÎÀÌ³ª ipÀÔ´Ï´Ù.");
+                System.out.println("ï¿½ß¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì³ï¿½ ipï¿½Ô´Ï´ï¿½.");
 
                 System.exit(1);
 
          }
 
          try{
-                BufferedReader br = new BufferedReader(new InputStreamReader(System.in));//ÀÔ·Â°ªÀ» ¹ÙÀÌÆ® Çü½ÄÀ¸·Î ¹Ù²ã¼­ ³ÖÀ½
+                BufferedReader br = new BufferedReader(new InputStreamReader(System.in));//ï¿½Ô·Â°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù²ã¼­ ï¿½ï¿½ï¿½ï¿½
 
                 dsock = new DatagramSocket();
 
@@ -68,7 +69,7 @@ public class client implements Runnable{
                     microphone.open(format);
 
                     ByteArrayOutputStream out = new ByteArrayOutputStream();
-                    int numBytesRead;
+                    int numBytesRead = 0;
                     int CHUNK_SIZE = 1024;
                     byte[] data = new byte[microphone.getBufferSize() / 5];
                     microphone.start();
@@ -78,12 +79,12 @@ public class client implements Runnable{
                     dsock.send(sendPacket);
                     try {
                     	while(true) {
-	                        while (bytesRead < 1) {
+	                        //while (numBytesRead < 1024) {
 	                        	numBytesRead = microphone.read(data, 0, CHUNK_SIZE);
-	                            bytesRead = bytesRead + numBytesRead;
+	                            //bytesRead = bytesRead + numBytesRead;
 	                           
-	                        }
-	                        sendPacket = new DatagramPacket(data, data.length, inetaddr, port);
+	                       // }
+	                        sendPacket = new DatagramPacket(data, numBytesRead, inetaddr, port);
 	                        dsock.send(sendPacket);
 	                        bytesRead = 0;
                     	}
@@ -106,7 +107,7 @@ public class client implements Runnable{
                        
                 }*/
 
-                System.out.println("UDPEchoClient¸¦ Á¾·áÇÕ´Ï´Ù.");
+                System.out.println("UDPEchoClientï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.");
 
          }catch(Exception ex){
 
@@ -131,6 +132,15 @@ public class client implements Runnable{
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
+		DataLine.Info dataLineInfo = new DataLine.Info(SourceDataLine.class, format);
+        try {
+			sourceDataLine = (SourceDataLine) AudioSystem.getLine(dataLineInfo);
+			sourceDataLine.open(format);
+		} catch (LineUnavailableException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+        sourceDataLine.start();
 		while(true) {
 			byte[] buffer = new byte[1024];
 			DatagramPacket receivePacket = new DatagramPacket(buffer, buffer.length);
@@ -145,15 +155,7 @@ public class client implements Runnable{
             byte[] audioData = receivePacket.getData();
             //InputStream byteArrayInputStream = new ByteArrayInputStream(audioData);
             //audioInputStream = new AudioInputStream(byteArrayInputStream,format, audioData.length / format.getFrameSize());
-            DataLine.Info dataLineInfo = new DataLine.Info(SourceDataLine.class, format);
-            try {
-				sourceDataLine = (SourceDataLine) AudioSystem.getLine(dataLineInfo);
-				sourceDataLine.open(format);
-			} catch (LineUnavailableException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-            sourceDataLine.start();
+            
             int cnt = 0;
             byte tempBuffer[] = new byte[2048];
             while (true) {
@@ -164,14 +166,15 @@ public class client implements Runnable{
 					e.printStackTrace();
 				}
             	buffer = receivePacket.getData();
-            	sourceDataLine.write(buffer, 0, buffer.length);
+            	int size = receivePacket.getData().length;
+            	sourceDataLine.write(buffer, 0, size);
         	}
             
             	//System.out.println(new String(receivePacket.getData(), 0, receivePacket.getData().length));
 
               // String msg = new String(receivePacket.getData(), 0, receivePacket.getData().length);
 
-              // System.out.println("Àü¼Û¹ÞÀº ¹®ÀÚ¿­ : "+msg);
+              // System.out.println("ï¿½ï¿½ï¿½Û¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ú¿ï¿½ : "+msg);
 		}
 	}
 
