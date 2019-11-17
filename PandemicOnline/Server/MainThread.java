@@ -54,7 +54,7 @@ public class MainThread implements Runnable {
 					if (LoginServer.loginCheck()) {
 						output.writeUTF("true");
 						name = LoginServer.getName();
-						lobbyServer = new LobbyServer(gameSocket, chatSocket, name);
+						lobbyServer = new LobbyServer(gameSocket, chatSocket, name);//이부분
 					} else
 						output.writeUTF("false");// 성공하면 로비 객체생성
 				} else if (str1.equals("join")) {// 회원가입
@@ -68,10 +68,9 @@ public class MainThread implements Runnable {
 				// TODO Auto-generated catch block
 				System.out.println("실패");
 				break;
-			} finally {
 			}
-
 		}
+		LobbyServer.userList.remove(name);
 	}
 
 }
