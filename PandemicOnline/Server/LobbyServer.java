@@ -8,13 +8,13 @@ import java.util.Hashtable;
 
 public class LobbyServer{
 	public static Hashtable<String, Socket[]> userList = new Hashtable<String, Socket[]>();//모든 유저의 리스트(아이디와 소켓이 들어간다.)
-	private static int RoomNumber = 1;//
+	private static int RoomNumber = 1;//처음 방번호
 	private Socket gameSocket = null;
 	private Socket chatSocket = null;
 	private DataInputStream input = null;
 	private DataOutputStream output = null;
 	private String name;
-	private Runnable ChatRun;
+	private ChatServer ChatRun;
 	private Thread ChatTh;
 	
 	
@@ -53,7 +53,6 @@ public class LobbyServer{
 		ChatRun = new ChatServer(0, name);
 		ChatTh = new Thread(ChatRun);
 		ChatTh.start();
-		
 		/*
 		 * 로비에 접속한 유저가 방을 생성하거나 입장에 대한 반복문이다.
 		 * 이건 바뀔수 있지만 일단 생성하면 create 로비에서 나가면 exit 그외 다른것이 들어오면 방 입장으로 본다.
@@ -64,7 +63,7 @@ public class LobbyServer{
 		 * 위 과정이 끝나면 게임룸으로 입장하게 된다.
 		 * 게임 룸에서는 룸객체안에 있는 유저들만 통신, 채팅이 가능하게된다.
 		 * 
-		 * +방이 삭제되었을때 클래스나 메소드도 만들어야됨!!
+		 * 
 		 */
 		while(true) {
 			try {
@@ -73,10 +72,15 @@ public class LobbyServer{
 					System.out.println("생성");
 					int num = 0;
 					synchronized (this) {//방 번호는 동기화해야된다.
+						if(RoomNumber >= 10000) {
+							RoomNumber = 1;
+						}
 						num = RoomNumber++;
+						MainServer.roomList.get(0).RoomUserListDel(name);//방에 유저 삭제
 						MainServer.roomList.put(num, new Room(name));
+						System.out.println("확인2");
 					}
-					new GameRoom(num, name);
+					new GameRoom(num, name, ChatRun);
 				}else if(str.equals("exit")){
 					return;
 				}else if(str.equals("refresh")) {
@@ -87,8 +91,14 @@ public class LobbyServer{
 					System.out.println("입장");
 					int rNumber = Integer.parseInt(input.readUTF());
 					System.out.println(rNumber);
-					MainServer.roomList.get(rNumber).RoomUserListAdd(name);
-					new GameRoom(rNumber, name);
+					if(MainServer.roomList.get(rNumber).getRoomSize() <= 3) {
+						MainServer.roomList.get(0).RoomUserListDel(name);//방에 유저 삭제
+						MainServer.roomList.get(rNumber).RoomUserListAdd(name);
+						new GameRoom(rNumber, name, ChatRun);
+					}else {
+						System.out.println("접속 실패");
+						output.writeUTF("false");
+					}
 				}
 				
 			}catch (Exception e) {
