@@ -42,15 +42,15 @@ public class LobbyServer{
 		userList.put(name,s);
 		
 		//로비 채팅을 하기 위해서 방번호 0번은 로비 채팅으로 한다.
-		if(MainServer.roomList.containsKey(0)) {
-			MainServer.roomList.get(0).RoomUserListAdd(name);
+		if(MainServer.roomList.containsKey("로비")) {
+			MainServer.roomList.get("로비").RoomUserListAdd(name);
 		}
 		else {
-			MainServer.roomList.put(0,new Room(name));
+			MainServer.roomList.put("로비",new Room(name));
 		}
 		
 		//방 번호 0번으로 채팅 스레드를 만든다.
-		ChatRun = new ChatServer(0, name);
+		ChatRun = new ChatServer("로비", name);
 		ChatTh = new Thread(ChatRun);
 		ChatTh.start();
 		/*
@@ -69,6 +69,8 @@ public class LobbyServer{
 			try {
 				String str = input.readUTF();
 				if(str.equals("Create")) {
+					String roomName = input.readUTF();
+					String roomPassword = input.readUTF();
 					System.out.println("생성");
 					int num = 0;
 					synchronized (this) {//방 번호는 동기화해야된다.
@@ -76,11 +78,13 @@ public class LobbyServer{
 							RoomNumber = 1;
 						}
 						num = RoomNumber++;
-						MainServer.roomList.get(0).RoomUserListDel(name);//방에 유저 삭제
-						MainServer.roomList.put(num, new Room(name));
+						MainServer.roomList.get("로비").RoomUserListDel(name);//방에 유저 삭제
+						MainServer.roomList.put(roomName, new Room(name));
+						MainServer.roomList.get(roomName).setRoomName(roomName);
+						MainServer.roomList.get(roomName).setRoomPass(roomPassword);
 						System.out.println("확인2");
 					}
-					new GameRoom(num, name, ChatRun);
+					new GameRoom(roomName, name, ChatRun);
 				}else if(str.equals("exit")){
 					return;
 				}else if(str.equals("refresh")) {
@@ -89,10 +93,10 @@ public class LobbyServer{
 				}
 				else {
 					System.out.println("입장");
-					int rNumber = Integer.parseInt(input.readUTF());
+					String rNumber = input.readUTF();
 					System.out.println(rNumber);
 					if(MainServer.roomList.get(rNumber).getRoomSize() <= 3) {
-						MainServer.roomList.get(0).RoomUserListDel(name);//방에 유저 삭제
+						MainServer.roomList.get("로비").RoomUserListDel(name);//방에 유저 삭제
 						MainServer.roomList.get(rNumber).RoomUserListAdd(name);
 						new GameRoom(rNumber, name, ChatRun);
 					}else {
