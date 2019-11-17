@@ -43,6 +43,12 @@ public class ChatServer implements Runnable{
 		list = MainServer.roomList.get(roomNum).getUserListChat();
 	}
 	
+	//방바꾸기
+	public void ChangeRoomNumber(int num) {
+		roomNum = num;
+		list = MainServer.roomList.get(num).getUserListChat();
+	}
+	
 	//유저 리스트에 받은 입력 정보를 보낸다.
 	public void sendAll(String str) {
 		for(DataOutputStream out : list.values()) {
@@ -68,7 +74,6 @@ public class ChatServer implements Runnable{
 		 */
 		try {
 			while(true) {
-				
 				String str = input.readUTF();   // 클라이언트로부터 채팅 받아옴
 				System.out.println(str);
 				if(str.substring(0,4).equals("[제어]")) {
@@ -84,6 +89,7 @@ public class ChatServer implements Runnable{
 				}
 				else {
 					str = str.substring(4);
+					System.out.println(roomNum);
 				}
 				if(input == null || str == null) break;   // 입력이 아무것도 들어오지 않으면 탈출
 				sendAll(name+">"+str);
