@@ -13,7 +13,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 
 public class GameRoom extends MainThread{
-	private int roomNum = 0;
+	private String roomName = "";
 	private Hashtable<String, DataOutputStream> list = null;//유저 리스트 보내기용
 	private DataInputStream input = null;
 	private DataOutputStream output = null;
@@ -31,7 +31,7 @@ public class GameRoom extends MainThread{
 	 * 전체 유저 리스트 객체에서 닉네임에 대한 소켓을 가지고 온다.
 	 */
 	
-	public GameRoom(int num, String name, ChatServer Chat) {
+	public GameRoom(String num, String name, ChatServer Chat) {
 		// TODO Auto-generated constructor stub
 		this.name = name;
 		this.ChatRun = Chat;
@@ -48,16 +48,16 @@ public class GameRoom extends MainThread{
 		}
 		
 		//이건 방장을 클라가 표시를 할수있으면 주석 풀기~!!
-		//sendAll("[제어]방장:"+MainServer.roomList.get(roomNum).GetKing()); 방장이 누구인지 모든 플레이어에게 보낸다.
+		//sendAll("[제어]방장:"+MainServer.roomList.get(roomName).GetKing()); 방장이 누구인지 모든 플레이어에게 보낸다.
 		
 		//해당 방 번호에 대한 룸객체안에 유저들의 리스트를 가지고온다.
-		roomNum = num;
-		list = MainServer.roomList.get(roomNum).getUserListGame();
+		roomName = num;
+		list = MainServer.roomList.get(roomName).getUserListGame();
 		
 		/*게임 서버를 만들경우 채팅은 스레드로 처리한다.
 		 * 나중에는 주석처리 지우기*/
 		
-		System.out.println("방장은 : "+MainServer.roomList.get(roomNum).GetKing());
+		System.out.println("방장은 : "+MainServer.roomList.get(roomName).GetKing());
 		/*
 		 * 이 부분부터 서비스 시작이다.
 		 * 일단 채팅만 구현함! 
@@ -81,9 +81,9 @@ public class GameRoom extends MainThread{
 				}
 				else if(str.equals("Start")) {
 					System.out.println("시작");
-					MainServer.roomList.get(roomNum).setStart(true);
+					MainServer.roomList.get(roomName).setStart(true);
 					//게임이 시작이 된다.
-					if(name.equals(MainServer.roomList.get(roomNum).GetKing())) {
+					if(name.equals(MainServer.roomList.get(roomName).GetKing())) {
 						//현재 유저가 방장일경우
 						//이문장을 수행한다.
 					}
@@ -110,19 +110,19 @@ public class GameRoom extends MainThread{
 		}catch (Exception e) {
 			// TODO: handle exception
 		}finally {
-			if(name.equals(MainServer.roomList.get(roomNum).GetKing())) {//만약에 방장이 나일경우 바뀐 방장이 누구인지 모든 플레이어에게 보낸다.
-				MainServer.roomList.get(roomNum).RoomUserListDel(name);//방에 유저 삭제
-				//sendAll("[제어]방장:"+MainServer.roomList.get(roomNum).GetKing()); 방장이 누구인지 모든 플레이어에게 보낸다.
+			if(name.equals(MainServer.roomList.get(roomName).GetKing())) {//만약에 방장이 나일경우 바뀐 방장이 누구인지 모든 플레이어에게 보낸다.
+				MainServer.roomList.get(roomName).RoomUserListDel(name);//방에 유저 삭제
+				//sendAll("[제어]방장:"+MainServer.roomList.get(roomName).GetKing()); 방장이 누구인지 모든 플레이어에게 보낸다.
 			}else {
-				MainServer.roomList.get(roomNum).RoomUserListDel(name);//방에 유저 삭제
+				MainServer.roomList.get(roomName).RoomUserListDel(name);//방에 유저 삭제
 			}
 			
-			System.out.println("방장은 : "+MainServer.roomList.get(roomNum).GetKing());
-			System.out.println(MainServer.roomList.get(roomNum).getUserListChat());
+			System.out.println("방장은 : "+MainServer.roomList.get(roomName).GetKing());
+			System.out.println(MainServer.roomList.get(roomName).getUserListChat());
 			
-			if(MainServer.roomList.get(roomNum).getUserListChat().isEmpty()) {
+			if(MainServer.roomList.get(roomName).getUserListChat().isEmpty()) {
 				System.out.println("삭제함");
-				MainServer.roomList.remove(roomNum);
+				MainServer.roomList.remove(roomName);
 			}
 		}
 	}
