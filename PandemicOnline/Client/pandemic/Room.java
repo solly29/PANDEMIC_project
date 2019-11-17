@@ -38,12 +38,14 @@ public class Room extends JPanel {
    Socket gsocket, socket2;
    DataOutputStream output, gameOutput;
    JTextArea textArea;// 우리가 친 글자가 보이는 곳
+   ClientReceiverThread ChatClass;
 
-   public Room(Socket gsocket, Socket socket2) {
+   public Room(Socket gsocket, Socket socket2, ClientReceiverThread ChatClass) {
 
       this.gsocket = gsocket;
       this.socket2 = socket2;
-
+      this.ChatClass = ChatClass;
+      
       try {
 			gameOutput = new DataOutputStream(gsocket.getOutputStream());
 		} catch (IOException e) {
@@ -67,9 +69,10 @@ public class Room extends JPanel {
       this.add(chat);
       chat.setBounds(0, 540, 960, 540);// NullVersion
       
-      Runnable ChatRun = new ClientReceiverThread(socket2, textArea);
+      
+      /*Runnable ChatRun = new ClientReceiverThread(socket2, textArea);
 		Thread ChatTh = new Thread(ChatRun);
-		ChatTh.start();
+		ChatTh.start();*/
 
       startexit = new StartExit();
       this.add(startexit);
@@ -141,7 +144,7 @@ public class Room extends JPanel {
             list[i].setBorderPainted(false);
             list[i].setContentAreaFilled(false);
             list[i].setFocusPainted(false);
-            System.out.println(list[i].getHeight());
+            //System.out.println(list[i].getHeight());
          }
       }
 
@@ -168,6 +171,7 @@ public class Room extends JPanel {
          setOpaque(false);
          setPreferredSize(new Dimension(900, 500));
          textArea = new JTextArea(26, 85);
+         ChatClass.ChangeTextArea(textArea);
          textArea.setEditable(false);
          scroll = new JScrollPane(textArea);
          scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
@@ -186,8 +190,8 @@ public class Room extends JPanel {
       public void actionPerformed(ActionEvent arg0) {
     	  String text =	textField.getText();
 			String temp_nickName = socket2.toString();
-			System.out.println(text);
-			System.out.println(socket2);
+			//System.out.println(text);
+			//System.out.println(socket2);
 			try {
 				output.writeUTF("[채팅]"+text);
 				textField.setText("");
