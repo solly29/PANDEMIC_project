@@ -3,6 +3,7 @@ package Server;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.Socket;
 import java.util.HashMap;
 import java.util.Hashtable;
 
@@ -15,6 +16,7 @@ public class UserList{
 	//ex) int형으로 데이터를 보내면 int형으로 받을수 있다.
 	private Hashtable<String, DataOutputStream> userGameList = new Hashtable<String, DataOutputStream>();//게임 스트림
 	private Hashtable<String, DataOutputStream> userChatList = new Hashtable<String, DataOutputStream>();//채팅 스트림
+	private Hashtable<String, Socket[]> totalUserList = LobbyServer.userList;
 	
 	public UserList() {
 		// TODO Auto-generated constructor stub
@@ -24,9 +26,9 @@ public class UserList{
 	public UserList(String name) {
 		DataOutputStream output;
 		try {
-			output = new DataOutputStream(LobbyServer.userList.get(name)[0].getOutputStream());
+			output = new DataOutputStream(totalUserList.get(name)[0].getOutputStream());
 			userGameList.put(name, output);
-			output = new DataOutputStream(LobbyServer.userList.get(name)[1].getOutputStream());
+			output = new DataOutputStream(totalUserList.get(name)[1].getOutputStream());
 			userChatList.put(name, output);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -38,15 +40,16 @@ public class UserList{
 	public void userAdd(String name) {
 		DataOutputStream output;
 		try {
-			output = new DataOutputStream(LobbyServer.userList.get(name)[0].getOutputStream());
+			output = new DataOutputStream(totalUserList.get(name)[0].getOutputStream());
 			userGameList.put(name, output);
-			output = new DataOutputStream(LobbyServer.userList.get(name)[1].getOutputStream());
+			output = new DataOutputStream(totalUserList.get(name)[1].getOutputStream());
 			userChatList.put(name, output);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
+	
 	//유저 삭제
 	public void userDel(String name) {
 		userGameList.remove(name);
@@ -54,9 +57,13 @@ public class UserList{
 	}
 	
 	//이건 쓸지는 모르겠지만 해당 유저의 출력스트림을 반환한다.
-	/*public DataOutputStream getUserList(String name){
-		return user.get(name);
-	}*/
+	public DataOutputStream getUserListGame(String name){
+		return userGameList.get(name);
+	}
+	//이건 쓸지는 모르겠지만 해당 유저의 출력스트림을 반환한다.
+	public DataOutputStream getUserListChat(String name){
+		return userChatList.get(name);
+	}
 	
 	//방의 유저의 게임 스트림을 반환
 	public Hashtable<String, DataOutputStream> getUserListGame(){
