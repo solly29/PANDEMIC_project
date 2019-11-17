@@ -11,7 +11,7 @@ public class MainServer {
 	private ServerSocket sSocket2 = null;
 	private Runnable runThread = null;
 	private Thread mainThread = null;
-	public static Hashtable<Integer, Room> roomList = new Hashtable<Integer, Room>();//룸 리스트
+	public static Hashtable<String, Room> roomList = new Hashtable<String, Room>();//룸 리스트
 	public static HashMap<String, String> IdPassword = new HashMap<String, String>();//로그인
 	
 	
