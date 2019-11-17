@@ -236,12 +236,14 @@ class RoomList extends JPanel {
 		try {
 			output.writeUTF("refresh");
 			list = input.readUTF();
-			if (list.length() != 3) {
-				list = list.substring(1, list.length() - 4);
+			System.out.println(list);
+			if (list.length() != 4) {
+				list = list.substring(1, list.length() - 1);
 
 				String[] list2 = list.split(", ");
+				System.out.println(list2);
 				model.setNumRows(0);
-				for (int i = list2.length - 1; i >= 0; i--) {
+				for (int i = list2.length-1; i >= 1; i--) {
 					String[] test = { list2[i] };
 					model.addRow(test);
 				}
@@ -263,7 +265,8 @@ class makeRoom extends JFrame implements ActionListener { // 방만들기 누르
 	DataOutputStream output, output1;
 	DataInputStream input;
 	ClientReceiverThread ChatClass;
-
+	JTextField RN = new JTextField();
+	JTextField RP = new JTextField();
 	public makeRoom(JFrame top, Socket gsocket, Socket csocket, ClientReceiverThread ChatClass) {
 		this.top = top;
 		this.gsocket = gsocket;
@@ -287,8 +290,7 @@ class makeRoom extends JFrame implements ActionListener { // 방만들기 누르
 		// 방만드는 버튼 설정
 		JLabel RoomName = new JLabel("방 이름 ");
 		JLabel RoomPW = new JLabel("비밀번호");
-		JTextField RN = new JTextField();
-		JTextField RP = new JTextField();
+		
 		RoomName.setBounds(10, 10, 100, 50);
 		RoomPW.setBounds(10, 150, 100, 50);
 		RN.setBounds(110, 10, 100, 50);
@@ -309,8 +311,9 @@ class makeRoom extends JFrame implements ActionListener { // 방만들기 누르
 			input = new DataInputStream(gsocket.getInputStream());
 			System.out.println(csocket);
 			output.writeUTF("Create");
+			output.writeUTF(RN.getText());
+			output.writeUTF(RP.getText());			
 			str = input.readUTF();
-
 			if (str.equals("true")) {
 				// output1.writeUTF("[제어]stop");
 				top.getContentPane().removeAll();
