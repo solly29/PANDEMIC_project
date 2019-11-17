@@ -52,6 +52,10 @@ public class Login{
 		
 		System.out.println("login");
 		
+		if(LobbyServer.userList.containsKey(ID)) {
+			System.out.println("유저가 로그인 되어있음");
+			return false;
+		}
 		
 		if(MainServer.IdPassword.containsKey(ID)) {
 			System.out.println("ID 확인");
