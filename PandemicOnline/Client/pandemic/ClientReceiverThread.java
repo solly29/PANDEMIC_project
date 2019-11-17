@@ -5,12 +5,16 @@ import java.net.Socket;
 import javax.swing.JTextArea;
 
 class ClientReceiverThread implements Runnable{
-	Socket socket;
-	JTextArea ChatList;
+	private Socket socket;
+	private JTextArea ChatList;
 	public ClientReceiverThread(Socket socket, JTextArea ChatList) {
 		this.socket = socket;
 		this.ChatList = ChatList;
-		System.out.println(ChatList);
+	}
+	
+	//textArea 바꾸기
+	public void ChangeTextArea(JTextArea test) {
+		ChatList = test;
 	}
 	
 	public void run() {   
