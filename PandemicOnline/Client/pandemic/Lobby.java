@@ -85,7 +85,7 @@ class RoomList extends JPanel {
 	ImageIcon Re = new ImageIcon(Client.class.getResource("../Lobby_Image/Refresh.png"));
 	Socket gsocket, csocket;
 	DataInputStream input;
-	DataOutputStream output,output1;
+	DataOutputStream output, output1;
 	JLabel la = new JLabel();
 	DefaultTableModel model;
 	JTable listTable;
@@ -180,12 +180,12 @@ class RoomList extends JPanel {
 				try {
 					output1 = new DataOutputStream(csocket.getOutputStream());
 					System.out.println(csocket);
-					
+
 				} catch (IOException e2) {
 					// TODO Auto-generated catch block
 					e2.printStackTrace();
 				}
-				
+
 				int row = listTable.getSelectedRow();
 				int col = listTable.getSelectedColumn();
 				String str = null;
@@ -194,14 +194,14 @@ class RoomList extends JPanel {
 					output.writeUTF("Join");
 					output.writeUTF(listTable.getValueAt(row, col) + "");
 					str = input.readUTF();
-				
-					if(str.equals("true")) {
-						//output1.writeUTF("[제어]stop");
+
+					if (str.equals("true")) {
+						// output1.writeUTF("[제어]stop");
 						top.getContentPane().removeAll();
 						top.getContentPane().add(new Room(gsocket, csocket, ChatClass));
 						top.revalidate();
 						top.repaint();
-					}else {
+					} else {
 						JOptionPane.showMessageDialog(null, "입장 불가능");
 					}
 				} catch (IOException e1) {
@@ -222,7 +222,7 @@ class RoomList extends JPanel {
 		this.add(Refresh); // 새로고침 버튼 적용
 		roomListPanel.add(scroll);
 		this.add(roomListPanel);
-		roomListPanel.setBounds(500, 200, 500, 200);
+		roomListPanel.setBounds(100, 100, 700, 300);
 		roomListPanel.setOpaque(false);
 		RoomMake.setBounds(0, 0, 250, 100);
 		RoomSearch.setBounds(270, 0, 410, 100);
@@ -269,18 +269,34 @@ class makeRoom extends JFrame implements ActionListener { // 방만들기 누르
 		this.gsocket = gsocket;
 		this.csocket = csocket;
 		this.ChatClass = ChatClass;
-		
+
 		setTitle("방만들기");
 		setSize(500, 300);
+		setLayout(null);
 		this.setBackground(Color.green);
 		setResizable(false);
 		setLocationRelativeTo(null);
 		// setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
+
 		JButton MKRB = new JButton();
 		MKRB.add(new JLabel("눌러"));
 		MKRB.addActionListener(this);
+		MKRB.setBounds(220, 10, 100, 100);
 		this.add(MKRB);
+		// 방만드는 버튼 설정
+		JLabel RoomName = new JLabel("방 이름 ");
+		JLabel RoomPW = new JLabel("비밀번호");
+		JTextField RN = new JTextField();
+		JTextField RP = new JTextField();
+		RoomName.setBounds(10, 10, 100, 50);
+		RoomPW.setBounds(10, 150, 100, 50);
+		RN.setBounds(110, 10, 100, 50);
+		RP.setBounds(110, 170, 100, 50);
+		this.add(RoomName);
+		this.add(RoomPW);
+		this.add(RN);
+		this.add(RP);
 
 	}
 
@@ -294,15 +310,15 @@ class makeRoom extends JFrame implements ActionListener { // 방만들기 누르
 			System.out.println(csocket);
 			output.writeUTF("Create");
 			str = input.readUTF();
-		
-			if(str.equals("true")) {
-				//output1.writeUTF("[제어]stop");
+
+			if (str.equals("true")) {
+				// output1.writeUTF("[제어]stop");
 				top.getContentPane().removeAll();
 				top.getContentPane().add(new Room(gsocket, csocket, ChatClass));
 				top.revalidate();
 				top.repaint();
 				this.dispose();
-			}else {
+			} else {
 				JOptionPane.showMessageDialog(null, "방을 만들 수 없습니다.");
 			}
 		} catch (IOException e1) {
@@ -342,14 +358,14 @@ class Chat extends JPanel {
 	JTextArea ChatList;
 
 	public Chat(Socket csocket, ClientReceiverThread ChatClass, JTextArea ChatList) {
-		
+
 		setLayout(null);
 		// setBounds(510, 730, 1230, 320);//식별용
 		this.setOpaque(false); // 판넬 안보이게하기
 		JTextField ChatField = new JTextField(); // 채팅치는 필드
-		
+
 		this.ChatList = ChatList;
-		
+
 		ChatList.setEditable(false);
 		JScrollPane scroll;
 		scroll = new JScrollPane(ChatList);
@@ -361,7 +377,7 @@ class Chat extends JPanel {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		ChatTh = new Thread(ChatClass);
 		ChatTh.start();
 
