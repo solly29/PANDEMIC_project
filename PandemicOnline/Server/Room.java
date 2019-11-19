@@ -14,6 +14,7 @@ public class Room {
 	private UserList user = null;
 	private String roomName = "";
 	private String kingName = "";
+	private String roomPass = "";
 	private boolean start = false;
 
 	public Room() {
@@ -62,6 +63,15 @@ public class Room {
 	// 이름 설정
 	public String getRoomName() {
 		return roomName;
+	}
+	
+	public void setRoomPass(String str) {
+		roomPass = str;
+	}
+
+	// 이름 설정
+	public String getRoomPass() {
+		return roomPass;
 	}
 
 	// 방장 시스템
