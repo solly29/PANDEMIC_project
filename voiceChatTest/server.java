@@ -24,8 +24,6 @@ public class server {
 
 		// 클라이언트에게 DatagramPacket을 전송하거나 수신하기 위해 DatagramSocket 객체 생성
 
-		// DatagramSocket dsock = null;
-
 		try {
 
 			System.out.println("접속 대기상태입니다.");
@@ -40,28 +38,12 @@ public class server {
 
 			while (true) {
 
-				byte[] buffer = new byte[1024];
+				byte[] buffer = new byte[4096];
 
 				DatagramPacket receivePacket = new DatagramPacket(buffer, buffer.length);
 
-				// System.out.println(receivePacket.getPort());
-
-				/*
-				 * String msg = new String(receivePacket.getData(), 0,
-				 * receivePacket.getLength());
-				 * 
-				 * System.out.println("전송 받은 문자열 : " + msg);
-				 * 
-				 * if(msg.equals("quit")) break;
-				 */
-				//dsock.receive(receivePacket);
-				//user.put(receivePacket.getAddress(), receivePacket.getPort());
-				//System.out.println(user);
 				format = new AudioFormat(8000.0f, 16, 1, true, false);
 
-				// InputStream byteArrayInputStream = new ByteArrayInputStream(audioData);
-				// audioInputStream = new AudioInputStream(byteArrayInputStream,format,
-				// audioData.length / format.getFrameSize());
 				DataLine.Info dataLineInfo = new DataLine.Info(SourceDataLine.class, format);
 				try {
 					sourceDataLine = (SourceDataLine) AudioSystem.getLine(dataLineInfo);
@@ -71,20 +53,14 @@ public class server {
 					e1.printStackTrace();
 				}
 				sourceDataLine.start();
-				int cnt = 0;
-				byte tempBuffer[] = new byte[2048];
 
-				
-				 /*while (true) { dsock.receive(receivePacket); buffer =
-				receivePacket.getData(); sourceDataLine.write(buffer, 0, buffer.length); }*/
-				 
 				while(true) {
 					DatagramPacket sendPacket = null;
 					dsock.receive(receivePacket);
 					user.put(receivePacket.getAddress(), receivePacket.getPort());
 					for (InetAddress ip : user.keySet()) {
-						
-						//if(!ip.equals(receivePacket.getAddress())) {
+
+						if(!ip.equals(receivePacket.getAddress())) {
 						sendPacket = new DatagramPacket(receivePacket.getData(), receivePacket.getData().length, ip,
 								user.get(ip));
 							try {
@@ -93,7 +69,7 @@ public class server {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
-						//}
+						}
 					}
 				}
 
@@ -113,4 +89,4 @@ public class server {
 
 	}
 
-}
+} 
