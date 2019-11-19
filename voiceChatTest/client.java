@@ -1,11 +1,7 @@
 package voiceTest;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -26,41 +22,39 @@ public class client implements Runnable{
     SourceDataLine sourceDataLine;
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     AudioFormat format = null;
+    DatagramSocket socket;
 	public client() {
-		
 		// TODO Auto-generated constructor stub
-		
+
 		format = new AudioFormat(8000.0f, 16, 1, true, false);
         TargetDataLine microphone;
-        
-        
+
+
 		 String ip = "59.24.76.229";
 
          int port = 9003;
 
-         InetAddress inetaddr = null;//ip�� ����.
+         InetAddress inetaddr = null;//ip가 들어간다.
 
          try{
 
-                inetaddr = InetAddress.getByName(ip);//ip�� �ְ�
+                inetaddr = InetAddress.getByName(ip);//ip를 넣고
 
          }catch(UnknownHostException e){
 
-                System.out.println("�߸��� �������̳� ip�Դϴ�.");
+                System.out.println("잘못된 도메인이나 ip입니다.");
 
                 System.exit(1);
 
          }
 
          try{
-                BufferedReader br = new BufferedReader(new InputStreamReader(System.in));//�Է°��� ����Ʈ �������� �ٲ㼭 ����
 
                 dsock = new DatagramSocket();
 
-                String line = null;
                 Thread t = new Thread(this);
                 t.start();
-                
+
                 try {
                     microphone = AudioSystem.getTargetDataLine(format);
 
@@ -69,9 +63,9 @@ public class client implements Runnable{
                     microphone.open(format);
 
                     ByteArrayOutputStream out = new ByteArrayOutputStream();
-                    int numBytesRead = 0;
-                    int CHUNK_SIZE = 1024;
-                    byte[] data = new byte[microphone.getBufferSize() / 5];
+                    int numBytesRead;
+                    int CHUNK_SIZE = 4096;
+                    byte[] data = new byte[4096];
                     microphone.start();
 
                     int bytesRead = 0;
@@ -79,12 +73,12 @@ public class client implements Runnable{
                     dsock.send(sendPacket);
                     try {
                     	while(true) {
-	                        //while (numBytesRead < 1024) {
+	                        while (bytesRead < 1) {
 	                        	numBytesRead = microphone.read(data, 0, CHUNK_SIZE);
-	                            //bytesRead = bytesRead + numBytesRead;
-	                           
-	                       // }
-	                        sendPacket = new DatagramPacket(data, numBytesRead, inetaddr, port);
+	                            bytesRead = bytesRead + numBytesRead;
+
+	                        }
+	                        sendPacket = new DatagramPacket(data, data.length, inetaddr, port);
 	                        dsock.send(sendPacket);
 	                        bytesRead = 0;
                     	}
@@ -96,18 +90,7 @@ public class client implements Runnable{
                 	System.out.println(e);
         		}
 
-                /*while((line = br.readLine())!=null){
-                		
-                       DatagramPacket sendPacket = new DatagramPacket(line.getBytes(), line.getBytes().length, inetaddr, port);
-                       dsock.send(sendPacket);
-
-                       if(line.equals("quit")) break;
-
-
-                       
-                }*/
-
-                System.out.println("UDPEchoClient�� �����մϴ�.");
+                System.out.println("UDPEchoClient를 종료합니다.");
 
          }catch(Exception ex){
 
@@ -125,60 +108,33 @@ public class client implements Runnable{
        public static void main(String[] args){
     	   new client();
 
-            
+
 
        }
 
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-		DataLine.Info dataLineInfo = new DataLine.Info(SourceDataLine.class, format);
-        try {
-			sourceDataLine = (SourceDataLine) AudioSystem.getLine(dataLineInfo);
-			sourceDataLine.open(format);
-		} catch (LineUnavailableException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-        sourceDataLine.start();
 		while(true) {
-			byte[] buffer = new byte[1024];
+			byte[] buffer = new byte[4096];
 			DatagramPacket receivePacket = new DatagramPacket(buffer, buffer.length);
 
+            DataLine.Info dataLineInfo = new DataLine.Info(SourceDataLine.class, format);
             try {
+				sourceDataLine = (SourceDataLine) AudioSystem.getLine(dataLineInfo);
+				sourceDataLine.open(format);
+				sourceDataLine.start();
 				dsock.receive(receivePacket);
-			} catch (IOException e) {
+			} catch (IOException | LineUnavailableException e1) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				e1.printStackTrace();
 			}
-            
-            byte[] audioData = receivePacket.getData();
-            //InputStream byteArrayInputStream = new ByteArrayInputStream(audioData);
-            //audioInputStream = new AudioInputStream(byteArrayInputStream,format, audioData.length / format.getFrameSize());
-            
-            int cnt = 0;
-            byte tempBuffer[] = new byte[2048];
-            while (true) {
-            	try {
-					dsock.receive(receivePacket);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-            	buffer = receivePacket.getData();
-            	int size = receivePacket.getData().length;
-            	sourceDataLine.write(buffer, 0, size);
-        	}
-            
-            	//System.out.println(new String(receivePacket.getData(), 0, receivePacket.getData().length));
-
-              // String msg = new String(receivePacket.getData(), 0, receivePacket.getData().length);
-
-              // System.out.println("���۹��� ���ڿ� : "+msg);
+            buffer = receivePacket.getData();
+            sourceDataLine.write(buffer, 0, buffer.length);
 		}
 	}
 
 
- 
 
-}
+
+} 
