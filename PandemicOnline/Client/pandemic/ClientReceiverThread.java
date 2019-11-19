@@ -4,7 +4,7 @@ import java.io.DataInputStream;
 import java.net.Socket;
 import javax.swing.JTextArea;
 
-class ClientReceiverThread implements Runnable{
+public class ClientReceiverThread implements Runnable{
 	private Socket socket;
 	private JTextArea ChatList;
 	public ClientReceiverThread(Socket socket, JTextArea ChatList) {
