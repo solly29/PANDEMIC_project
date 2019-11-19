@@ -67,6 +67,7 @@ public class GameRoom extends MainThread{
 				
 				String str = input.readUTF();   // 클라이언트로부터 채팅 받아옴
 				System.out.println(str);
+				sendAll(str);//테스트용  sendAll이다. 나중에는 지울것
 				if(str.equals("Ready")) {
 					System.out.println("준비");
 					sendAll("["+name+"]Ready");
@@ -96,10 +97,10 @@ public class GameRoom extends MainThread{
 							//게임에서 서버가 관여 함
 							//예를들어 승패 여부
 						}
-						sendAll(str);
+						sendAll(str);//레디 기능을 구현 할경우 여기서 게임제어 문자를 보낸다.
 					}
 				}else {
-					break;
+					//break;
 				}
 				
 				/*
