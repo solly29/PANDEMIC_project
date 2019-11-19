@@ -12,7 +12,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
-import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
@@ -25,7 +24,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.SwingUtilities;
+
+import Game.*;
 
 public class Room extends JPanel {
 //JFrame의 기본 창은 1920,1080이다. 반띵하면 960 540.
@@ -33,7 +33,7 @@ public class Room extends JPanel {
    UserList user;
    CharacterList character;
    StartExit startexit;
-   JFrame top = Login.getTop();
+   JFrame top;
    Image background2=new ImageIcon(Client.class.getResource("../Room_Common/background.png")).getImage();
    Socket gsocket, socket2;
    DataOutputStream output, gameOutput;
@@ -69,7 +69,7 @@ public class Room extends JPanel {
       this.add(chat);
       chat.setBounds(0, 540, 960, 540);// NullVersion
       
-      
+      top = Login.getTop();
       /*Runnable ChatRun = new ClientReceiverThread(socket2, textArea);
 		Thread ChatTh = new Thread(ChatRun);
 		ChatTh.start();*/
@@ -243,9 +243,9 @@ public class Room extends JPanel {
 						e1.printStackTrace();
 					}*/
                      top.getContentPane().removeAll();
-                     top.getContentPane().add(new Login(gsocket, socket2));
-                     revalidate();
-                     repaint();
+                     top.getContentPane().add(new MainPanel(gsocket, socket2, ChatClass)).requestFocusInWindow();
+                     top.revalidate();
+                     top.repaint();
                   //}
                }
 
