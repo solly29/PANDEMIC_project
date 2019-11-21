@@ -243,7 +243,7 @@ class RoomList extends JPanel {
 				String[] list2 = list.split(", ");
 				System.out.println(list2);
 				model.setNumRows(0);
-				for (int i = list2.length-1; i >= 1; i--) {
+				for (int i = list2.length - 1; i >= 1; i--) {
 					String[] test = { list2[i] };
 					model.addRow(test);
 				}
@@ -267,40 +267,48 @@ class makeRoom extends JFrame implements ActionListener { // 방만들기 누르
 	ClientReceiverThread ChatClass;
 	JTextField RN = new JTextField();
 	JTextField RP = new JTextField();
-	public makeRoom(JFrame top, Socket gsocket, Socket csocket, ClientReceiverThread ChatClass) {
+	//Image background2 = new ImageIcon(Client.class.getResource("../Lobby_Image/blood.jpg")).getImage();
+	
+	public makeRoom(JFrame top, Socket gsocket, Socket csocket, ClientReceiverThread ChatClass) {			
 		this.top = top;
 		this.gsocket = gsocket;
 		this.csocket = csocket;
-		this.ChatClass = ChatClass;
-
+		this.ChatClass = ChatClass;			
 		setTitle("방만들기");
 		setSize(500, 300);
 		setLayout(null);
-		this.setBackground(Color.green);
+		//this.setBackground(Color.green);
 		setResizable(false);
 		setLocationRelativeTo(null);
 		// setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 
+	//	setContentPane(new JLabel(new ImageIcon("../Lobby_Image/blood.jpg")));
 		JButton MKRB = new JButton();
-		MKRB.add(new JLabel("눌러"));
+		MKRB.add(new JLabel("생성"));
 		MKRB.addActionListener(this);
-		MKRB.setBounds(220, 10, 100, 100);
+		MKRB.setBounds(270, 90, 90, 40);
 		this.add(MKRB);
 		// 방만드는 버튼 설정
 		JLabel RoomName = new JLabel("방 이름 ");
 		JLabel RoomPW = new JLabel("비밀번호");
-		
-		RoomName.setBounds(10, 10, 100, 50);
-		RoomPW.setBounds(10, 150, 100, 50);
-		RN.setBounds(110, 10, 100, 50);
-		RP.setBounds(110, 170, 100, 50);
+
+		RoomName.setBounds(110, 90, 50, 20);
+		RoomPW.setBounds(110, 115, 50, 20);
+		RN.setBounds(160, 90, 100, 20);
+		RP.setBounds(160, 115, 100, 20);
 		this.add(RoomName);
 		this.add(RoomPW);
 		this.add(RN);
 		this.add(RP);
 
 	}
+	/*public void paintComponent(Graphics g) {
+		g.drawImage(background2, 0, 0, null);
+		paintComponent(g);
+		
+	}*/
+	
 
 	public void actionPerformed(ActionEvent e) {
 		// JFrame top=(JFrame)SwingUtilities.getWindowAncestor(Lobby);
@@ -312,7 +320,7 @@ class makeRoom extends JFrame implements ActionListener { // 방만들기 누르
 			System.out.println(csocket);
 			output.writeUTF("Create");
 			output.writeUTF(RN.getText());
-			output.writeUTF(RP.getText());			
+			output.writeUTF(RP.getText());
 			str = input.readUTF();
 			if (str.equals("true")) {
 				// output1.writeUTF("[제어]stop");
@@ -329,6 +337,7 @@ class makeRoom extends JFrame implements ActionListener { // 방만들기 누르
 			e1.printStackTrace();
 		}
 	}
+	
 }
 
 class MkRoomBg extends JPanel { // 방만들기 창에 넣을 배경 패널
