@@ -7,6 +7,7 @@ import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -58,15 +59,23 @@ public class Card extends JLabel {
 			}
 
 			public void mousePressed(MouseEvent e) {
-				Controlpanel.Mainpanel.characterList.get(Client.name).setXY(pos.getX(), pos.getY());
-				Controlpanel.Mainpanel.characterList.get(Client.name).setCC(CityName, color);
+				/*Controlpanel.Mainpanel.characterList.get(Client.name).setXY(pos.getX(), pos.getY());
+				Controlpanel.Mainpanel.characterList.get(Client.name).setCC(CityName, color);*/
 				Controlpanel.Havecard.removeCard(CityName);
-				Controlpanel.invalidate();
+				/*Controlpanel.invalidate();
 				Controlpanel.removeAll();
 				Controlpanel.add(new BasicSelect(Controlpanel));
 				Controlpanel.Mainpanel.Controlpanel.setBounds(0, 840, 1920, 240);
 				Controlpanel.revalidate();
-				Controlpanel.repaint();
+				Controlpanel.repaint();*/
+				if(!Client.CardPrint) {
+					try {
+						Controlpanel.Mainpanel.GameOutStream.writeUTF("[이동]"+Client.name+":"+CityName);
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
 			}
 		});
 	}
