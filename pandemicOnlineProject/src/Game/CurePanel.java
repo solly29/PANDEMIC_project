@@ -2,11 +2,13 @@ package Game;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
 import Game.MainPanel.Map;
+import pandemic.Client;
 
 public class CurePanel extends ControlShape {
 	ControlPanel Controlpanel;
@@ -31,13 +33,15 @@ public class CurePanel extends ControlShape {
 		e.setHorizontalTextPosition(JLabel.CENTER);
 		e.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
-				Controlpanel.Havecard.DevelopeCure(color);
-				Controlpanel.invalidate();
-				Controlpanel.removeAll();
-				Controlpanel.add(new BasicSelect(Controlpanel));
-				Controlpanel.revalidate();
-				Controlpanel.repaint();
-				Controlpanel.Mainpanel.Controlpanel.setBounds(0, 840, 1920, 240);
+				if(!Client.CardPrint) {
+					Controlpanel.Havecard.DevelopeCure(color);
+					Controlpanel.invalidate();
+					Controlpanel.removeAll();
+					Controlpanel.add(new BasicSelect(Controlpanel));
+					Controlpanel.revalidate();
+					Controlpanel.repaint();
+					Controlpanel.Mainpanel.Controlpanel.setBounds(0, 840, 1920, 240);
+				}
 			}
 		});
 		return e;
