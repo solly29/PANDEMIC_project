@@ -17,11 +17,11 @@ public class ControlPanel extends ControlShape {// 컨트롤 패널
 	ControlPanel(MainPanel Mainpanel) {
 		this.Mainpanel = Mainpanel;// 상위자원을 연결해서 쓸수있게
 
-		Havecard.insertCard(Controlpanel,"로스앤젤레스", "Yellow");
+		/*Havecard.insertCard(Controlpanel,"로스앤젤레스", "Yellow");
 		Havecard.insertCard(Controlpanel,"자카르타", "Red");
 		Havecard.insertCard(Controlpanel,"보고타", "Blue");
 		Havecard.insertCard(Controlpanel,"카라치", "Black");
-		Havecard.insertCard(Controlpanel,"런던", "Blue");
+		Havecard.insertCard(Controlpanel,"런던", "Blue");*/
 		//위는 테스트를 위해 임의의 카드를 넣어 둔것이다.
 		
 	//	setSize(new Dimension(1920, 200));
