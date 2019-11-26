@@ -71,7 +71,7 @@ public class testLabel extends Thread{
 				//JLabel l = new JLabel(text[i]);
 				l.setText(qu.poll());
 				l.setFont(new Font("바탕",Font.BOLD,30));
-				l.setBackground(Color.green);
+				l.setForeground(Color.white);
 				t.add(l, new Integer(20));
 				l.setBounds(700, 400, 500, 100);
 				System.out.println(l.getText());
