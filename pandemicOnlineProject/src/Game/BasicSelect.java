@@ -3,6 +3,7 @@ package Game;
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -60,7 +61,15 @@ public class BasicSelect extends JPanel {// 기본선택 사항
 		labels[2].addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				String Pos = Controlpanel.Mainpanel.characterList.get(Client.name).getCurrentposition();
-				Controlpanel.Havecard.BuildLabatory(Pos);
+				//Controlpanel.Havecard.BuildLabatory(Pos);
+				if(!Client.CardPrint) {
+					try {
+						Controlpanel.Mainpanel.GameOutStream.writeUTF("[건설]"+Client.name+":"+Pos);
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
 			}
 		});
 
