@@ -11,7 +11,7 @@ public class Client extends JFrame{
 	static Socket gsocket = null;
 	static Socket socket2 = null;
 	public static String name = "";
-	public static boolean CardPrint = false;
+	public static boolean CardPrint = true;
 	
 	public static void main(String[] args) {
 		System.out.println("hi");
@@ -44,5 +44,3 @@ public class Client extends JFrame{
 		
 	}
 }
-
-
