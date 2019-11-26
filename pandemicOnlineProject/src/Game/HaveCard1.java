@@ -1,6 +1,9 @@
 package Game;
 
+import java.io.IOException;
 import java.util.ArrayList;
+
+import pandemic.Client;
 
 public class HaveCard1 {
 	ArrayList<Card> List = new ArrayList<Card>();
@@ -34,6 +37,7 @@ public class HaveCard1 {
 
 	public void DevelopeCure(String Color) {
 		int Cure_Source = 0;
+		String color;
 		String[] PreditedRemove = new String[5];
 		for (int i = 0; i < List.size(); i++) {
 			if (List.get(i).getColor().equals(Color)) {
@@ -44,14 +48,24 @@ public class HaveCard1 {
 		if (Cure_Source == 5) {
 			if (Color.equals("Red")) {
 				Game.RedCure = true;
+				color = "Red";
 			} else if (Color.equals("Blue")) {
 				Game.BlueCure = true;
+				color = "Blue";
 			} else if (Color.equals("Yellow")) {
 				Game.YellowCure = true;
+				color = "Yellow";
 			} else {
 				Game.BlackCure = true;
+				color = "Black";
 			}
 			removeCards(PreditedRemove);// 5장의 카드를 한번에 삭제
+			try {
+				Controlpanel.Mainpanel.GameOutStream.writeUTF("[개발]"+color);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 	}
 
