@@ -16,7 +16,7 @@ public class Login{
 	private String PW;
 	private String NAME;
 	private String NUMBER;
-	DOA db = new DOA();
+	//DOA db = new DOA(); 지금은 디비 서버를 다시 만들어야되서 주석처리함
 	
 	public Login(Socket s1, Socket s2) {
 		// TODO Auto-generated constructor stub
@@ -24,10 +24,10 @@ public class Login{
 		chatSocket = s2;
 		
 		//임의의 유저
-		/*MainServer.IdPassword.put("admin","1234");
+		MainServer.IdPassword.put("admin","1234");
 		MainServer.IdPassword.put("user","1234");
 		MainServer.IdPassword.put("user2","1234");
-		MainServer.IdPassword.put("user3","1234");*/
+		MainServer.IdPassword.put("user3","1234");
 		try {
 			input = new DataInputStream(gameSocket.getInputStream());
 		} catch (IOException e) {
@@ -62,10 +62,17 @@ public class Login{
 			return false;
 		}
 		
-		if (db.MatchPWD(ID, PW)) {
+		if(MainServer.IdPassword.get(ID).equals(PW)) {
 			System.out.println("PW 일치");
 			return true;
 		}
+		
+		//디비서버를 다시 만들어야 되서 주석처리함
+		/*
+		if (db.MatchPWD(ID, PW)) {
+			System.out.println("PW 일치");
+			return true;
+		}*/
 
 		return false;
 	}
@@ -88,7 +95,7 @@ public class Login{
 			
 		}
 		
-		
+		/* 디비가 원상복귀되면 주석 지우기
 		if (db.MatchID(ID)) {
 
 			db.Insert(NAME, NUMBER, ID, PW);
@@ -96,6 +103,7 @@ public class Login{
 			return true;
 		} else {
 			return false;
-		}
+		}*/
+		return false;//이거도 복구되면 지우기
 	}
 }
