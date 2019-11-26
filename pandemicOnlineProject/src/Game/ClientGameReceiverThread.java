@@ -11,6 +11,7 @@ public class ClientGameReceiverThread implements Runnable{
 	private Socket socket;
 	private MainPanel mainPanel;
 	private testLabel labelTh;
+	private boolean turnStart = false;
 	
 	public ClientGameReceiverThread(Socket socket, MainPanel mainPanel) {
 		this.socket = socket;
@@ -24,6 +25,7 @@ public class ClientGameReceiverThread implements Runnable{
 		mainPanel.Controlpanel.revalidate();
 		mainPanel.Controlpanel.repaint();
 		mainPanel.repaint();
+		mainPanel.Controlpanel.setBounds(0, 840, 1920, 240);
 	}
 	
 	public void colorSelect(String color, String cityName) {
@@ -99,20 +101,52 @@ public class ClientGameReceiverThread implements Runnable{
 						str = str.substring(4);
 						String[] str2 = str.split(", ");
 						//테스트 아직 안됨
+						Client.CardPrint = true;
 						labelTh = new testLabel(mainPanel,str2);
 						labelTh.start();
-						Client.CardPrint = true;
+						if(turnStart)
+							Client.CardPrint = false;
 						Thread.sleep(1500*str2.length+1000);
-						Client.CardPrint = false;
-						//for(int i=0;i<str2.length;i++) {
-							//testLabel labelTh = new testLabel(mainPanel);
-							//labelTh = new Thread(t);
-							//labelTh.start();
-							//mainPanel.add(t, new Integer(20));
-							//t.setBounds(500, 500, 100, 100);
-							//Thread.sleep(3000);
-						//}
 						
+					}else if(str.substring(0, 4).equals("[도시]")) {
+						str = str.substring(4);
+						String[] str2 = str.split(", ");
+						for(int i=0;i<str2.length;i++) {
+							String Color = mainPanel.citys.returnCity(str2[i]).color;
+							mainPanel.Controlpanel.Havecard.insertCard(mainPanel.Controlpanel,str2[i], Color);
+						}
+						
+					}else if(str.substring(0, 4).equals("[건설]")) {
+						str = str.substring(4);
+						String[] str2 = str.split(":");
+						if(str2[0].equals(Client.name)) {
+							mainPanel.Controlpanel.Havecard.BuildLabatory(str2[1]);
+						}else {
+							mainPanel.citys.returnCity(str2[1]).Labatory = true;
+							mainPanel.repaint();
+						}
+						
+					}else if(str.substring(0, 4).equals("[개발]")) {
+						str = str.substring(4);
+						if (str.equals("Red")) {
+							Game.RedCure = true;
+						} else if (str.equals("Blue")) {
+							Game.BlueCure = true;
+						} else if (str.equals("Yellow")) {
+							Game.YellowCure = true;
+						} else {
+							Game.BlackCure = true;
+						}
+					}else if(str.substring(0, 4).equals("[제어]")) {
+						str = str.substring(4);
+						String[] str2 = str.split(":");
+						if(str2[0].equals("turnStart") && str2[1].equals(Client.name)) {
+							Client.CardPrint = false;
+							turnStart = true;
+						}else if(str2[0].equals("turnStop") && str2[1].equals(Client.name)) {
+							Client.CardPrint = true;
+							turnStart = false;
+						}
 					}
 				}
 			}
