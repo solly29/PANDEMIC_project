@@ -4,6 +4,7 @@ package Server;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
 
@@ -17,6 +18,7 @@ public class UserList{
 	private Hashtable<String, DataOutputStream> userGameList = new Hashtable<String, DataOutputStream>();//게임 스트림
 	private Hashtable<String, DataOutputStream> userChatList = new Hashtable<String, DataOutputStream>();//채팅 스트림
 	private Hashtable<String, Socket[]> totalUserList = LobbyServer.userList;
+	private ArrayList<String> userName = new ArrayList<String>();
 	
 	public UserList() {
 		// TODO Auto-generated constructor stub
@@ -30,6 +32,7 @@ public class UserList{
 			userGameList.put(name, output);
 			output = new DataOutputStream(totalUserList.get(name)[1].getOutputStream());
 			userChatList.put(name, output);
+			userName.add(name);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -44,6 +47,7 @@ public class UserList{
 			userGameList.put(name, output);
 			output = new DataOutputStream(totalUserList.get(name)[1].getOutputStream());
 			userChatList.put(name, output);
+			userName.add(name);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -54,6 +58,7 @@ public class UserList{
 	public void userDel(String name) {
 		userGameList.remove(name);
 		userChatList.remove(name);
+		userName.remove(name);
 	}
 	
 	//이건 쓸지는 모르겠지만 해당 유저의 출력스트림을 반환한다.
@@ -73,5 +78,9 @@ public class UserList{
 	//방의 유저의 채팅 스트름을 반환
 	public Hashtable<String, DataOutputStream> getUserListChat(){
 		return userChatList;
+	}
+	
+	public String getUserName(int i) {
+		return userName.get(i);
 	}
 }
