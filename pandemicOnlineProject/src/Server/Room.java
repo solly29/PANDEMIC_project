@@ -17,6 +17,8 @@ public class Room {
 	private String roomPass = "";
 	private boolean start = false;
 	public CardList cardList=null;
+	private int nextStart = -1;
+	public String StartUser = "";
 
 	public Room() {
 		// TODO Auto-generated constructor stub
@@ -120,5 +122,13 @@ public class Room {
 			return String.format("****");
 		else
 			return String.format(" ");
+	}
+	
+	public String getNextStartUser() {
+		nextStart++;
+		if(nextStart == getRoomSize()) {
+			nextStart = 0;
+		}
+		return user.getUserName(nextStart);
 	}
 }
