@@ -22,6 +22,7 @@ public class GameRoom{
 	private String name; 
 	private ChatServer ChatRun;
 	private Room MyRoom;
+	private int countTurn = 0;
 	
 	public GameRoom() {
 		// TODO Auto-generated constructor stub
@@ -88,28 +89,55 @@ public class GameRoom{
 					MyRoom.setStart(true);
 					output.writeUTF("[목룍]"+MyRoom.getUserListGame().keySet().toString());
 					//게임이 시작이 된다.
+					String cardList = Arrays.toString(MyRoom.cardList.cityCardHamdling());
+					output.writeUTF("[도시]"+cardList.substring(1,cardList.length()-1));
 					if(name.equals(MyRoom.GetKing())) {
 						//현재 유저가 방장일경우
 						//초기 감염상황 발생
 						//나중에 주석풀기
-						/*for(int i=0;i<3;i++) {
-							String cardList = Arrays.toString(MyRoom.cardList.infCardHandling(3));
+						Thread.sleep(2000);
+						ChatRun.sendAll("감염카드 배부 중입니다.");
+						for(int i=0;i<3;i++) {
+							cardList = Arrays.toString(MyRoom.cardList.infCardHandling(3));
 							sendAll("[감염]"+cardList.substring(1,cardList.length()-1));
-						}*/
+						}
+						String startuser = MyRoom.getNextStartUser();
+						sendAll("[제어]turnStart:"+startuser);
+						ChatRun.sendAll(startuser+"님의 턴입니다.");
+						MyRoom.StartUser = startuser;
 					}
-					String cardList = Arrays.toString(MyRoom.cardList.cityCardHamdling());
-					output.writeUTF("[도시]"+cardList.substring(1,cardList.length()-1));
+					
 					while(true) {
 						str = input.readUTF();   // 클라이언트로부터 채팅 받아옴
+						if(MyRoom.StartUser.equals(name))
+							countTurn++;
 						System.out.println(str);
 						if(input == null || str == null) break;   // 입력이 아무것도 들어오지 않으면 탈출
 						if(str.substring(0,4).equals("[제어]")) {
 							str = str.substring(4);
+							if(str.equals("turnStop")) {
+								
+							}
 							//게임에서 서버가 관여 함
 							//예를들어 승패 여부
 						}
-						System.out.println("asdasd");
 						sendAll(str);//레디 기능을 구현 할경우 여기서 게임제어 문자를 보낸다.
+						if(countTurn==4) {
+							output.writeUTF("[제어]turnStop:"+name);
+							
+							cardList = Arrays.toString(MyRoom.cardList.cityCardHamdling());
+							output.writeUTF("[도시]"+cardList.substring(1,cardList.length()-1));
+							
+							cardList = Arrays.toString(MyRoom.cardList.infCardHandling(3));
+							sendAll("[감염]"+cardList.substring(1,cardList.length()-1));
+							
+							String startuser = MyRoom.getNextStartUser();
+							sendAll("[제어]turnStart:"+startuser);
+							ChatRun.sendAll(startuser+"님의 턴입니다.");
+							MyRoom.StartUser = startuser;
+							System.out.println("시작:"+startuser);
+							countTurn = 0;
+						}
 					}
 				}else {
 					//break;
@@ -122,6 +150,7 @@ public class GameRoom{
 			}
 		}catch (Exception e) {
 			// TODO: handle exception
+			System.out.println(e);
 		}finally {
 			if(name.equals(MyRoom.GetKing())) {//만약에 방장이 나일경우 바뀐 방장이 누구인지 모든 플레이어에게 보낸다.
 				MyRoom.RoomUserListDel(name);//방에 유저 삭제
