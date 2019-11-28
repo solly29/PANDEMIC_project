@@ -127,11 +127,11 @@ public class Login extends JPanel implements ActionListener {
 
 			
 
-		} else if (e.getSource() == join) {
+		} else if (e.getSource() == join) { // 회원가입 버튼 누르면 joinE 클래스로 감
 			j = new joinE(gsocket);
-		} else if (e.getSource() == find) {
+		} else if (e.getSource() == find) { // ID, PWD 찾기 버튼 누르면 findE 클래스로 감
 			f = new findE(gsocket);
-		} else if (e.getSource() == login) {
+		} else if (e.getSource() == login) { // 로그인 버튼 누르면 ID, PWD 확인 후, 맞으면 로비로 틀리면 경고 
 			String str = null;
 			try {
 				output.writeUTF("login");
@@ -214,14 +214,14 @@ class joinE extends JFrame // 회원가입 창 만드는 클래스
 				dispose();
 			}
 		});// 회원가입 창에 있는 버튼 누르면 창 종료
-		Duple.addActionListener(new ActionListener() {
+		Duple.addActionListener(new ActionListener() { // 중복확인 버튼 누르면 같은 ID가 있는지 확인 함
 			public void actionPerformed(ActionEvent arg0) {
 				try {
 					
 				output.writeUTF("duple");
 				output.writeUTF(ID_text.getText());
 				
-				if (input.readUTF().equals("false")) {
+				if (input.readUTF().equals("false")) { // ID가 같으면 경고 메세지
 					JOptionPane.showMessageDialog(null, "다른 ID를 사용해주세요","오류" ,JOptionPane.WARNING_MESSAGE);
 				
 				} else
@@ -243,7 +243,7 @@ class joinE extends JFrame // 회원가입 창 만드는 클래스
 					output.writeUTF(PWD_text.getText());
 					output.writeUTF(Name_text.getText());
 					output.writeUTF(Number_text.getText());
-					if (input.readUTF().equals("true")) {
+					if (input.readUTF().equals("true")) { 
 						JOptionPane.showMessageDialog(null, "회원가입 성공! 축하드립니다~");
 						dispose();
 					} else
@@ -343,14 +343,14 @@ class findE extends JFrame // ID/PWD 찾기 창 만드는 클래스
 		getContentPane().setLayout(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		ID_Find.addActionListener(new ActionListener() {
+		ID_Find.addActionListener(new ActionListener() { // ID, PWD 찾기를 눌렀을때
 			public void actionPerformed(ActionEvent arg0) {
 
 				try {
 					output.writeUTF("find");
 					output.writeUTF(Name_text.getText());
 					output.writeUTF(Number_text.getText());
-					if (input.readUTF().equals("true")) {
+					if (input.readUTF().equals("true")) { // 학번과 이름이 맞다면 ID,PWD 보여줌
 						String in = input.readUTF();
 						JOptionPane.showMessageDialog(null, in);
 						dispose();
