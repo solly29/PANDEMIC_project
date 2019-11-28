@@ -7,13 +7,13 @@ public class DOA {
 	PreparedStatement pstmt = null;
 	ResultSet rs = null;
 	String sql = "SELECT PWD from user_information where ID=? ";
-	String url = "jdbc:mysql://106.10.40.27:3306/pandemic";
+	String url = "jdbc:mysql://13.125.178.148:3306/pandemic";
 
 	public DOA() {
 		try {
 
-			Class.forName("org.mariadb.jdbc.Driver");
-			conn = DriverManager.getConnection(url, "root", "rladudrms");
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			conn = DriverManager.getConnection(url, "root", "Rladudrms1234!");
 
 			if (conn != null) {
 				System.out.println("db성공");
