@@ -1,6 +1,12 @@
 package DB;
 
-import java.sql.*;
+import java.io.DataOutputStream;
+import java.net.Socket;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class DOA {
 	Connection conn = null;
@@ -8,10 +14,13 @@ public class DOA {
 	ResultSet rs = null;
 	String sql = "SELECT PWD from user_information where ID=? ";
 	String url = "jdbc:mysql://13.125.178.148:3306/pandemic";
-
-	public DOA() {
+	Socket socket;
+	DataOutputStream output;
+	public DOA(Socket socket) {
 		try {
-
+			this.socket = socket;
+			output = new DataOutputStream(socket.getOutputStream());
+			
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			conn = DriverManager.getConnection(url, "root", "Rladudrms1234!");
 
@@ -28,12 +37,6 @@ public class DOA {
 		} finally {
 
 		}
-
-	}
-
-	public static void main(String[] args) throws SQLException {
-
-		new DOA();
 
 	}
 
@@ -63,7 +66,7 @@ public class DOA {
 	public boolean MatchID(String ID) {
 		try {
 
-			pstmt = conn.prepareStatement("SELECT PWD from user_information ID = ?");
+			pstmt = conn.prepareStatement("SELECT PWD from user_information where ID = ?");
 			pstmt.setString(1, ID);
 			rs = pstmt.executeQuery();
 
@@ -87,14 +90,16 @@ public class DOA {
 	public boolean MatchPWD(String ID, String PWD) {
 		try {
 
-			pstmt = conn.prepareStatement("SELECT PWD from user_information where ID = ? ");
+			pstmt = conn.prepareStatement("SELECT PWD, NAME, NUMBER from user_information where ID = ? ");
 			pstmt.setString(1, ID);
 			rs = pstmt.executeQuery();
 
 			if(rs.next()) {
 
 				String pwd = rs.getString("PWD");
-				System.out.println(pwd);
+				String name = rs.getString("NAME");
+				String number = rs.getString("NUMBER");
+				System.out.println(pwd + name + number);
 
 				if (pwd.equals(PWD)) {
 
@@ -111,4 +116,33 @@ public class DOA {
 
 	}
 
+	
+	public boolean FindID(String NAME, String NUMBER) {
+		
+		try {
+
+			pstmt = conn.prepareStatement("SELECT ID, PWD from user_information where NAME = ? AND NUMBER = ?");
+			pstmt.setString(1, NAME);
+			pstmt.setString(2, NUMBER);
+			
+			rs = pstmt.executeQuery();
+
+			if(rs.next()) {
+				
+				String id = rs.getString("ID");
+				String pwd = rs.getString("PWD");
+				
+				output.writeUTF("true");
+				output.writeUTF("ID : " + id +" \n "+"Password : " + pwd);
+				return true;
+				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return false;
+
+	}
 }
