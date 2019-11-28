@@ -1,6 +1,7 @@
 package Server;
 
 import java.io.DataInputStream;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
@@ -14,6 +15,7 @@ public class MainThread implements Runnable {
 	private Login LoginServer = null;
 	private LobbyServer lobbyServer = null;
 
+	
 	public MainThread() {
 		// TODO Auto-generated constructor stub
 
@@ -46,7 +48,7 @@ public class MainThread implements Runnable {
 		LoginServer = new Login(gameSocket, chatSocket); // 로그인 객체 생성
 		while (true) {
 			System.out.println("확인");
-			
+
 			try {
 				String str1 = input.readUTF();
 				System.out.println(str1);
@@ -55,16 +57,26 @@ public class MainThread implements Runnable {
 					if (LoginServer.loginCheck()) {
 						output.writeUTF("true");
 						name = LoginServer.getName();
-						lobbyServer = new LobbyServer(gameSocket, chatSocket, name);//이부분
+						lobbyServer = new LobbyServer(gameSocket, chatSocket, name);// 이부분
 					} else
-						output.writeUTF("false");// 성공하면 로비 객체생성
-				} else if (str1.equals("join")) {// 회원가입
+						output.writeUTF("false");
+					
+				} else if (str1.equals("join")) {
 					if (LoginServer.join()) {
 						output.writeUTF("true");
 					} else
 						output.writeUTF("false");
+					
+				} else if (str1.equals("find")) {
+					if (!LoginServer.find()) {
+						output.writeUTF("false");
+					}
+				}else if(str1.contentEquals("duple")) {
+					if(LoginServer.duple()) {
+						output.writeUTF("true");
+					}else
+						output.writeUTF("false");
 				}
-
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				System.out.println("실패");
