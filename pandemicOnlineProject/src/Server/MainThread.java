@@ -61,17 +61,17 @@ public class MainThread implements Runnable {
 					} else
 						output.writeUTF("false");
 					
-				} else if (str1.equals("join")) {
+				} else if (str1.equals("join")) { // 회원가입
 					if (LoginServer.join()) {
 						output.writeUTF("true");
 					} else
 						output.writeUTF("false");
 					
-				} else if (str1.equals("find")) {
+				} else if (str1.equals("find")) { // ID, PWD 찾기
 					if (!LoginServer.find()) {
 						output.writeUTF("false");
 					}
-				}else if(str1.contentEquals("duple")) {
+				}else if(str1.contentEquals("duple")) { // 중복확인
 					if(LoginServer.duple()) {
 						output.writeUTF("true");
 					}else
