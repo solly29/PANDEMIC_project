@@ -61,6 +61,7 @@ public class LobbyServer {
 		 * 
 		 * 
 		 */
+
 		while (true) {
 			try {
 				String str = input.readUTF();
@@ -91,6 +92,10 @@ public class LobbyServer {
 					output.writeUTF(roomList);
 
 					System.out.println(roomList);
+				} else if (str.equals("logout")) {
+					System.out.println("로그아웃시도");
+					userList.remove(name);
+					break;
 				} else {
 					System.out.println("입장");
 					String rNumber = input.readUTF();
@@ -117,7 +122,10 @@ public class LobbyServer {
 			} catch (Exception e) {
 				// TODO: handle exception
 				break;
+			} finally {
+
 			}
 		}
+
 	}
 }
