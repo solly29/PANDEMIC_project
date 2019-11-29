@@ -54,6 +54,9 @@ public class Lobby extends JPanel {
 		add(new Profile()).setBounds(190, 730, 310, 320);
 		add(new RoomList(gsocket, csocket, top, ChatClass)).setBounds(475, 170, 1000, 465);
 		add(new Chat(csocket, ChatClass, ChatList)).setBounds(510, 730, 1230, 320);
+
+		add(new logOut(gsocket, csocket, top, ChatClass)).setBounds(1800, 10, 100, 100);
+
 		setVisible(true);
 
 	}
@@ -61,6 +64,41 @@ public class Lobby extends JPanel {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		g.drawImage(background, 0, 0, null);
+	}
+}
+
+class logOut extends JButton {
+	JFrame top;
+	Socket gsocket, csocket;
+	ClientReceiverThread ChatClass;
+	DataInputStream input;
+	DataOutputStream output;
+
+	public logOut(Socket gsocket, Socket csocket, JFrame top, ClientReceiverThread ChatClass) {
+		this.top = top;
+		this.gsocket = gsocket;
+		this.csocket = csocket;
+
+		this.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					System.out.println("로그아웃시도(클)");
+					output = new DataOutputStream(gsocket.getOutputStream());
+					output.writeUTF("logout");
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					System.out.println("앙기모띠");
+					e1.printStackTrace();
+				}
+				top.getContentPane().removeAll();
+				top.getContentPane().add(new Login(gsocket, csocket));
+				top.revalidate();
+				top.repaint();
+
+				// input.readUTF("logout")
+			}
+		});
+
 	}
 }
 
@@ -428,31 +466,19 @@ class makeRoom extends JFrame implements ActionListener { // 방만들기 누르
 		}
 	}
 }
+
 /*
-class MkRoomBg extends JPanel { // 방만들기 창에 넣을 배경 패널
-	public MkRoomBg() {
-		JLabel label = new JLabel("123");
-		this.add(label);
-		this.setBackground(Color.green);
-		this.add(new MKRP());
-		// this.setBounds(0, 0, 500, 300);
-		setVisible(true);
-	}
-}
-*/
+ * class MkRoomBg extends JPanel { // 방만들기 창에 넣을 배경 패널 public MkRoomBg() {
+ * JLabel label = new JLabel("123"); this.add(label);
+ * this.setBackground(Color.green); this.add(new MKRP()); // this.setBounds(0,
+ * 0, 500, 300); setVisible(true); } }
+ */
 /*
-class MKRP extends JPanel {
-	// 방만들기 창에 기능할 패널
-	public MKRP() {
-		JLabel RoomID = new JLabel("방 이름 "); // 방이름 적으라는 글자
-		JLabel RoomPW = new JLabel("비밀번호"); // 비밀번호 적으라는 글자
-		RoomID.setBounds(100, 100, 50, 50);
-		RoomPW.setBounds(150, 150, 50, 50);
-		this.add(RoomID);
-		this.add(RoomPW);
-	}
-}
-*/
+ * class MKRP extends JPanel { // 방만들기 창에 기능할 패널 public MKRP() { JLabel RoomID =
+ * new JLabel("방 이름 "); // 방이름 적으라는 글자 JLabel RoomPW = new JLabel("비밀번호"); //
+ * 비밀번호 적으라는 글자 RoomID.setBounds(100, 100, 50, 50); RoomPW.setBounds(150, 150,
+ * 50, 50); this.add(RoomID); this.add(RoomPW); } }
+ */
 class Chat extends JPanel {
 	DataOutputStream output;
 
