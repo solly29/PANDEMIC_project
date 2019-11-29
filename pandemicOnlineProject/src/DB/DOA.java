@@ -90,7 +90,7 @@ public class DOA {
 	public boolean MatchPWD(String ID, String PWD) { //로그인할때 사용하는 메소드  ID, PWD 맞는지 확인
 		try {
 
-			pstmt = conn.prepareStatement("SELECT PWDfrom user_information where ID = ? ");
+			pstmt = conn.prepareStatement("SELECT PWD from user_information where ID = ? ");
 			pstmt.setString(1, ID);
 			rs = pstmt.executeQuery();
 
