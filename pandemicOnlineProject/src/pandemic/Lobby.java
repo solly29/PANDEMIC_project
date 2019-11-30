@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.DataInputStream;
@@ -12,18 +13,22 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
+
+
 
 public class Lobby extends JPanel {
 
@@ -67,7 +72,7 @@ public class Lobby extends JPanel {
 	}
 }
 
-class logOut extends JButton {
+class logOut extends JButton { //로그아웃하기위한 버튼
 	JFrame top;
 	Socket gsocket, csocket;
 	ClientReceiverThread ChatClass;
@@ -78,6 +83,8 @@ class logOut extends JButton {
 		this.top = top;
 		this.gsocket = gsocket;
 		this.csocket = csocket;
+		
+		
 
 		this.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -87,7 +94,7 @@ class logOut extends JButton {
 					output.writeUTF("logout");
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
-					System.out.println("앙기모띠");
+					//System.out.println("앙기모띠");
 					e1.printStackTrace();
 				}
 				top.getContentPane().removeAll();
@@ -116,15 +123,20 @@ class Profile extends JPanel {
 }
 
 class RoomList extends JPanel {
-	ImageIcon Make = new ImageIcon(Client.class.getResource("../Lobby_Image/Make.png"));
-	ImageIcon Search = new ImageIcon(Client.class.getResource("../Lobby_Image/Search.png"));
-	ImageIcon Re = new ImageIcon(Client.class.getResource("../Lobby_Image/Refresh.png"));
+	ImageIcon roomMakeIcon = new ImageIcon(Client.class.getResource("../Lobby_Image/Make.png"));
+	ImageIcon roomSearch = new ImageIcon(Client.class.getResource("../Lobby_Image/Search.png"));
+	ImageIcon roomRefresh = new ImageIcon(Client.class.getResource("../Lobby_Image/Refresh.png"));
+	
+	ImageIcon MakePush = new ImageIcon(Client.class.getResource("../Lobby_Image/MakePush.png"));
+	ImageIcon roomSearchPush = new ImageIcon(Client.class.getResource("../Lobby_Image/SearchPush.png"));
+	ImageIcon roomRefreshPush = new ImageIcon(Client.class.getResource("../Lobby_Image/RefreshPush.png"));
+	
 	Socket gsocket, csocket;
 	DataInputStream input;
 	DataOutputStream output, output1;
 	JLabel la = new JLabel();
 	DefaultTableModel model;
-	JTable listTable;
+	JTable roomListTable;
 	JScrollPane scroll;
 	String list;
 	JFrame top;
@@ -135,17 +147,19 @@ class RoomList extends JPanel {
 		this.csocket = csocket;
 		this.top = top;
 
+	
+		
 		model = new DefaultTableModel(0, 0) {
 			public boolean isCellEditable(int i, int c) {
 				return false;
 			}
 		};
-		listTable = new JTable(model);
-		scroll = new JScrollPane(listTable);
+		roomListTable = new JTable(model);
+		scroll = new JScrollPane(roomListTable);
 		model.addColumn("방 목록");
-		model.addColumn("유무");
-		listTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		// listTable.disable();
+		model.addColumn("비밀번호");
+		roomListTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		// roomListTable.disable();
 
 		roomListPanel = new JPanel();
 
@@ -158,35 +172,78 @@ class RoomList extends JPanel {
 		}
 
 		setLayout(null);
-		JButton RoomMake = new JButton(Make); // 방만들기 버튼추가
-		JButton RoomSearch = new JButton(Search); // 방찾기 버튼추가
-		JButton Refresh = new JButton(Re); // 새로고침버튼 추가
+		JButton roomMakeButton = new JButton(roomMakeIcon); // 방만들기 버튼추가
+		JButton roomSearchButton = new JButton(roomSearch); // 방찾기 버튼추가
+		JButton roomRefreshButton = new JButton(roomRefresh); // 새로고침버튼 추가
 
-		RoomMake.setContentAreaFilled(false); // 버튼 내용영역 채우지않기,이미지로 해놨으니깐
-		RoomSearch.setContentAreaFilled(false);
-		Refresh.setContentAreaFilled(false);
-		RoomMake.setBorderPainted(false); // 버튼 테두리 없애기
-		RoomSearch.setBorderPainted(false);
-		Refresh.setBorderPainted(false);
-		RoomMake.setFocusPainted(false); // 눌렀을때 테두리 안뜨게
-		RoomSearch.setFocusPainted(false);
-		Refresh.setFocusPainted(false);
+		roomMakeButton.setContentAreaFilled(false); // 버튼 내용영역 채우지않기,이미지로 해놨으니깐
+		roomSearchButton.setContentAreaFilled(false);
+		roomRefreshButton.setContentAreaFilled(false);
+		roomMakeButton.setBorderPainted(false); // 버튼 테두리 없애기
+		roomSearchButton.setBorderPainted(false);
+		roomRefreshButton.setBorderPainted(false);
+		roomMakeButton.setFocusPainted(false); // 눌렀을때 테두리 안뜨게
+		roomSearchButton.setFocusPainted(false);
+		roomRefreshButton.setFocusPainted(false);
+		
+		JLabel roomMakeButtonMessage = new JLabel("이것은 방만들기 버튼의 라벨");// 마우스 올릴때 라벨 추가하려고 만든 라벨
+		roomMakeButtonMessage.setBounds(50, 100, 200, 50);
+		
+	
 
 		// 배열로 줄이자
-		RoomMake.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		roomMakeButton.addMouseListener(new MouseAdapter() { //방만들기버튼 마우스액션
+			public void mouseEntered(MouseEvent e) {
+				roomMakeButton.setIcon(MakePush);// 버튼 클릭했을때 모양이 바뀐다
+				roomMakeButtonMessage.setVisible(true);
+				add(roomMakeButtonMessage);
+			
+			}				
+			public void mouseExited(MouseEvent e) {
+				
+				roomMakeButtonMessage.setVisible(false);
+				roomMakeButton.setIcon(roomMakeIcon);// 마우스가 떼졌을 때 버튼의 모양이 원래대로
+			}
+			public void mousePressed(MouseEvent e) {
+				
 				new makeRoom(top, gsocket, csocket, ChatClass);
 			}
-		});
 
-		Refresh.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+			
+		});
+		roomSearchButton.addMouseListener(new MouseAdapter() { //방찾기버튼 마우스액션
+			public void mouseEntered(MouseEvent e) {
+				roomSearchButton.setIcon(roomSearchPush);// 버튼 도달했을때 모양이 바뀐다
+			}			
+			public void mouseExited(MouseEvent e) {				
+				roomSearchButton.setIcon(roomSearch);// 마우스가 떼졌을 때 버튼의 모양이 원래대로
+			}
+			
+			public void mousePressed(MouseEvent e) {
+				roomSearchButton.setIcon(roomSearchPush);// 버튼 클릭했을때 모양이 바뀐다				
+			}
+
+			
+		});
+		
+		roomRefreshButton.addMouseListener(new MouseAdapter() { //새로고침버튼 마우스액션
+			public void mouseEntered(MouseEvent e) {
+				roomRefreshButton.setIcon(roomRefreshPush);// 버튼 클릭했을때 모양이 바뀐다			
+						
+			}				
+			public void mouseExited(MouseEvent e) {							
+				roomRefreshButton.setIcon(roomRefresh);// 마우스가 떼졌을 때 버튼의 모양이 원래대로
+			}
+			public void mousePressed(MouseEvent e) {
 				printListRoom();
 			}
+
+			
 		});
+
 		// this.setBounds(475, 170, 1000, 465);//식별용
 
-		listTable.addMouseListener(new MouseListener() {
+		roomListTable.addMouseListener(new MouseListener() {
 
 			@Override
 			public void mouseReleased(MouseEvent e) {
@@ -225,17 +282,17 @@ class RoomList extends JPanel {
 					e2.printStackTrace();
 				}
 
-				int row = listTable.getSelectedRow();
-				int col = listTable.getSelectedColumn();
+				int row = roomListTable.getSelectedRow();
+				int col = roomListTable.getSelectedColumn();
 				String str = null;
-				String str2 = listTable.getValueAt(row, 0) + ""; // 방 이름
-				String str3 = listTable.getValueAt(row, 1) + ""; // 비밀번호 유무
+				String str2 = roomListTable.getValueAt(row, 0) + ""; // 방 이름
+				String str3 = roomListTable.getValueAt(row, 1) + ""; // 비밀번호 유무
 				if (str3.equals("****")) {
 					new checkRoomPassword(top, gsocket, csocket, ChatClass, str2);
 				} else {
 					try {
 						output.writeUTF("Join");
-						output.writeUTF(listTable.getValueAt(row, col) + "");
+						output.writeUTF(roomListTable.getValueAt(row, col) + "");
 						output.writeUTF(""); // 비밀번호 없음
 						str = input.readUTF();
 
@@ -257,22 +314,59 @@ class RoomList extends JPanel {
 
 			}
 		});
+		
+		
+	
 
 		// 테이블 수정 불가
-		listTable.getTableHeader().setReorderingAllowed(false);
-		listTable.getTableHeader().setResizingAllowed(false);
+		roomListTable.getTableHeader().setReorderingAllowed(false);
+		roomListTable.getTableHeader().setResizingAllowed(false);
+		
+		roomListTable.getColumn("방 목록").setPreferredWidth(800);  //룸리스트테이블 방목록 비밀번호 폭 조절
+		roomListTable.getColumn("비밀번호").setPreferredWidth(200);
+		
+		roomListTable.setRowHeight(50);
+		
+		
+		roomListTable.getTableHeader().setBackground(Color.red);
+		
+		//roomListTable.getTableHeader().setOpaque(false);
+		
+		
+		roomListTable.setBackground(Color.red); //셀 배경 설정
+		//roomListTable.setForeground(Color.red); //셀 글자색 설정
+
+
+		//룸리스트테이블 투명하게 보이게하기
+		roomListTable.setOpaque(false);	
+		scroll.setOpaque(false); 
+		scroll.getViewport().setOpaque(false); 		
+		scroll.setBorder(BorderFactory.createEmptyBorder());
+		roomListTable.setShowGrid(false);
+		
+		
 
 		this.setOpaque(false);
-		this.add(RoomMake); // 방만들기 버튼 적용
-		this.add(RoomSearch); // 방찾기 버튼 적용
-		this.add(Refresh); // 새로고침 버튼 적용
+		this.add(roomMakeButton); // 방만들기 버튼 적용
+		this.add(roomSearchButton); // 방찾기 버튼 적용
+		this.add(roomRefreshButton); // 새로고침 버튼 적용
+		
 		roomListPanel.add(scroll);
 		this.add(roomListPanel);
-		roomListPanel.setBounds(100, 100, 700, 300);
+		
+		
+		roomListPanel.setLayout(null);
+		
+		scroll.setBounds(0,0, 1000, 300);
+		
+		roomListPanel.setBounds(10, 110, 1400, 400);
+		
+		
 		roomListPanel.setOpaque(false);
-		RoomMake.setBounds(0, 0, 250, 100);
-		RoomSearch.setBounds(270, 0, 410, 100);
-		Refresh.setBounds(700, 0, 300, 100);
+		
+		roomMakeButton.setBounds(0, 0, 250, 100);
+		roomSearchButton.setBounds(270, 0, 410, 100);
+		roomRefreshButton.setBounds(700, 0, 300, 100);
 		// this.setBackground(Color.blue);//식별용
 		setVisible(true);
 		printListRoom();
@@ -320,8 +414,9 @@ class checkRoomPassword extends JFrame implements ActionListener { // 비밀번�
 	DataOutputStream output;
 	DataInputStream input;
 	ClientReceiverThread ChatClass;
-	JTextField inputPassword = new JTextField();
+	JPasswordField inputPassword = new JPasswordField();
 	String str2 = "";
+	Image passwordCheckBackground = new ImageIcon(Client.class.getResource("../Lobby_Image/passwordCheck.png")).getImage();
 
 	public checkRoomPassword(JFrame top, Socket gsocket, Socket csocket, ClientReceiverThread ChatClass, String str2) {
 		this.top = top;
@@ -339,8 +434,8 @@ class checkRoomPassword extends JFrame implements ActionListener { // 비밀번�
 		JButton PWbutton = new JButton();
 		JLabel roomPassword = new JLabel("비밀번호");
 
-		roomPassword.setBounds(50, 50, 50, 50);
-		inputPassword.setBounds(50, 100, 100, 55);
+		roomPassword.setBounds(50, 50, 100, 50);
+		inputPassword.setBounds(150, 50, 100, 50);
 
 		PWbutton.add(new JLabel("확인"));
 		PWbutton.addActionListener(this);
@@ -348,6 +443,20 @@ class checkRoomPassword extends JFrame implements ActionListener { // 비밀번�
 		this.add(roomPassword);
 		this.add(PWbutton);
 		this.add(inputPassword);
+		
+		 JPanel background = new JPanel() {
+	            public void paintComponent(Graphics g) {
+	                
+	                g.drawImage(passwordCheckBackground, 0, 0, null);	               
+	                setOpaque(false); 
+	                super.paintComponent(g);
+	            }
+	        };
+		background.setBounds(0, 0, 400, 200);
+		this.add(background);
+
+		
+		
 
 	}
 
@@ -391,11 +500,9 @@ class makeRoom extends JFrame implements ActionListener { // 방만들기 누르
 	DataOutputStream output, output1;
 	DataInputStream input;
 	ClientReceiverThread ChatClass;
-	JTextField RN = new JTextField();
-	JTextField RP = new JTextField();
-	// Image background2 = new
-	// ImageIcon(Client.class.getResource("../Lobby_Image/blood.jpg")).getImage();
-
+	JTextField roomNameField = new JTextField();
+	JPasswordField roomPasswordField = new JPasswordField();
+	
 	public makeRoom(JFrame top, Socket gsocket, Socket csocket, ClientReceiverThread ChatClass) {
 		this.top = top;
 		this.gsocket = gsocket;
@@ -411,32 +518,26 @@ class makeRoom extends JFrame implements ActionListener { // 방만들기 누르
 		// setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 
-		// setContentPane(new JLabel(new ImageIcon("../Lobby_Image/blood.jpg")));
-		JButton MKRB = new JButton();
-		MKRB.add(new JLabel("생성"));
-		MKRB.addActionListener(this);
-		MKRB.setBounds(270, 90, 90, 40);
-		this.add(MKRB);
+		JButton makeRoomButton = new JButton();
+		makeRoomButton.add(new JLabel("생성"));
+		makeRoomButton.addActionListener(this);
+		makeRoomButton.setBounds(270, 90, 90, 40);
+		this.add(makeRoomButton);
 		// 방만드는 버튼 설정
-		JLabel RoomName = new JLabel("방 이름 ");
-		JLabel RoomPW = new JLabel("비밀번호");
+		JLabel roomNameLabel = new JLabel("방 이름 ");
+		JLabel roomPasswordLabel = new JLabel("비밀번호");
 
-		RoomName.setBounds(105, 90, 50, 20);
-		RoomPW.setBounds(105, 115, 50, 20);
-		RN.setBounds(160, 90, 100, 20);
-		RP.setBounds(160, 115, 100, 20);
-		this.add(RoomName);
-		this.add(RoomPW);
-		this.add(RN);
-		this.add(RP);
+		roomNameLabel.setBounds(105, 90, 70, 20);
+		roomPasswordLabel.setBounds(105, 115, 70, 20);
+		roomNameField.setBounds(160, 90, 110, 20);
+		roomPasswordField.setBounds(160, 115, 110, 20);
+		this.add(roomNameLabel);
+		this.add(roomPasswordLabel);
+		this.add(roomNameField);
+		this.add(roomPasswordField);
 
 	}
-	/*
-	 * public void paintComponent(Graphics g) { g.drawImage(background2, 0, 0,
-	 * null); paintComponent(g);
-	 * 
-	 * }
-	 */
+	
 
 	public void actionPerformed(ActionEvent e) {
 		// JFrame top=(JFrame)SwingUtilities.getWindowAncestor(Lobby);
@@ -447,8 +548,8 @@ class makeRoom extends JFrame implements ActionListener { // 방만들기 누르
 			input = new DataInputStream(gsocket.getInputStream());
 			System.out.println(csocket);
 			output.writeUTF("Create");
-			output.writeUTF(RN.getText());
-			output.writeUTF(RP.getText());
+			output.writeUTF(roomNameField.getText());
+			output.writeUTF(roomPasswordField.getText());
 			str = input.readUTF();
 			if (str.equals("true")) {
 				// output1.writeUTF("[제어]stop");
@@ -467,18 +568,7 @@ class makeRoom extends JFrame implements ActionListener { // 방만들기 누르
 	}
 }
 
-/*
- * class MkRoomBg extends JPanel { // 방만들기 창에 넣을 배경 패널 public MkRoomBg() {
- * JLabel label = new JLabel("123"); this.add(label);
- * this.setBackground(Color.green); this.add(new MKRP()); // this.setBounds(0,
- * 0, 500, 300); setVisible(true); } }
- */
-/*
- * class MKRP extends JPanel { // 방만들기 창에 기능할 패널 public MKRP() { JLabel RoomID =
- * new JLabel("방 이름 "); // 방이름 적으라는 글자 JLabel RoomPW = new JLabel("비밀번호"); //
- * 비밀번호 적으라는 글자 RoomID.setBounds(100, 100, 50, 50); RoomPW.setBounds(150, 150,
- * 50, 50); this.add(RoomID); this.add(RoomPW); } }
- */
+
 class Chat extends JPanel {
 	DataOutputStream output;
 
