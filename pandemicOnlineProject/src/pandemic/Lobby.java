@@ -82,6 +82,7 @@ class logOut extends JButton { // 로그아웃하기위한 버튼
 	DataInputStream input;
 	DataOutputStream output;
 	ImageIcon exit = new ImageIcon(Client.class.getResource("../Lobby_Image/logoutButton.png"));
+	ImageIcon exitPush = new ImageIcon(Client.class.getResource("../Lobby_Image/exitPush.png"));
 	
 
 	public logOut(Socket gsocket, Socket csocket, JFrame top, ClientReceiverThread ChatClass) {
@@ -91,6 +92,40 @@ class logOut extends JButton { // 로그아웃하기위한 버튼
 				
 		this.setIcon(exit);
 		
+		this.setContentAreaFilled(false); // 버튼 내용영역 채우지않기,이미지로 해놨으니깐
+		this.setBorderPainted(false); // 버튼 테두리 없애기
+		this.setFocusPainted(false); // 눌렀을때 테두리 안뜨게
+		
+		this.addMouseListener(new MouseAdapter() { // 방만들기버튼 마우스액션
+			public void mouseEntered(MouseEvent e) {
+				setIcon(exitPush);// 버튼 도달했을때 모양이 바뀐다
+			}
+
+			
+
+			public void mouseExited(MouseEvent e) {				
+				setIcon(exit);// 마우스가 떼졌을 때 버튼의 모양이 원래대로
+			}
+
+			public void mousePressed(MouseEvent e) {
+				try {
+					//System.out.println("로그아웃시도(클)");
+					output = new DataOutputStream(gsocket.getOutputStream());
+					output.writeUTF("logout");
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				top.getContentPane().removeAll();
+				top.getContentPane().add(new Login(gsocket, csocket));
+				top.revalidate();
+				top.repaint();
+
+			}
+
+		});
+
+		/*
 		this.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -108,7 +143,7 @@ class logOut extends JButton { // 로그아웃하기위한 버튼
 
 				// input.readUTF("logout")
 			}
-		});
+		});*/
 
 	}
 	
