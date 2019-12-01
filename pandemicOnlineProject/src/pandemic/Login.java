@@ -16,21 +16,21 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
-import DB.DOA;
 
 public class Login extends JPanel implements ActionListener {
 
 	private Image background = new ImageIcon(Client.class.getResource("../Login_Image/background.png")).getImage();
 
-	private JButton login = new JButton("Login"); // 로그인 버튼
-	private JButton exit = new JButton("EXIT"); // 나가기 버튼
-	private JButton join = new JButton("회원가입"); // 회원가입 버튼
-	private JButton find = new JButton("ID/PWD 찾기"); // ID/PWD 찾기 버튼
+	private JButton login = new JButton(new ImageIcon(Client.class.getResource("../Login_Image/Login.png"))); // 로그인 버튼
+	private JButton exit = new JButton(new ImageIcon(Client.class.getResource("../Login_Image/Exit.png"))); // 나가기 버튼
+	private JButton join = new JButton(new ImageIcon(Client.class.getResource("../Login_Image/Join.png"))); // 회원가입 버튼
+	private JButton find = new JButton(new ImageIcon(Client.class.getResource("../Login_Image/Find.png"))); // ID/PWD 찾기 버튼
 	private static JFrame top;
 	private JTextField idtext;
-	private JTextField pwdtext;
+	private JPasswordField pwdtext;
 
 	DataInputStream input;
 	DataOutputStream output;
@@ -59,11 +59,11 @@ public class Login extends JPanel implements ActionListener {
 			e.printStackTrace();
 		}
 		System.out.println("Login 소켓연결 후");
-		JLabel id = new JLabel("ID ");
-		JLabel pwd = new JLabel("PWD ");
+		JLabel id = new JLabel(new ImageIcon(Client.class.getResource("../Login_Image/ID.png")));
+		JLabel pwd = new JLabel(new ImageIcon(Client.class.getResource("../Login_Image/PWD.png")));
 
 		idtext = new JTextField();
-		pwdtext = new JTextField();
+		pwdtext = new JPasswordField();
 
 		Font RLfont, ChatFont, PFfont; // 폰트 추가 차례대로 방목록,채팅,내정보
 
@@ -76,16 +76,19 @@ public class Login extends JPanel implements ActionListener {
 		join.setBounds(750, 710, 140, 50);
 		find.setBounds(900, 710, 140, 50);
 
-		id.setBounds(730, 500, 100, 100);
-		pwd.setBounds(730, 560, 100, 100);
+		id.setBounds(695, 495, 100, 100);
+		pwd.setBounds(690, 555, 100, 100);
 
 		idtext.setBounds(790, 530, 300, 30);
 		pwdtext.setBounds(790, 590, 300, 30);
 
 		login.setOpaque(false); // 투명하게
+		 login.setBorderPainted(false);// 외곽선없애기
+		 login.setContentAreaFilled(false);// 내용영역 채우기 없애기
+		 login.setFocusPainted(false);// 테두리 사용 안함
 
 		exit.setOpaque(false);
-		// exit.setBorderPainted(false);// 외곽선없애기
+		 exit.setBorderPainted(false);// 외곽선없애기
 		// exit.setContentAreaFilled(false);// 내용영역 채우기 없애기
 		// exit.setFocusPainted(false);// 테두리 사용 안함
 
@@ -125,13 +128,11 @@ public class Login extends JPanel implements ActionListener {
 			 * c.dispose(); j.dispose(); f.dispose(); 이상하게 안됨... 그래서 일단 System.exit(0) 씀
 			 */
 
-			
-
-		} else if (e.getSource() == join) {
+		} else if (e.getSource() == join) { // 회원가입 버튼 누르면 joinE 클래스로 감
 			j = new joinE(gsocket);
-		} else if (e.getSource() == find) {
+		} else if (e.getSource() == find) { // ID, PWD 찾기 버튼 누르면 findE 클래스로 감
 			f = new findE(gsocket);
-		} else if (e.getSource() == login) {
+		} else if (e.getSource() == login) { // 로그인 버튼 누르면 ID, PWD 확인 후, 맞으면 로비로 틀리면 경고
 			String str = null;
 			try {
 				output.writeUTF("login");
@@ -155,9 +156,9 @@ public class Login extends JPanel implements ActionListener {
 
 				top.revalidate();
 				top.repaint();
-			}else {
-				JOptionPane.showMessageDialog(null, "ID 또는 Password를 잘못 입력하셨습니다.","오류" ,JOptionPane.WARNING_MESSAGE);
-				
+			} else {
+				JOptionPane.showMessageDialog(null, "ID 또는 Password를 잘못 입력하셨습니다.", "오류", JOptionPane.WARNING_MESSAGE);
+
 			}
 
 		}
@@ -201,7 +202,7 @@ class joinE extends JFrame // 회원가입 창 만드는 클래스
 		JTextField Name_text = new JTextField();
 		JTextField Number_text = new JTextField();
 		JTextField ID_text = new JTextField();
-		JTextField PWD_text = new JTextField();
+		JPasswordField PWD_text = new JPasswordField();
 
 		setSize(500, 750);
 		setTitle("회원가입");
@@ -214,23 +215,23 @@ class joinE extends JFrame // 회원가입 창 만드는 클래스
 				dispose();
 			}
 		});// 회원가입 창에 있는 버튼 누르면 창 종료
-		Duple.addActionListener(new ActionListener() {
+		Duple.addActionListener(new ActionListener() { // 중복확인 버튼 누르면 같은 ID가 있는지 확인 함
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					
-				output.writeUTF("duple");
-				output.writeUTF(ID_text.getText());
-				
-				if (input.readUTF().equals("false")) {
-					JOptionPane.showMessageDialog(null, "다른 ID를 사용해주세요","오류" ,JOptionPane.WARNING_MESSAGE);
-				
-				} else
-					JOptionPane.showMessageDialog(null, "사용가능한 ID입니다");
-				
-				}catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+
+					output.writeUTF("duple");
+					output.writeUTF(ID_text.getText());
+
+					if (input.readUTF().equals("false")) { // ID가 같으면 경고 메세지
+						JOptionPane.showMessageDialog(null, "다른 ID를 사용해주세요", "오류", JOptionPane.WARNING_MESSAGE);
+
+					} else
+						JOptionPane.showMessageDialog(null, "사용가능한 ID입니다");
+
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 
@@ -247,7 +248,7 @@ class joinE extends JFrame // 회원가입 창 만드는 클래스
 						JOptionPane.showMessageDialog(null, "회원가입 성공! 축하드립니다~");
 						dispose();
 					} else
-						JOptionPane.showMessageDialog(null, "회원가입 실패","오류" ,JOptionPane.WARNING_MESSAGE);
+						JOptionPane.showMessageDialog(null, "회원가입 실패", "오류", JOptionPane.WARNING_MESSAGE);
 
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
@@ -299,7 +300,6 @@ class findE extends JFrame // ID/PWD 찾기 창 만드는 클래스
 
 	public findE(Socket socket) {
 
-		
 		Client c;
 
 		Socket gsocket, socket2;
@@ -343,19 +343,20 @@ class findE extends JFrame // ID/PWD 찾기 창 만드는 클래스
 		getContentPane().setLayout(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		ID_Find.addActionListener(new ActionListener() {
+		ID_Find.addActionListener(new ActionListener() { // ID, PWD 찾기를 눌렀을때
 			public void actionPerformed(ActionEvent arg0) {
 
 				try {
 					output.writeUTF("find");
 					output.writeUTF(Name_text.getText());
 					output.writeUTF(Number_text.getText());
-					if (input.readUTF().equals("true")) {
+					if (input.readUTF().equals("true")) { // 학번과 이름이 맞다면 ID,PWD 보여줌
 						String in = input.readUTF();
 						JOptionPane.showMessageDialog(null, in);
 						dispose();
 					} else
-						JOptionPane.showMessageDialog(null, "이름 또는 학번을 잘못 입력 하셨습니다.","오류" ,JOptionPane.WARNING_MESSAGE);
+						JOptionPane.showMessageDialog(null, "이름 또는 학번을 잘못 입력 하셨습니다.", "오류",
+								JOptionPane.WARNING_MESSAGE);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
