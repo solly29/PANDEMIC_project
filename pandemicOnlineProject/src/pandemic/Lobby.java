@@ -710,3 +710,4 @@ class Chat extends JPanel {
 		setVisible(true);
 	}
 }
+
