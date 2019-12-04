@@ -371,7 +371,7 @@ public class Room extends JPanel {
 				BufferedImage.TYPE_3BYTE_BGR);
 		Graphics2D Overlap2 = (Graphics2D) Overlap.getGraphics();
 		Overlap2.drawImage(Back, 0, 0, null);
-		Overlap2.drawImage(front, 87, 51, null);
+		Overlap2.drawImage(front, 65, 45, null); // 사진 위치 조정
 		ImageIcon merged = new ImageIcon(Overlap);
 		return merged;
 	}
@@ -383,7 +383,7 @@ public class Room extends JPanel {
 				BufferedImage.TYPE_3BYTE_BGR);
 		Graphics2D Overlap2 = (Graphics2D) Overlap.getGraphics();
 		Overlap2.drawImage(Back, 0, 0, null);
-		Overlap2.drawImage(front, 87, 51, null);
+		Overlap2.drawImage(front, 65, 45, null);// 사진 위치 조정
 		ImageIcon merged = new ImageIcon(Overlap);
 		return merged;
 	}
