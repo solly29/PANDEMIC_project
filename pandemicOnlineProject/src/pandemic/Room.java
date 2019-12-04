@@ -1,8 +1,6 @@
 package pandemic;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -10,10 +8,9 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Image;
-import java.awt.Point;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
@@ -29,7 +26,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.JToolBar;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.ToolTipManager;
 
@@ -41,6 +37,12 @@ public class Room extends JPanel {
 	StartExit startexit;
 	JFrame top = Login.getTop();
 	Image background2 = new ImageIcon(Client.class.getResource("../Room_Common/background.png")).getImage();
+	
+	ImageIcon start = new ImageIcon(Client.class.getResource("../Room_Common/start.png"));
+	ImageIcon startpush = new ImageIcon(Client.class.getResource("../Room_Common/startpush.png"));
+	ImageIcon exit = new ImageIcon(Client.class.getResource("../Room_Common/exit.png"));
+	ImageIcon exitpush = new ImageIcon(Client.class.getResource("../Room_Common/exitpush.png"));
+	
 	Socket gsocket, socket2;
 	DataOutputStream output, gameOutput;
 	JTextArea textArea;// 우리가 친 글자가 보이는 곳
@@ -88,6 +90,8 @@ public class Room extends JPanel {
 		chat = new Chat();
 		this.add(chat);
 		chat.setBounds(0, 540, 960, 540);// NullVersion
+		
+		
 
 		/*Runnable ChatRun = new ClientReceiverThread(socket2, textArea);
 		Thread ChatTh = new Thread(ChatRun);
@@ -259,6 +263,8 @@ public class Room extends JPanel {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			
+			setLayout(null);
 			setOpaque(false);
 			setPreferredSize(new Dimension(900, 500));
 			textArea = new JTextArea(26, 85);
@@ -267,11 +273,31 @@ public class Room extends JPanel {
 			scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 			scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
+			
 			textField = new JTextField(85);
 			textField.addActionListener(this);
 
-			add(scroll, BorderLayout.CENTER);
-			add(textField, BorderLayout.SOUTH);
+			
+			
+			textArea.setForeground(Color.white);
+			textField.setForeground(Color.white);
+			
+			
+			textArea.setFont(new Font("HY헤드라인M",Font.PLAIN,18));
+			textField.setFont(new Font("HY헤드라인M",Font.PLAIN,13));
+			
+			textArea.setOpaque(false);
+			scroll.setOpaque(false);
+			textField.setOpaque(false);
+			scroll.getViewport().setOpaque(false);
+			
+			scroll.setBounds(0, 0, 960, 460);			
+			textField.setBounds(0, 465, 960, 35);
+			//chat.setBounds(0, 540, 960, 540);
+			
+			add(scroll/*, BorderLayout.CENTER*/);
+			add(textField/*, BorderLayout.SOUTH*/);
+			
 
 		}
 
@@ -282,6 +308,7 @@ public class Room extends JPanel {
 			System.out.println(text);
 			System.out.println(socket2);
 			try {
+				textArea.setCaretPosition(textArea.getDocument().getLength());
 				output.writeUTF("[채팅]" + text);
 				textField.setText("");
 			} catch (IOException e) {
@@ -305,21 +332,40 @@ public class Room extends JPanel {
 			// setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 			setOpaque(false);
 			setLayout(new FlowLayout());
+			
+			buttons[0] = new JButton(start);
+			buttons[1] = new JButton(exit);
 
 			for (int i = 0; i < 2; i++) {
-				buttons[i] = new JButton(text[i]);
+				
 				buttons[i].setPreferredSize(new Dimension(500, 100));
 				add(buttons[i]);
 				buttons[i].addActionListener(this);
 				buttons[i].setHorizontalAlignment(JButton.CENTER);
+				
+				
 				JButton temp = buttons[i];
-				buttons[i].addActionListener(new ActionListener() {
-
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						// TODO Auto-generated method stub
+				
+				buttons[i].addMouseListener(new MouseAdapter() { // 새로고침버튼 마우스액션
+					public void mouseEntered(MouseEvent e) {
 						if (e.getSource() == buttons[1]) {
+							buttons[1].setIcon(exitpush);
 							
+						}else
+							buttons[0].setIcon(startpush);						
+					}
+
+					public void mouseExited(MouseEvent e) {
+						if (e.getSource() == buttons[1]) {
+							buttons[1].setIcon(exit);
+							
+						}else
+							buttons[0].setIcon(start);			
+					}
+
+					public void mousePressed(MouseEvent e) {
+						if (e.getSource() == buttons[1]) {
+							buttons[1].setIcon(exitpush);
 							try {
 								gameOutput.writeUTF("[Exit]");
 								gameOutput.writeUTF("");
@@ -336,6 +382,7 @@ public class Room extends JPanel {
 							top.revalidate();
 							top.repaint();
 						} else {
+							buttons[0].setIcon(startpush);
 							try {
 								//list[0].setText("ready");
 								gameOutput.writeUTF("[Ready]");
@@ -348,8 +395,10 @@ public class Room extends JPanel {
 							}
 						}
 					}
+
 				});
 			}
+			
 		}
 
 		@Override
@@ -371,7 +420,7 @@ public class Room extends JPanel {
 				BufferedImage.TYPE_3BYTE_BGR);
 		Graphics2D Overlap2 = (Graphics2D) Overlap.getGraphics();
 		Overlap2.drawImage(Back, 0, 0, null);
-		Overlap2.drawImage(front, 65, 45, null); // 사진 위치 조정
+		Overlap2.drawImage(front, 65, 45, null);
 		ImageIcon merged = new ImageIcon(Overlap);
 		return merged;
 	}
@@ -383,7 +432,7 @@ public class Room extends JPanel {
 				BufferedImage.TYPE_3BYTE_BGR);
 		Graphics2D Overlap2 = (Graphics2D) Overlap.getGraphics();
 		Overlap2.drawImage(Back, 0, 0, null);
-		Overlap2.drawImage(front, 65, 45, null);// 사진 위치 조정
+		Overlap2.drawImage(front, 65, 45, null);
 		ImageIcon merged = new ImageIcon(Overlap);
 		return merged;
 	}
