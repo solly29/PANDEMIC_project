@@ -13,7 +13,7 @@ public class DOA {
 	PreparedStatement pstmt = null;
 	ResultSet rs = null;
 	String sql = "SELECT PWD from user_information where ID=? ";
-	String url = "jdbc:mysql://13.125.178.148:3306/pandemic";
+	String url = "jdbc:mysql://15.164.97.188:3306/pandemic";
 	Socket socket;
 	DataOutputStream output;
 	public DOA(Socket socket) { //소켓을 넣은 이유는 ID, PWD 찾을때 바로 클라로 넘겨주기 위함.
