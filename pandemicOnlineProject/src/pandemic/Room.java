@@ -337,7 +337,8 @@ public class Room extends JPanel {
 			buttons[1] = new JButton(exit);
 
 			for (int i = 0; i < 2; i++) {
-				
+				buttons[i].setBorderPainted(false);
+			        buttons[i].setFocusPainted(false);
 				buttons[i].setPreferredSize(new Dimension(500, 100));
 				add(buttons[i]);
 				buttons[i].addActionListener(this);
