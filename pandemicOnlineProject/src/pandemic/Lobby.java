@@ -82,7 +82,7 @@ class logOut extends JButton { // 로그아웃하기위한 버튼
    DataInputStream input;
    DataOutputStream output;
    ImageIcon exit = new ImageIcon(Client.class.getResource("../Lobby_Image/logoutButton.png"));
-   ImageIcon exitPush = new ImageIcon(Client.class.getResource("../Lobby_Image/exitPush.png"));
+   ImageIcon exitPush = new ImageIcon(Client.class.getResource("../Lobby_Image/logoutPush.png"));
    
 
    public logOut(Socket gsocket, Socket csocket, JFrame top, ClientReceiverThread ChatClass) {
