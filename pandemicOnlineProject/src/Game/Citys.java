@@ -6,21 +6,27 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 
 import Game.MainPanel.Map;
+import pandemic.Client;
 
 public class Citys {
-	public String[][] ad = new String[49][49];// 인접시 o 소문자 o가 넣어진다 아닐시에는"", 도시의 인접상만 판단
+	public static String[][] ad = new String[49][49];// 인접시 o 소문자 o가 넣어진다 아닐시에는"", 도시의 인접상만 판단
 	String[] name = { "", "애틀란타", "워싱턴", "시카고", "마이애미", "멕시코 시티", "몬트리올", "뉴욕", "보고타", "리마", "로스앤젤레스", "샌프란시스코", "런던",
 			"마드리드", "산티아고", "상파울루", "부에노스아이레스", "도쿄", "마닐라", "시드니", "에센", "파리", "알제", "라고스", "오사카", "서울", "상하이", "홍콩",
 			"호치민 시티", "자카르타", "타이베이", "상트페테르부르크", "밀라노", "이스탄불", "카이로", "카르툼", "킨샤샤", "베이징", "콜카타", "방콕", "첸나이", "모스크바",
 			"바그다드", "리야드", "요하네스버그", "델리", "뭄바이", "카라치", "테헤란" };
 
-	City[] city = new City[48];// 도시 그 자체의 자원을 나타낸다.
+	static City[] city = new City[48];// 도시 그 자체의 자원을 나타낸다.
 	// ad배열같은 경우에는 한눈에 알아보기 쉽고, 또 인접성판단을 위해 공백을 넣어 index가 +1 되있지만, city 배열은 그럴
 	// 필요가없어서 공백이 없다.
+
+	final String[] eventCard = { "평온한 하룻밤", "긴급공중수송", "항체보유자", "예측", "정부보조금", "파워업" };
+	public List<String> EventCard = Arrays.asList(eventCard);
 
 	public Citys() {
 		for (int i = 0; i < 49; i++)
@@ -136,53 +142,57 @@ public class Citys {
 		// 도시정보 설정
 		city[0] = new City("애틀란타", "Blue", 1, 760, 900);
 		city[0].Labatory = true;
-		city[1] = new City("워싱턴", "Blue", 2, 960, 900);
-		city[2] = new City("시카고", "Blue", 3, 680, 780);
-		city[3] = new City("마이애미", "Yellow", 4, 870, 1020);
-		city[4] = new City("멕시코 시티", "Yellow", 5, 670, 1035);
-		city[5] = new City("몬트리올", "Blue", 6, 860, 770);
-		city[6] = new City("뉴욕", "Blue", 7, 1000, 760);
-		city[7] = new City("보고타", "Yellow", 8, 910, 1180);
-		city[8] = new City("리마", "Yellow", 9, 740, 1230);
-		city[9] = new City("로스앤젤레스", "Yellow", 10, 460, 1030);
-		city[10] = new City("샌프란시스코", "Blue", 11, 440, 850);
-		city[11] = new City("런던", "Blue", 12, 1300, 680);
+		city[1] = new City("워싱턴", "Blue", 2, 960, 904);
+		city[2] = new City("시카고", "Blue", 3, 648, 700);
+		city[3] = new City("마이애미", "Yellow", 4, 866, 1020);
+		city[4] = new City("멕시코 시티", "Yellow", 5, 669, 1032);
+		city[5] = new City("몬트리올", "Blue", 6, 857, 683);
+		city[6] = new City("뉴욕", "Blue", 7, 1003, 762);
+		city[7] = new City("보고타", "Yellow", 8, 913, 1180);
+		city[8] = new City("리마", "Yellow", 9, 734, 1227);
+		city[9] = new City("로스앤젤레스", "Yellow", 10, 458, 1029);
+		city[10] = new City("샌프란시스코", "Blue", 11, 444, 852);
+		city[11] = new City("런던", "Blue", 12, 1346, 598);
 		city[12] = new City("마드리드", "Blue", 13, 1313, 870);
-		city[13] = new City("산티아고", "Yellow", 14, 790, 1400);
-		city[14] = new City("상파울루", "Yellow", 15, 1200, 1200);
-		city[15] = new City("부에노스아이레스", "Yellow", 16, 1070, 1350);
-		city[16] = new City("도쿄", "Red", 17, 2700, 800);
-		city[17] = new City("마닐라", "Red", 18, 2590, 1125);
-		city[18] = new City("시드니", "Red", 19, 2690, 1395);
-		city[19] = new City("에센", "Blue", 20, 1545, 655);
-		city[20] = new City("파리", "Blue", 21, 1490, 775);
-		city[21] = new City("알제", "Black", 22, 1500, 930);
-		city[22] = new City("라고스", "Yellow", 23, 1430, 1100);
-		city[23] = new City("오사카", "Red", 24, 2730, 970);
-		city[24] = new City("서울", "Red", 25, 2550, 780);
-		city[25] = new City("상하이", "Red", 26, 2380, 820);
-		city[26] = new City("홍콩", "Red", 27, 2400, 1005);
-		city[27] = new City("호치민 시티", "Red", 28, 2395, 1200);
+		city[13] = new City("산티아고", "Yellow", 14, 795, 1400);
+		city[14] = new City("상파울루", "Yellow", 15, 1126, 1300);
+		city[15] = new City("부에노스아이레스", "Yellow", 16, 1004, 1402);
+		city[16] = new City("도쿄", "Red", 17, 2699, 800);
+		city[17] = new City("마닐라", "Red", 18, 2592, 1127);
+		city[18] = new City("시드니", "Red", 19, 2693, 1395);
+		city[19] = new City("에센", "Blue", 20, 1549, 583);
+		city[20] = new City("파리", "Blue", 21, 1480, 780);
+		city[21] = new City("알제", "Black", 22, 1497, 930);
+		city[22] = new City("라고스", "Yellow", 23, 1432, 1100);
+		city[23] = new City("오사카", "Red", 24, 2729, 970);
+		city[24] = new City("서울", "Red", 25, 2553, 733);
+		city[25] = new City("상하이", "Red", 26, 2376, 820);
+		city[26] = new City("홍콩", "Red", 27, 2403, 1005);
+		city[27] = new City("호치민 시티", "Red", 28, 2395, 1203);
 		city[28] = new City("자카르타", "Red", 29, 2240, 1300);
 		city[29] = new City("타이베이", "Red", 30, 2545, 985);
-		city[30] = new City("상트페테르부르크", "Blue", 31, 1680, 460);
-		city[31] = new City("밀라노", "Blue", 32, 1670, 700);
+		city[30] = new City("상트페테르부르크", "Blue", 31, 1725, 570);
+		city[31] = new City("밀라노", "Blue", 32, 1620, 705);
 		city[32] = new City("이스탄불", "Black", 33, 1690, 850);
 		city[33] = new City("카이로", "Black", 34, 1680, 1000);
-		city[34] = new City("카르툼", "Yellow", 35, 1720, 1155);
-		city[35] = new City("킨샤샤", "Yellow", 36, 1550, 1215);
+		city[34] = new City("카르툼", "Yellow", 35, 1770, 1155);
+		city[35] = new City("킨샤샤", "Yellow", 36, 1600, 1215);
 		city[36] = new City("베이징", "Red", 37, 2360, 650);
-		city[37] = new City("콜카타", "Black", 38, 2235, 855);
-		city[38] = new City("방콕", "Red", 39, 2290, 1100);
-		city[39] = new City("첸나이", "Black", 40, 2140, 1190);
-		city[40] = new City("모스크바", "Black", 41, 1815, 590);
-		city[41] = new City("바그다드", "Black", 42, 1870, 880);
-		city[42] = new City("리야드", "Black", 43, 1840, 1100);
-		city[43] = new City("요하네스버그", "Yellow", 44, 1700, 1400);
-		city[44] = new City("델리", "Black", 45, 2130, 700);
-		city[45] = new City("뭄바이", "Black", 46, 2000, 1080);
-		city[46] = new City("카라치", "Black", 47, 2020, 900);
-		city[47] = new City("테헤란", "Black", 48, 1920, 700);
+		city[37] = new City("콜카타", "Black", 38, 2230, 855);
+		city[38] = new City("방콕", "Red", 39, 2290, 1098);
+		city[39] = new City("첸나이", "Black", 40, 2145, 1040);
+		city[40] = new City("모스크바", "Black", 41, 1880, 590);
+		city[41] = new City("바그다드", "Black", 42, 1873, 880);
+		city[42] = new City("리야드", "Black", 43, 1886, 1027);
+		city[43] = new City("요하네스버그", "Yellow", 44, 1700, 1354);
+		city[44] = new City("델리", "Black", 45, 2135, 700);
+		city[45] = new City("뭄바이", "Black", 46, 2040, 1073);
+		city[46] = new City("카라치", "Black", 47, 2023, 900);
+		city[47] = new City("테헤란", "Black", 48, 1945, 700);
+	}
+
+	public String[] returntext() {
+		return name;
 	}
 
 	public void draw(Graphics g) {
@@ -207,6 +217,28 @@ public class Citys {
 			// 위에서 현재도시가 판별됬으니 그 도시를 기준으로 o가 되있는 도시들을 다 Adjacency에 넣는다
 			if (ad[i][position].equals("o")) {
 				Adjacency.add(ad[0][i]);
+			}
+		}
+		return Adjacency;
+	}
+
+	// 인접 도시의 도시객체를 반환한다.
+	public static ArrayList<City> AdjacencyCity(String e) {
+		// 인접성을 식별해서 인접한 도시들을 배열로 보내준다.
+		// 인접성을 판별해서 인접한 도시들의 ArrayList<String> 값으로 반환
+		// 매개변수 e로 현재 캐릭터의 도시 위치(String)가 들어온다.
+		ArrayList<City> Adjacency = new ArrayList<City>();
+		int position = 0;
+		for (position = 0; position < 49; position++) {
+			if (ad[0][position].equals(e))
+				break;
+			// 행이 0일 때 즉 e 값이 어딨는지 찾는다.
+		}
+
+		for (int i = 0; i < 49; i++) {
+			// 위에서 현재도시가 판별됬으니 그 도시를 기준으로 o가 되있는 도시들을 다 Adjacency에 넣는다
+			if (ad[i][position].equals("o")) {
+				Adjacency.add(city[i - 1]);
 			}
 		}
 		return Adjacency;
@@ -261,11 +293,14 @@ class City {// 도시 클래스
 	String color;
 	private int x, y;
 	int myNum;
-	int Red = 0, Blue = 3, Black = 0, Yellow = 1;
+	int Red = 0, Blue = 0, Black = 0, Yellow = 0;
 	boolean Labatory = false;
 	Image CircleBack;
 	Image LabatoryImage;
 	Image RedCube = new ImageIcon(Map.class.getResource("../Image/RedCube.png")).getImage();
+	private boolean protection = false;
+	
+	public static ArrayList<String> visit = new ArrayList<String>();
 
 	public City() {
 	}
@@ -276,8 +311,13 @@ class City {// 도시 클래스
 		this.myNum = myNum;
 		this.x = x;
 		this.y = y;
-		CircleBack = new ImageIcon(Map.class.getResource("../Image/" + color + "Circle.png")).getImage();
-		LabatoryImage = new ImageIcon(Map.class.getResource("../Image/" + color + "Labatory.png")).getImage();
+		// CircleBack = new ImageIcon(Map.class.getResource("../Image/" + color +
+		// "Circle.png")).getImage();
+		LabatoryImage = new ImageIcon(Map.class.getResource("../Image/Labatory.png")).getImage();
+	}
+	
+	public void setProtection(boolean t) {
+		this.protection = t;
 	}
 
 	public int getX() {
@@ -292,49 +332,127 @@ class City {// 도시 클래스
 		return name;
 	}
 
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
+	}
+
+	public boolean getLabatory() {
+		return Labatory;
+	}
+
+	public void setLabatory() {
+		Labatory = true;
+	}
+
 	public void draw(Graphics g) {
-		if (!Labatory)
-			g.drawImage(CircleBack, x, y, null);
-		else
+		if (Labatory)
+			// g.drawImage(CircleBack, x, y, null);
+			// else
 			g.drawImage(LabatoryImage, x, y, null);
-		g.setFont(new Font("굴림", Font.BOLD, 30));
-		g.setColor(Color.white);
-		g.drawString(name, x - 30, y + 90);
+		// g.setFont(new Font("굴림", Font.BOLD, 30));
+		// g.setColor(Color.white);
+		// g.drawString(name, x - 30, y + 90);
 		drawCube(g);
 	}
 
-	public void PlusVirus(String color) {
+	public void PlusVirus(String color, int i) {
 		// 일단 Red,Black,Yellow,Blue 텍스트를 읽어서 해당 텍스트면 해당 색깔의 바이러스가 그려지도록 만들겠다.
+		if(protection)
+			return;
+		
 		if (color.equals("Red")) {
-			if (++Red > 3) {
+			if (Game.RedVirus == 0 && Game.RedCure) {
+				return;
+			}
+			Game.RedVirus = Game.RedVirus + i;
+			if ((Red = Red + i) > 3) {
 				System.out.println("확산이벤트는 아직 안넣었다.");
+				Red = Red - i;
+				Game.RedVirus = Game.RedVirus - i;
+				diffusionVirus(color);
 			}
 		} else if (color.equals("Blue")) {
-			if (++Blue > 3) {
-
+			if (Game.BlueVirus == 0 && Game.BlueCure) {
+				return;
+			}
+			Game.BlueVirus = Game.BlueVirus + i;
+			if ((Blue = Blue + i) > 3) {
+				Blue = Blue - i;
+				Game.BlueVirus = Game.BlueVirus + i;
+				diffusionVirus(color);
 			}
 		} else if (color.equals("Yellow")) {
-			if (++Yellow > 3) {
-
+			if (Game.YellowVirus == 0 && Game.YellowCure) {
+				return;
+			}
+			Game.YellowVirus = Game.YellowVirus + i;
+			if ((Yellow = Yellow + i) > 3) {
+				Yellow = Yellow - i;
+				Game.YellowVirus = Game.YellowVirus - i;
+				diffusionVirus(color);
 			}
 		} else if (color.equals("Black")) {
-			if (++Black > 3) {
-
+			if (Game.BlackVirus == 0 && Game.BlackCure) {
+				return;
+			}
+			Game.BlackVirus = Game.BlackVirus + i;
+			if ((Black = Black + i) > 3) {
+				Black = Black - i;
+				Game.BlackVirus = Game.BlackVirus - i;
+				diffusionVirus(color);
 			}
 		} else {
 			System.out.println("Citys PlusVirus에 잘못된 문자가 입력 되었다.");
+		}
+		
+		if(Game.RedVirus >= 24 || Game.BlueVirus >= 24 || Game.YellowVirus >= 24 || Game.BlackVirus>= 24) {
+			System.out.println(" 바이러스 큐브 24개 오버");
+			new fail();
+		}
+	}
+
+	public void diffusionVirus(String color) {
+		City.visit.add(name);
+		ArrayList<City> adCity = Citys.AdjacencyCity(name);
+		for (int j = 0; j < adCity.size(); j++) {
+			if (!City.visit.contains(adCity.get(j).name))
+				adCity.get(j).PlusVirus(color, 1);
+		}
+		
+		Game.diffusionToken++;
+		System.out.println(" 확산마커 수 : " + Game.diffusionToken );
+		
+		if(Game.diffusionToken == 7 ) {
+			System.out.println(" 확산 마커 패배");
+			new fail();
 		}
 	}
 
 	public void drawCube(Graphics g) {
 		int height = RedCube.getHeight(null);
 		int width = RedCube.getWidth(null);
-		int x = this.getX() - 20;
-		int y = this.getY() - 30;
+		int x = this.getX() /*- 20*/;
+		int y = this.getY() /*- 30*/;
 
 		for (int i = 0; i < Red; i++) {
-			DrawCubeIn("Red", x, y, g);
-			x += width;
+			/*
+			 * DrawCubeIn("Red", x, y, g); x += width;
+			 */
+			// 일단 영근이 부분 안될수도 있음
+			if (i == 0)
+				DrawCubeIn("Red", x + 10, y - 17, g);
+			else if (i == 1)
+				DrawCubeIn("Red", x - 17, y + 27, g);
+			else if (i == 2)
+				DrawCubeIn("Red", x + 35, y + 30, g);
+			else if (i == 3)
+				DrawDiffusionCubeIn("Blue", x + 30, y + -17, g);
+			else if (i == 4)
+				DrawDiffusionCubeIn("Yellow", x + 15, y + 5, g);
 		}
 		for (int i = 0; i < Blue; i++) {
 			DrawCubeIn("Blue", x, y, g);
@@ -353,5 +471,11 @@ class City {// 도시 클래스
 	public void DrawCubeIn(String color, int x, int y, Graphics g) {
 		Image Cube = new ImageIcon(Map.class.getResource("../Image/" + color + "Cube.png")).getImage();
 		g.drawImage(Cube, x, y, null);
+	}
+
+	// 영근이 부분
+	public void DrawDiffusionCubeIn(String color, int x, int y, Graphics g) {
+		Image Diffusion = new ImageIcon(Map.class.getResource("../Image/Diffusion_" + color + ".png")).getImage();
+		g.drawImage(Diffusion, x, y, null);
 	}
 }

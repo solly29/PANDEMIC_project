@@ -12,7 +12,7 @@ public class HandPanel extends ControlShape {
 		CardsLabel = Controlpanel.Havecard.ReArray();
 		for(int i=0;i<CardsLabel.size();i++) {
 		add(CardsLabel.get(i));}
-		Controlpanel.Mainpanel.Controlpanel.setBounds(0, 750, 1920, 400);
+		Controlpanel.Mainpanel.Controlpanel.setBounds(0, 750, 1920, 500);
 		
 		add(new BackLabel(Controlpanel));
 	}

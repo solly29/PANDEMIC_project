@@ -11,6 +11,11 @@ public class Game extends JFrame {
 	public static boolean BlueCure = false;//파란 치료제
 	static boolean YellowCure = false;//노란 치료제
 	static boolean BlackCure = false;//검은 치료제
+	static int diffusionToken = 0; //확산 마커
+	static int RedVirus = 0;
+	static int BlueVirus = 0;
+	static int YellowVirus = 0;
+	static int BlackVirus = 0;
 
 	public Game() {
 		/*setLayout(null);

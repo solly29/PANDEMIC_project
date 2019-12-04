@@ -83,4 +83,8 @@ public class UserList{
 	public String getUserName(int i) {
 		return userName.get(i);
 	}
+	
+	public ArrayList<String> getUserNameList(){
+		return userName;
+	}
 }

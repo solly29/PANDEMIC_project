@@ -23,8 +23,14 @@ public class Login {
 		gameSocket = s1;
 		chatSocket = s2;
 		db = new DOA(gameSocket);
-		// db가 잘 되어서 임의의 사용자 지움 - 김영근
-	
+		// 임의의 유저
+		/*
+		 * MainServer.IdPassword.put("admin","1234");
+		 * MainServer.IdPassword.put("user","1234");
+		 * MainServer.IdPassword.put("user2","1234");
+		 * MainServer.IdPassword.put("user3","1234");
+		 */
+
 		try {
 			input = new DataInputStream(gameSocket.getInputStream());
 		} catch (IOException e) {
@@ -78,7 +84,7 @@ public class Login {
 
 		}
 
-		if (db.MatchID(ID)) {// db에 있는 ID와 다르면 true 같으면 false
+		if (db.MatchID(ID)) {
 			return true;
 		} else {
 			return false;
@@ -105,7 +111,7 @@ public class Login {
 
 		}
 
-		if (db.MatchID(ID)) {// db에 있는 MatchID 메소드로 가서 ID 같은게 없으면 DB정보 업데이트
+		if (db.MatchID(ID)) {
 
 			db.Insert(NAME, NUMBER, ID, PW);
 
@@ -115,7 +121,7 @@ public class Login {
 		}
 
 	}
-	//ID, PWD 찾기
+
 	public boolean find() {
 
 		NAME = null;
@@ -132,7 +138,7 @@ public class Login {
 
 		}
 
-		if (db.FindID(NAME, NUMBER)) { // db에 있는 FindID 메소드로
+		if (db.FindID(NAME, NUMBER)) {
 			
 			return true;
 		} else {

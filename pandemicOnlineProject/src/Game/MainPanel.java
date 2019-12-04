@@ -2,8 +2,10 @@ package Game;
 
 import java.awt.AlphaComposite;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Composite;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -17,8 +19,10 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -26,7 +30,8 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 
-import pandemic.*;
+import pandemic.Client;
+import pandemic.ClientReceiverThread;
 
 public class MainPanel extends JLayeredPane implements KeyListener, MouseListener {
 	// JLayerdPane이기 때문에 겹쳐서 패널을 올려넣을수가 있다.
@@ -34,23 +39,45 @@ public class MainPanel extends JLayeredPane implements KeyListener, MouseListene
 	Map map = new Map();// 지도 단순히 이미지만 그린다.
 	Characters characters = new Characters();// C키를 눌렀을 때 유저들이 어떤 카드를 가지고 있는지 확인하기 위해
 	Chat chat;
+	List<String> ReAbandonedCard = new ArrayList<String>();//special카드 특수카드를 사용하기 위해
 	
 	Citys citys = new Citys();// 도시 그래프
-	ControlPanel Controlpanel = new ControlPanel(Mainpanel);// 밑에 컨트롤을 위해 필요한 패널
+	ControlPanel Controlpanel;
+	History history = new History();
 	//Character character = new Character(Mainpanel);// 캐릭터말 캐릭터 좌표등
-	Socket gSocket, cSocket;
+	static Socket gSocket, cSocket;
 	DataOutputStream ChatOutStream,GameOutStream;
 	ClientReceiverThread ChatClass;
 	JTextArea textArea;
 	ClientGameReceiverThread GameRun;
 	Thread GameTh;
+	String myjob;
+	String[] otherjob;
+	Count count= new Count();
 	
 	Hashtable<String, Character> characterList = new Hashtable<String, Character>();
 
-	public MainPanel(Socket gSocket, Socket cSocket, ClientReceiverThread ChatClass) {
+	public MainPanel(Socket gSocket, Socket cSocket, ClientReceiverThread ChatClass, String myjob,String[] otherjob) {
 		this.gSocket = gSocket;
 		this.cSocket = cSocket;
 		this.ChatClass = ChatClass;
+		this.myjob = myjob;
+		this.otherjob = otherjob;
+		
+		for(int i=0; i < otherjob.length; i++) {
+			if(!otherjob[i].equals("")) {
+				this.otherjob[i] = otherjob[i];
+				System.out.println(i +"의 " + this.otherjob[i]+ " 직업이다");
+			}
+		}
+		
+		Controlpanel = new ControlPanel(Mainpanel);// 밑에 컨트롤을 위해 필요한 패널
+		
+		//비상대책설계자 클라이언트직업이름이 emergency즉 비대설이면 시작 시 정부 보조금을 가지고 시작한다.
+	      if (Client.name.equals("emergency")) {
+	         Controlpanel.Havecard.insertCard(Controlpanel, "정부보조금");
+	         Controlpanel.Havecard.insertCard(Controlpanel, "긴급공중수송");
+	      }
 		
 		try {
 			ChatOutStream = new DataOutputStream(cSocket.getOutputStream());
@@ -76,14 +103,18 @@ public class MainPanel extends JLayeredPane implements KeyListener, MouseListene
 		characters.setBounds(1520, 0, 400, 1080);
 
 		this.add(chat, new Integer(10));// 반 투명 채팅창
-		chat.setBounds(600, 550, 400, 250);
+		chat.setBounds(600, 550, 500, 220);
 
 		this.add(Controlpanel, new Integer(20));// 이 컨트롤 패널에서 유저들의 행동 모든 것을 처리한다
-		Controlpanel.setBounds(0, 800, 1920, 300);
+		Controlpanel.setBounds(0, 840, 1920, 240);
 		//Controlpanel.setOpaque(false);
 		// addFocusListener(new MyFocuseListener());//현재 패널이 키보드 포커싱을 알아먹는지 못 알아 먹는지
 		// 알아보기 위하여
-		
+		this.add(count, new Integer(50));// 확산, 감염, 백신개발 여부 알림판
+	      count.setBounds(0, 0, 85, 130);
+	      
+	      this.add(history, new Integer(10));
+	      history.setBounds(0, 400, history.getHeight(), history.getWidth());
 		
 		
 		this.setFocusable(true);
@@ -93,6 +124,97 @@ public class MainPanel extends JLayeredPane implements KeyListener, MouseListene
 		
 		
 	}
+	
+	   class History extends JPanel {
+		      JScrollPane scroll;// 스크롤 기능 구현
+		      JTextArea textarea = new JTextArea(10, 10);
+
+		      public History() {
+		         setSize(new Dimension(240, 350));
+		         scroll = new JScrollPane(textarea);
+		         scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);// 열로는 항상설정
+		         scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);// 행으로는 절대 안설정
+		         setLayout(new BorderLayout());
+		         textarea.setFocusable(false);
+		         textarea.setFont(new Font("굴림", 20, 20));
+		         textarea.setOpaque(false);
+		         textarea.setForeground(Color.BLACK);
+		         add(scroll);
+		      }
+
+		      public void addHistory(String text) {
+		         textarea.append(text + "\n");
+		         textarea.setCaretPosition(textarea.getDocument().getLength());
+		      }
+		   }
+	
+	class Count extends JPanel {
+
+	      final String Infectioncnt = " X 4";
+	      final String Diffusioncnt = " X 5";
+
+	      ImageIcon Infection = new ImageIcon(Map.class.getResource("../Image/Infection.png"));// 전염카드 자체적인 카운터가있다. 차면
+	                                                                        // 카드뽑히는 갯수가 올라간다
+	      ImageIcon Diffusion = new ImageIcon(Map.class.getResource("../Image/Diffusion.png"));// 7개 되면 게임패배
+
+	      ImageIcon RedCureIcon = new ImageIcon(Map.class.getResource("../Image/red.png"));
+	      ImageIcon DevelopeRedCureIcon = new ImageIcon(Map.class.getResource("../Image/red2.png"));
+
+	      ImageIcon BlueCureIcon = new ImageIcon(Map.class.getResource("../Image/blue.png"));
+	      ImageIcon DevelopeBlueCureIcon = new ImageIcon(Map.class.getResource("../Image/blue2.png"));
+
+	      ImageIcon YellowCureIcon = new ImageIcon(Map.class.getResource("../Image/yellow.png"));
+	      ImageIcon DevelopeYellowCureIcon = new ImageIcon(Map.class.getResource("../Image/yellow2.png"));
+
+	      ImageIcon BlackCureIcon = new ImageIcon(Map.class.getResource("../Image/black.png"));
+	      ImageIcon DevelopeBlackCureIcon = new ImageIcon(Map.class.getResource("../Image/black2.png"));
+
+	      JLabel RedCureIcon_label = new JLabel(RedCureIcon);
+	      JLabel BlueCureIcon_label = new JLabel(BlueCureIcon);
+	      JLabel BlackCureIcon_label = new JLabel(BlackCureIcon);
+	      JLabel YellowCureIcon_label = new JLabel(YellowCureIcon);
+
+	      public Count() {
+
+	         JLabel Diffusion_label = new JLabel(Diffusion);
+	         Diffusion_label.setText(Infectioncnt);
+	         Diffusion_label.setFont(new Font("굴림", Font.BOLD, 20));
+	         Diffusion_label.setForeground(Color.white);
+
+	         JLabel Infection_label = new JLabel(Infection);
+	         Infection_label.setText(Diffusioncnt);
+	         Infection_label.setText(Infectioncnt);
+	         Infection_label.setFont(new Font("굴림", Font.BOLD, 20));
+	         Infection_label.setForeground(Color.white);
+
+	         add(Diffusion_label);
+	         add(Infection_label);
+	         add(RedCureIcon_label);
+	         add(BlueCureIcon_label);
+	         add(BlackCureIcon_label);
+	         add(YellowCureIcon_label);
+
+	         setOpaque(false);
+
+	      }
+
+	      public void DevelopeRedCure() {
+	         RedCureIcon_label.setIcon(DevelopeRedCureIcon);
+	      }
+
+	      public void DevelopeBlueCure() {
+	         BlueCureIcon_label.setIcon(DevelopeBlueCureIcon);
+	      }
+
+	      public void DevelopeYellowCure() {
+	         YellowCureIcon_label.setIcon(DevelopeYellowCureIcon);
+	      }
+
+	      public void DevelopeBlackCure() {
+	         BlackCureIcon_label.setIcon(DevelopeBlackCureIcon);
+	      }
+
+	   }
 
 	public ArrayList returnCity() {
 		ArrayList<String> list = citys.AdjacencyCitys(characterList.get(Client.name).CurrentPositon);
@@ -130,10 +252,12 @@ public class MainPanel extends JLayeredPane implements KeyListener, MouseListene
 		JTextField textField;
 
 		public Chat() {
+			setLayout(null);
 			this.setOpaque(false);
 			textArea = new JTextArea(12, 35);
 			textField = new JTextField(35);
 			textArea.setEditable(false);
+			textArea.setFocusable(false);
 			addFocusListener(new MyFocuseListener());
 
 			JScrollPane scrollPane = new JScrollPane(textArea) {
@@ -161,10 +285,18 @@ public class MainPanel extends JLayeredPane implements KeyListener, MouseListene
 			scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 			scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 			
+			textArea.setFont(new Font("궁서",Font.BOLD,18)); //채팅표시되는 부분 이다 궁서체 바꿔야함
+			textField.setFont(new Font("궁서",Font.BOLD,15)); //채팅입력하는 부분 , 궁서체 바꾸자
+			
+			
+			
+			scrollPane.setBounds(0, 0, 500, 190); //chat 패널을 layout(null)줘서 셋바운드로 위치조정함 현재 패널이랑 딱맞게 되어있기 때문에 위치수정하려면 위에 챗패널 자체의 셋바운드도 수정해야한다.
+			textField.setBounds(0, 190, 500, 30);
+			
 			ChatClass.ChangeTextArea(textArea);
 			
-			add(scrollPane, BorderLayout.CENTER);
-			add(textField, BorderLayout.SOUTH);
+			add(scrollPane);
+			add(textField);
 			textField.addKeyListener(new KeyAdapter() {
 				public void keyPressed(KeyEvent e) {
 					int key = e.getKeyCode();
@@ -174,6 +306,7 @@ public class MainPanel extends JLayeredPane implements KeyListener, MouseListene
 						break;
 					case KeyEvent.VK_ENTER:
 						try {
+							textArea.setCaretPosition(textArea.getDocument().getLength()); //채팅창 맨아레로 스크롤
 							ChatOutStream.writeUTF("[채팅]"+textField.getText());
 							textField.setText("");
 						} catch (IOException e1) {
@@ -229,8 +362,19 @@ public class MainPanel extends JLayeredPane implements KeyListener, MouseListene
 			repaint();
 			revalidate();
 			break;
-
+		case KeyEvent.VK_F:
+	         if (history.isVisible()) {
+	            history.setVisible(false);
+	         } else {
+	            history.setVisible(true);
+	         }
+	         break;
+	         
+		case KeyEvent.VK_ESCAPE:
+			new ESC();
+			break;
 		}
+		
 	}
 
 	@Override

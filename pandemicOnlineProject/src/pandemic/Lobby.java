@@ -140,7 +140,6 @@ class logOut extends JButton { // 로그아웃하기위한 버튼
 				top.getContentPane().add(new Login(gsocket, csocket));
 				top.revalidate();
 				top.repaint();
-
 				// input.readUTF("logout")
 			}
 		});*/
@@ -656,6 +655,7 @@ class Chat extends JPanel {
 		JTextField ChatField = new JTextField(); // 채팅치는 필드
 
 		this.ChatList = ChatList;
+		
 
 		ChatList.setEditable(false);
 		JScrollPane scroll;
@@ -674,6 +674,8 @@ class Chat extends JPanel {
 		ChatField.setFont(new Font("궁서",Font.ITALIC,15));
 		
 		ChatList.setFont(new Font("궁서",Font.ITALIC,18));
+		
+		
 		
 		ChatField.setOpaque(false); // 채팅입력하는곳 불투명하게
 
@@ -694,6 +696,7 @@ class Chat extends JPanel {
 				JTextField t = (JTextField) e.getSource();
 				// ChatList.append(t.getText() + "\n");
 				try {
+					ChatList.setCaretPosition(ChatList.getDocument().getLength());
 					output.writeUTF("[채팅]" + t.getText());
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
@@ -710,4 +713,3 @@ class Chat extends JPanel {
 		setVisible(true);
 	}
 }
-

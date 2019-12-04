@@ -1,6 +1,7 @@
 package Server;
 
 import java.io.DataOutputStream;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
@@ -19,6 +20,8 @@ public class Room {
 	public CardList cardList=null;
 	private int nextStart = -1;
 	public String StartUser = "";
+	private Hashtable<String, String> userSelect = new Hashtable<String, String>();
+	private int[] startState = { 0 , 0, 0, 0,};
 
 	public Room() {
 		// TODO Auto-generated constructor stub
@@ -27,7 +30,6 @@ public class Room {
 	// 해당 닉네임 또는 아이디의 유저를 유저 클레스로 추가한다.(방을 생성을 할경우)
 	public Room(String name) {
 		// TODO Auto-generated constructor stub
-		System.out.println(name);
 		kingName = name;
 		user = new UserList(name);// 유저 객체를 생성
 		cardList = new CardList(4);//일단 난이도는 4장으로 고정 나중에 바꿀꺼당
@@ -39,7 +41,6 @@ public class Room {
 
 	// 방에 입장할경우 이 메소드를 이용해서 유저 클래스로 추가한다.
 	public void RoomUserListAdd(String name) {
-		System.out.println(name);
 		user.userAdd(name);
 	}
 
@@ -113,8 +114,8 @@ public class Room {
 	}
 	
 	//총 유저의 리스트 반환
-	public Enumeration<String> getUserNameList(){
-		return user.getUserListChat().keys();
+	public ArrayList<String> getUserNameList(){
+		return user.getUserNameList();
 	}
 	
 	public String toString() {
@@ -131,4 +132,42 @@ public class Room {
 		}
 		return user.getUserName(nextStart);
 	}
+	
+	public void setUserSelect(String num, String job) {
+		   userSelect.put(num, job);
+	   }
+	   
+	   public Hashtable<String, String> getUserSelect() {
+		   return userSelect;
+	   }
+	   
+	   public void setStartState1(String userNumber) {
+		   int num = Integer.parseInt(userNumber);
+		   
+		   if(startState[num] == 0) {
+			   startState[num] = 10;
+		   }
+	   }
+	   
+	   public void setStartState2(String userNumber) {
+		   int num = Integer.parseInt(userNumber);
+		   
+		   if(startState[num] == 10)
+			   startState[num] = 11;
+		   else if(startState[num] == 11)
+			   startState[num] = 10;
+	   }
+	   
+	   public int getStartState() {
+		   int sum = 0;
+		   for(int i = 0 ; i< 4 ; i++) {
+			   sum += startState[i];
+		   }
+		   return sum;
+	   }
+	   
+	   public int getStartState(String str) {
+		   int i = Integer.parseInt(str);
+		   return startState[i];
+	   }
 }

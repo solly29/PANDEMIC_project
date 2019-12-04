@@ -100,7 +100,7 @@ public class ChatServer implements Runnable{
 			MainServer.roomList.get(roomName).RoomUserListDel(name);//방에 유저 삭제
 			System.out.println(MainServer.roomList.get(roomName).getUserListChat());
 			if(MainServer.roomList.get(roomName).getUserListChat().isEmpty()) {
-				System.out.println("샂게함");
+				System.out.println("삭제함");
 				MainServer.roomList.remove(roomName);
 			}
 			
