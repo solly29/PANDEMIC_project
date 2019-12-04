@@ -33,6 +33,8 @@ public class Client extends JFrame{
 		setSize(1920,1080);
 		setPreferredSize(new Dimension(1920,1080));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setExtendedState(JFrame.MAXIMIZED_BOTH); // 전체화면 -김영근
+		setUndecorated(true); // 작업표시줄 없애기 - 김영근
 	//	setLayout(cards);
 		add(new Login(gsocket, socket2));//규진
 		setResizable(false); 
