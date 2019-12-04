@@ -22,8 +22,7 @@ import javax.swing.SwingUtilities;
 
 public class Login extends JPanel implements ActionListener {
 
-	private Image background = new ImageIcon(Client.class.getResource("../Login_Image/background.png")).getImage();
-
+	private Image background = new ImageIcon(Client.class.getResource("../Login_Image/background.png")).getImage(); //배경화면
 	private JButton login = new JButton(new ImageIcon(Client.class.getResource("../Login_Image/Login.png"))); // 로그인 버튼
 	private JButton exit = new JButton(new ImageIcon(Client.class.getResource("../Login_Image/Exit.png"))); // 나가기 버튼
 	private JButton join = new JButton(new ImageIcon(Client.class.getResource("../Login_Image/Join.png"))); // 회원가입 버튼
@@ -170,12 +169,18 @@ public class Login extends JPanel implements ActionListener {
 }
 
 class joinE extends JFrame // 회원가입 창 만드는 클래스
-{
 
+{
+	private Image Jback = new ImageIcon(Client.class.getResource("../Login_Image/Jback.png")).getImage();
 	private DataOutputStream output;
 	private DataInputStream input;
+	
+
 
 	public joinE(Socket socket) {
+		
+		
+		
 
 		Client c;
 
@@ -189,15 +194,17 @@ class joinE extends JFrame // 회원가입 창 만드는 클래스
 			e.printStackTrace();
 		}
 		;
+		
+		
 
-		JButton Jexit = new JButton("exit");
-		JButton Jjoin = new JButton("회원가입");
-		JButton Duple = new JButton("중복확인");
+		JButton Jexit = new JButton(new ImageIcon(Client.class.getResource("../Login_Image/Exit.PNG")));
+		JButton Jjoin = new JButton(new ImageIcon(Client.class.getResource("../Login_Image/Join.PNG")));
+		JButton Duple = new JButton(new ImageIcon(Client.class.getResource("../Login_Image/duple.PNG")));
 
-		JLabel ID = new JLabel("ID      : ");
-		JLabel PWD = new JLabel("PWD : ");
-		JLabel Name = new JLabel("이름   : ");
-		JLabel Number = new JLabel("학번   : ");
+		JLabel ID = new JLabel(new ImageIcon(Client.class.getResource("../Login_Image/JID.PNG")));
+		JLabel PWD = new JLabel(new ImageIcon(Client.class.getResource("../Login_Image/JPWD.png")));
+		JLabel Name = new JLabel(new ImageIcon(Client.class.getResource("../Login_Image/Jname.png")));
+		JLabel Number = new JLabel(new ImageIcon(Client.class.getResource("../Login_Image/Jnumber.png")));
 
 		JTextField Name_text = new JTextField();
 		JTextField Number_text = new JTextField();
@@ -209,7 +216,13 @@ class joinE extends JFrame // 회원가입 창 만드는 클래스
 		setLocation(300, 120);
 		getContentPane().setLayout(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+	
+		setUndecorated(true); // 작업표시줄 없애기
+		
+		Jexit.setOpaque(false);
+		Jjoin.setOpaque(false);
+		Duple.setOpaque(false);
+		
 		Jexit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				dispose();
@@ -268,33 +281,52 @@ class joinE extends JFrame // 회원가입 창 만드는 클래스
 		this.add(Name);
 		this.add(Number);
 		this.add(Duple);
-
-		Name.setBounds(150, 75, 100, 30);
+	
+		Name.setBounds(100, 75, 100, 30);
 		Name_text.setBounds(200, 80, 100, 20);
 
-		Number.setBounds(150, 145, 100, 30);
+		Number.setBounds(100, 145, 100, 30);
 		Number_text.setBounds(200, 150, 100, 20);
 
-		ID.setBounds(150, 215, 100, 30);
+		ID.setBounds(100, 215, 100, 30);
 		ID_text.setBounds(200, 220, 100, 20);
 
-		PWD.setBounds(150, 285, 100, 30);
+		PWD.setBounds(100, 285, 100, 30);
 		PWD_text.setBounds(200, 290, 100, 20);
 
-		Jexit.setBounds(250, 400, 150, 50);
-		Jjoin.setBounds(80, 400, 150, 50);
+		Jexit.setBounds(250, 400, 140, 50);
+		Jjoin.setBounds(80, 400, 140, 50);
 
-		Duple.setBounds(310, 220, 100, 20);
-
+		Duple.setBounds(310, 200, 100, 50);
+		
+		/*ID.setFont(new Font("HY헤드라인M",Font.PLAIN,15));
+		PWD.setFont(new Font("HY헤드라인M",Font.PLAIN,15));
+		Name.setFont(new Font("HY헤드라인M",Font.PLAIN,15));
+		Number.setFont(new Font("HY헤드라인M",Font.PLAIN,15));
+*/
 		getContentPane().add(Jexit);
 		getContentPane().add(Jjoin);
 		setVisible(true);
+		
+		
+		JPanel jback = new JPanel() {
+			public void paintComponent(Graphics g) {
+
+				g.drawImage(Jback, 0, 0, null);
+				setOpaque(false);
+				super.paintComponent(g);
+			}
+		};
+		jback.setBounds(0, 0, 500, 750);
+		this.add(jback);
+		
 	}
 }
 
 class findE extends JFrame // ID/PWD 찾기 창 만드는 클래스
 {
-
+	
+	private Image Jback = new ImageIcon(Client.class.getResource("../Login_Image/Jback.png")).getImage();
 	private DataOutputStream output;
 	private DataInputStream input;
 
@@ -313,11 +345,11 @@ class findE extends JFrame // ID/PWD 찾기 창 만드는 클래스
 		}
 		;
 
-		JButton FEXIT = new JButton("EXIT");
-		JButton ID_Find = new JButton("ID/PWD 찾기");
+		JButton FEXIT = new JButton(new ImageIcon(Client.class.getResource("../Login_Image/Exit.PNG")));
+		JButton ID_Find = new JButton(new ImageIcon(Client.class.getResource("../Login_Image/Find.PNG")));
 
-		JLabel Name = new JLabel("이름   : ");
-		JLabel Number = new JLabel("학번   : ");
+		JLabel Name = new JLabel(new ImageIcon(Client.class.getResource("../Login_Image/JID.PNG")));
+		JLabel Number = new JLabel(new ImageIcon(Client.class.getResource("../Login_Image/Jnumber.PNG")));
 
 		JTextField Name_text = new JTextField();
 		JTextField Number_text = new JTextField();
@@ -326,14 +358,16 @@ class findE extends JFrame // ID/PWD 찾기 창 만드는 클래스
 		setSize(500, 750);
 		setLocation(300, 120);
 
-		Name.setBounds(150, 75, 100, 30);
+		
+		
+		Name.setBounds(120, 75, 100, 30);
 		Name_text.setBounds(200, 80, 100, 20);
 
-		Number.setBounds(150, 145, 100, 30);
+		Number.setBounds(100, 145, 100, 30);
 		Number_text.setBounds(200, 150, 100, 20);
 
-		FEXIT.setBounds(250, 400, 150, 50);
-		ID_Find.setBounds(80, 400, 150, 50);
+		FEXIT.setBounds(250, 400, 140, 50);
+		ID_Find.setBounds(80, 400, 140, 50);
 
 		this.add(Number_text);
 		this.add(Name_text);
@@ -342,6 +376,8 @@ class findE extends JFrame // ID/PWD 찾기 창 만드는 클래스
 		this.add(ID_Find);
 		getContentPane().setLayout(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	
+		setUndecorated(true); // 작업표시줄 없애기
 
 		ID_Find.addActionListener(new ActionListener() { // ID, PWD 찾기를 눌렀을때
 			public void actionPerformed(ActionEvent arg0) {
@@ -371,5 +407,17 @@ class findE extends JFrame // ID/PWD 찾기 창 만드는 클래스
 
 		getContentPane().add(FEXIT);
 		setVisible(true);
+		
+		JPanel fback = new JPanel() {
+			public void paintComponent(Graphics g) {
+
+				g.drawImage(Jback, 0, 0, null);
+				setOpaque(false);
+				super.paintComponent(g);
+			}
+		};
+		fback.setBounds(0, 0, 500, 750);
+		this.add(fback);
+		
 	}
 }
