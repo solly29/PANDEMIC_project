@@ -1,10 +1,12 @@
 package pandemic;
 
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -23,10 +25,23 @@ import javax.swing.SwingUtilities;
 public class Login extends JPanel implements ActionListener {
 
 	private Image background = new ImageIcon(Client.class.getResource("../Login_Image/background.png")).getImage(); //배경화면
-	private JButton login = new JButton(new ImageIcon(Client.class.getResource("../Login_Image/Login.png"))); // 로그인 버튼
-	private JButton exit = new JButton(new ImageIcon(Client.class.getResource("../Login_Image/Exit.png"))); // 나가기 버튼
-	private JButton join = new JButton(new ImageIcon(Client.class.getResource("../Login_Image/Join.png"))); // 회원가입 버튼
-	private JButton find = new JButton(new ImageIcon(Client.class.getResource("../Login_Image/Find.png"))); // ID/PWD 찾기 버튼
+	private ImageIcon loginpush = new ImageIcon(Client.class.getResource("../Login_Image/Login2.png"));
+	private ImageIcon exitpush = new ImageIcon(Client.class.getResource("../Login_Image/Exit2.png"));
+	private ImageIcon joinpush = new ImageIcon(Client.class.getResource("../Login_Image/Join2.png"));
+	private ImageIcon findpush = new ImageIcon(Client.class.getResource("../Login_Image/Find2.png"));
+	private ImageIcon loginimage = new ImageIcon(Client.class.getResource("../Login_Image/Login.png"));
+	private ImageIcon exitimage = new ImageIcon(Client.class.getResource("../Login_Image/Exit.png"));
+	private ImageIcon joinimage = new ImageIcon(Client.class.getResource("../Login_Image/Join.png"));
+	private ImageIcon findimage = new ImageIcon(Client.class.getResource("../Login_Image/Find.png"));
+
+	private JButton login = new JButton(loginimage); // 로그인 버튼
+	
+	private JButton exit = new JButton(exitimage); // 나가기 버튼
+	
+	private JButton join = new JButton(joinimage); // 회원가입 버튼
+	
+	private JButton find = new JButton(findimage); // ID/PWD 찾기 버튼
+	
 	private static JFrame top;
 	private JTextField idtext;
 	private JPasswordField pwdtext;
@@ -64,10 +79,10 @@ public class Login extends JPanel implements ActionListener {
 		idtext = new JTextField();
 		pwdtext = new JPasswordField();
 
-		Font RLfont, ChatFont, PFfont; // 폰트 추가 차례대로 방목록,채팅,내정보
+		/*Font RLfont, ChatFont, PFfont; // 폰트 추가 차례대로 방목록,채팅,내정보
 
 		RLfont = new Font("Serif", Font.BOLD, 50);
-
+*/
 		setLayout(null);
 
 		login.setBounds(1153, 500, 150, 170);
@@ -115,8 +130,73 @@ public class Login extends JPanel implements ActionListener {
 		find.addActionListener(this);
 
 		setVisible(true); // 해결과제 채팅창 크기조절, 배경사진넣기(전부)
+		
+		  login.addMouseListener(new MouseAdapter() { // 방찾기버튼 마우스액션
+		         public void mouseEntered(MouseEvent e) {
+		        	 login.setIcon(loginpush);// 버튼 도달했을때 모양이 바뀐다
+		         }
+
+		         public void mouseExited(MouseEvent e) {
+		        	 login.setIcon(loginimage);// 마우스가 떼졌을 때 버튼의 모양이 원래대로
+		         }
+
+		         public void mousePressed(MouseEvent e) {
+		        	 login.setIcon(loginpush);// 버튼 클릭했을때 모양이 바뀐다
+		         }
+
+		      });
+		  
+		  exit.addMouseListener(new MouseAdapter() { // 방찾기버튼 마우스액션
+		         public void mouseEntered(MouseEvent e) {
+		        	 exit.setIcon(exitpush);// 버튼 도달했을때 모양이 바뀐다
+		         }
+
+		         public void mouseExited(MouseEvent e) {
+		        	 exit.setIcon(exitimage);// 마우스가 떼졌을 때 버튼의 모양이 원래대로
+		         }
+
+		         public void mousePressed(MouseEvent e) {
+		        	 exit.setIcon(exitpush);// 버튼 클릭했을때 모양이 바뀐다
+		         }
+
+		      });
+		  
+		  find.addMouseListener(new MouseAdapter() { // 방찾기버튼 마우스액션
+		         public void mouseEntered(MouseEvent e) {
+		        	 find.setIcon(findpush);// 버튼 도달했을때 모양이 바뀐다
+		         }
+
+		         public void mouseExited(MouseEvent e) {
+		        	 find.setIcon(findimage);// 마우스가 떼졌을 때 버튼의 모양이 원래대로
+		         }
+
+		         public void mousePressed(MouseEvent e) {
+		        	 find.setIcon(findpush);// 버튼 클릭했을때 모양이 바뀐다
+		         }
+
+		      });
+		  
+		  join.addMouseListener(new MouseAdapter() { // 방찾기버튼 마우스액션
+		         public void mouseEntered(MouseEvent e) {
+		        	 join.setIcon(joinpush);// 버튼 도달했을때 모양이 바뀐다
+		         }
+
+		         public void mouseExited(MouseEvent e) {
+		        	 join.setIcon(joinimage);// 마우스가 떼졌을 때 버튼의 모양이 원래대로
+		         }
+
+		         public void mousePressed(MouseEvent e) {
+		        	 join.setIcon(joinpush);// 버튼 클릭했을때 모양이 바뀐다
+		         }
+
+		      });
+		  
 
 	}
+	
+	
+	
+	
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -172,6 +252,14 @@ class joinE extends JFrame // 회원가입 창 만드는 클래스
 
 {
 	private Image Jback = new ImageIcon(Client.class.getResource("../Login_Image/Jback.png")).getImage();
+	private ImageIcon Jjoinimage = new ImageIcon(Client.class.getResource("../Login_Image/Join.png"));
+	private ImageIcon Jexitimage = new ImageIcon(Client.class.getResource("../Login_Image/Exit.png"));
+	private ImageIcon Jjoinpush = new ImageIcon(Client.class.getResource("../Login_Image/Join2.png"));
+	private ImageIcon Jexitpush = new ImageIcon(Client.class.getResource("../Login_Image/Exit2.png"));
+	private ImageIcon dupleimage = new ImageIcon(Client.class.getResource("../Login_Image/duple.png"));
+	private ImageIcon duplepush = new ImageIcon(Client.class.getResource("../Login_Image/duple2.png"));
+	
+	
 	private DataOutputStream output;
 	private DataInputStream input;
 	
@@ -197,9 +285,9 @@ class joinE extends JFrame // 회원가입 창 만드는 클래스
 		
 		
 
-		JButton Jexit = new JButton(new ImageIcon(Client.class.getResource("../Login_Image/Exit.PNG")));
-		JButton Jjoin = new JButton(new ImageIcon(Client.class.getResource("../Login_Image/Join.PNG")));
-		JButton Duple = new JButton(new ImageIcon(Client.class.getResource("../Login_Image/duple.PNG")));
+		JButton Jexit = new JButton(Jexitimage);
+		JButton Jjoin = new JButton(Jjoinimage);
+		JButton Duple = new JButton(dupleimage);
 
 		JLabel ID = new JLabel(new ImageIcon(Client.class.getResource("../Login_Image/JID.PNG")));
 		JLabel PWD = new JLabel(new ImageIcon(Client.class.getResource("../Login_Image/JPWD.png")));
@@ -215,13 +303,52 @@ class joinE extends JFrame // 회원가입 창 만드는 클래스
 		setTitle("회원가입");
 		setLocation(300, 120);
 		getContentPane().setLayout(null);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	
 		setUndecorated(true); // 작업표시줄 없애기
+	
 		
-		Jexit.setOpaque(false);
-		Jjoin.setOpaque(false);
-		Duple.setOpaque(false);
+		 Jjoin.addMouseListener(new MouseAdapter() { // 방찾기버튼 마우스액션
+	         public void mouseEntered(MouseEvent e) {
+	        	 Jjoin.setIcon(Jjoinpush);// 버튼 도달했을때 모양이 바뀐다
+	         }
+
+	         public void mouseExited(MouseEvent e) {
+	        	 Jjoin.setIcon(Jjoinimage);// 마우스가 떼졌을 때 버튼의 모양이 원래대로
+	         }
+
+	         public void mousePressed(MouseEvent e) {
+	        	 Jjoin.setIcon(Jjoinpush);// 버튼 클릭했을때 모양이 바뀐다
+	         }
+
+	      });
+		 Duple.addMouseListener(new MouseAdapter() { // 방찾기버튼 마우스액션
+	         public void mouseEntered(MouseEvent e) {
+	        	 Duple.setIcon(duplepush);// 버튼 도달했을때 모양이 바뀐다
+	         }
+
+	         public void mouseExited(MouseEvent e) {
+	        	 Duple.setIcon(dupleimage);// 마우스가 떼졌을 때 버튼의 모양이 원래대로
+	         }
+
+	         public void mousePressed(MouseEvent e) {
+	        	 Duple.setIcon(duplepush);// 버튼 클릭했을때 모양이 바뀐다
+	         }
+
+	      });
+		 Jexit.addMouseListener(new MouseAdapter() { // 방찾기버튼 마우스액션
+	         public void mouseEntered(MouseEvent e) {
+	        	 Jexit.setIcon(Jexitpush);// 버튼 도달했을때 모양이 바뀐다
+	         }
+
+	         public void mouseExited(MouseEvent e) {
+	        	 Jexit.setIcon(Jexitimage);// 마우스가 떼졌을 때 버튼의 모양이 원래대로
+	         }
+
+	         public void mousePressed(MouseEvent e) {
+	        	 Jexit.setIcon(Jexitpush);// 버튼 클릭했을때 모양이 바뀐다
+	         }
+
+	      });
 		
 		Jexit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -308,6 +435,21 @@ class joinE extends JFrame // 회원가입 창 만드는 클래스
 		getContentPane().add(Jjoin);
 		setVisible(true);
 		
+		Jjoin.setOpaque(false); // 투명하게
+		Jjoin.setBorderPainted(false);// 외곽선없애기
+		Jjoin.setContentAreaFilled(false);// 내용영역 채우기 없애기
+		Jjoin.setFocusPainted(false);// 테두리 사용 안함
+		
+		Duple.setOpaque(false); // 투명하게
+		Duple.setBorderPainted(false);// 외곽선없애기
+		Duple.setContentAreaFilled(false);// 내용영역 채우기 없애기
+		Duple.setFocusPainted(false);// 테두리 사용 안함
+		
+		Jexit.setOpaque(false); // 투명하게
+		Jexit.setBorderPainted(false);// 외곽선없애기
+		Jexit.setContentAreaFilled(false);// 내용영역 채우기 없애기
+		Jexit.setFocusPainted(false);// 테두리 사용 안함
+		
 		
 		JPanel jback = new JPanel() {
 			public void paintComponent(Graphics g) {
@@ -327,6 +469,11 @@ class findE extends JFrame // ID/PWD 찾기 창 만드는 클래스
 {
 	
 	private Image Jback = new ImageIcon(Client.class.getResource("../Login_Image/Jback.png")).getImage();
+	private ImageIcon Ffindimage = new ImageIcon(Client.class.getResource("../Login_Image/Find.png"));
+	private ImageIcon Ffindpush = new ImageIcon(Client.class.getResource("../Login_Image/Find2.png"));
+	private ImageIcon Fexitimage = new ImageIcon(Client.class.getResource("../Login_Image/Exit.png"));
+	private ImageIcon Fexitpush = new ImageIcon(Client.class.getResource("../Login_Image/Exit2.png"));
+	
 	private DataOutputStream output;
 	private DataInputStream input;
 
@@ -345,8 +492,8 @@ class findE extends JFrame // ID/PWD 찾기 창 만드는 클래스
 		}
 		;
 
-		JButton FEXIT = new JButton(new ImageIcon(Client.class.getResource("../Login_Image/Exit.PNG")));
-		JButton ID_Find = new JButton(new ImageIcon(Client.class.getResource("../Login_Image/Find.PNG")));
+		JButton Fexit = new JButton(Fexitimage);
+		JButton ID_Find = new JButton(Ffindimage);
 
 		JLabel Name = new JLabel(new ImageIcon(Client.class.getResource("../Login_Image/JID.PNG")));
 		JLabel Number = new JLabel(new ImageIcon(Client.class.getResource("../Login_Image/Jnumber.PNG")));
@@ -366,7 +513,7 @@ class findE extends JFrame // ID/PWD 찾기 창 만드는 클래스
 		Number.setBounds(100, 145, 100, 30);
 		Number_text.setBounds(200, 150, 100, 20);
 
-		FEXIT.setBounds(250, 400, 140, 50);
+		Fexit.setBounds(250, 400, 140, 50);
 		ID_Find.setBounds(80, 400, 140, 50);
 
 		this.add(Number_text);
@@ -378,6 +525,36 @@ class findE extends JFrame // ID/PWD 찾기 창 만드는 클래스
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	
 		setUndecorated(true); // 작업표시줄 없애기
+		
+		
+		Fexit.addMouseListener(new MouseAdapter() { // 방찾기버튼 마우스액션
+	         public void mouseEntered(MouseEvent e) {
+	        	 Fexit.setIcon(Fexitpush);// 버튼 도달했을때 모양이 바뀐다
+	         }
+
+	         public void mouseExited(MouseEvent e) {
+	        	 Fexit.setIcon(Fexitimage);// 마우스가 떼졌을 때 버튼의 모양이 원래대로
+	         }
+
+	         public void mousePressed(MouseEvent e) {
+	        	 Fexit.setIcon(Fexitpush);// 버튼 클릭했을때 모양이 바뀐다
+	         }
+
+	      });
+		 ID_Find.addMouseListener(new MouseAdapter() { // 방찾기버튼 마우스액션
+	         public void mouseEntered(MouseEvent e) {
+	        	 ID_Find.setIcon(Ffindpush);// 버튼 도달했을때 모양이 바뀐다
+	         }
+
+	         public void mouseExited(MouseEvent e) {
+	        	 ID_Find.setIcon(Ffindimage);// 마우스가 떼졌을 때 버튼의 모양이 원래대로
+	         }
+
+	         public void mousePressed(MouseEvent e) {
+	        	 ID_Find.setIcon(Ffindpush);// 버튼 클릭했을때 모양이 바뀐다
+	         }
+
+	      });
 
 		ID_Find.addActionListener(new ActionListener() { // ID, PWD 찾기를 눌렀을때
 			public void actionPerformed(ActionEvent arg0) {
@@ -399,13 +576,16 @@ class findE extends JFrame // ID/PWD 찾기 창 만드는 클래스
 				}
 			}
 		});
-		FEXIT.addActionListener(new ActionListener() {
+		
+		
+		
+		Fexit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				dispose();
 			}
 		});// 버튼 누르면 창 종료
 
-		getContentPane().add(FEXIT);
+		getContentPane().add(Fexit);
 		setVisible(true);
 		
 		JPanel fback = new JPanel() {
@@ -418,6 +598,17 @@ class findE extends JFrame // ID/PWD 찾기 창 만드는 클래스
 		};
 		fback.setBounds(0, 0, 500, 750);
 		this.add(fback);
+		
+		Fexit.setOpaque(false); // 투명하게
+		Fexit.setBorderPainted(false);// 외곽선없애기
+		Fexit.setContentAreaFilled(false);// 내용영역 채우기 없애기
+		Fexit.setFocusPainted(false);// 테두리 사용 안함
+		
+		ID_Find.setOpaque(false); // 투명하게
+		ID_Find.setBorderPainted(false);// 외곽선없애기
+		ID_Find.setContentAreaFilled(false);// 내용영역 채우기 없애기
+		ID_Find.setFocusPainted(false);// 테두리 사용 안함
+		
 		
 	}
 }
