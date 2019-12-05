@@ -1,5 +1,6 @@
 package pandemic;
 
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -45,6 +46,8 @@ public class Login extends JPanel implements ActionListener {
 	private static JFrame top;
 	private JTextField idtext;
 	private JPasswordField pwdtext;
+	
+	
 
 	DataInputStream input;
 	DataOutputStream output;
@@ -79,10 +82,7 @@ public class Login extends JPanel implements ActionListener {
 		idtext = new JTextField();
 		pwdtext = new JPasswordField();
 
-		/*Font RLfont, ChatFont, PFfont; // 폰트 추가 차례대로 방목록,채팅,내정보
 
-		RLfont = new Font("Serif", Font.BOLD, 50);
-*/
 		setLayout(null);
 
 		login.setBounds(1153, 500, 150, 170);
@@ -92,6 +92,9 @@ public class Login extends JPanel implements ActionListener {
 
 		id.setBounds(695, 495, 100, 100);
 		pwd.setBounds(690, 555, 100, 100);
+		
+		idtext.setFont(new Font("HY헤드라인M",Font.PLAIN,20));
+		pwdtext.setFont(new Font("굴림",Font.PLAIN,20));
 
 		idtext.setBounds(790, 530, 300, 30);
 		pwdtext.setBounds(790, 590, 300, 30);
@@ -103,17 +106,14 @@ public class Login extends JPanel implements ActionListener {
 
 		exit.setOpaque(false);
 		 exit.setBorderPainted(false);// 외곽선없애기
-		// exit.setContentAreaFilled(false);// 내용영역 채우기 없애기
-		// exit.setFocusPainted(false);// 테두리 사용 안함
+
 
 		join.setOpaque(false);
 		join.setBorderPainted(false);
-		// join.setContentAreaFilled(false);
 		join.setFocusPainted(false);
 
 		find.setOpaque(false);
 		find.setBorderPainted(false);
-		// find.setContentAreaFilled(false);
 		find.setFocusPainted(false);
 
 		add(login);
@@ -203,9 +203,9 @@ public class Login extends JPanel implements ActionListener {
 		// TODO Auto-generated method stub
 		if (e.getSource() == exit) {
 			System.exit(0);
-			/*
-			 * c.dispose(); j.dispose(); f.dispose(); 이상하게 안됨... 그래서 일단 System.exit(0) 씀
-			 */
+			
+			// c.dispose(); j.dispose(); f.dispose(); 이상하게 안됨... 그래서 일단 System.exit(0) 씀
+			 
 
 		} else if (e.getSource() == join) { // 회원가입 버튼 누르면 joinE 클래스로 감
 			j = new joinE(gsocket);
@@ -305,7 +305,11 @@ class joinE extends JFrame // 회원가입 창 만드는 클래스
 		getContentPane().setLayout(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	
 		setUndecorated(true); // 작업표시줄 없애기
-	
+		
+		 Name_text.setFont(new Font("HY헤드라인M",Font.PLAIN,20));
+		 Number_text.setFont(new Font("HY헤드라인M",Font.PLAIN,20));
+		 ID_text.setFont(new Font("HY헤드라인M",Font.PLAIN,20));		
+		 PWD_text.setFont(new Font("굴림",Font.PLAIN,20));
 		
 		 Jjoin.addMouseListener(new MouseAdapter() { // 방찾기버튼 마우스액션
 	         public void mouseEntered(MouseEvent e) {
@@ -426,11 +430,7 @@ class joinE extends JFrame // 회원가입 창 만드는 클래스
 
 		Duple.setBounds(310, 200, 100, 50);
 		
-		/*ID.setFont(new Font("HY헤드라인M",Font.PLAIN,15));
-		PWD.setFont(new Font("HY헤드라인M",Font.PLAIN,15));
-		Name.setFont(new Font("HY헤드라인M",Font.PLAIN,15));
-		Number.setFont(new Font("HY헤드라인M",Font.PLAIN,15));
-*/
+
 		getContentPane().add(Jexit);
 		getContentPane().add(Jjoin);
 		setVisible(true);
@@ -504,6 +504,8 @@ class findE extends JFrame // ID/PWD 찾기 창 만드는 클래스
 		setTitle("ID/PWD 찾기");
 		setSize(500, 750);
 		setLocation(300, 120);
+		 Name_text.setFont(new Font("HY헤드라인M",Font.PLAIN,20));
+		 Number_text.setFont(new Font("HY헤드라인M",Font.PLAIN,20));
 
 		
 		
