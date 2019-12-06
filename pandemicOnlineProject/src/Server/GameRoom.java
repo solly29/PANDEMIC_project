@@ -379,7 +379,7 @@ public class GameRoom {
 						cardList = Arrays.toString(MyRoom.cardList.infCardHandling(MyRoom.InfTrackCount()));
 						sendAll("[감염]" + cardList.substring(1, cardList.length() - 1) + ", 1");
 					}
-					
+					PeaceNightCard = false;
 
 				}
 			}
