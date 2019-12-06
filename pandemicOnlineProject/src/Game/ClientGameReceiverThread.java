@@ -220,21 +220,21 @@ public class ClientGameReceiverThread implements Runnable {
 
 						if (str2[0].equals(Client.name))
 							panelRepaint();
-					} else if (str.substring(0, 4).equals("[개발]")) {
-                				  str = str.substring(4);
-						  if (str.equals("Red")) {
-						     Game.RedCure = true;
-						     mainPanel.count.DevelopeRedCure();
-						  } else if (str.equals("Blue")) {
-						     Game.BlueCure = true;
-						     mainPanel.count.DevelopeBlueCure();
-						  } else if (str.equals("Yellow")) {
-						     Game.YellowCure = true;
-						     mainPanel.count.DevelopeYellowCure();
-						  } else {
-						     Game.BlackCure = true;
-						     mainPanel.count.DevelopeBlackCure();
-						  }
+					}else if (str.substring(0, 4).equals("[개발]")) {
+		                  str = str.substring(4);
+		                  if (str.equals("Red")) {
+		                     Game.RedCure = true;
+		                     mainPanel.count.DevelopeRedCure();
+		                  } else if (str.equals("Blue")) {
+		                     Game.BlueCure = true;
+		                     mainPanel.count.DevelopeBlueCure();
+		                  } else if (str.equals("Yellow")) {
+		                     Game.YellowCure = true;
+		                     mainPanel.count.DevelopeYellowCure();
+		                  } else {
+		                     Game.BlackCure = true;
+		                     mainPanel.count.DevelopeBlackCure();
+		                  }
 					} else if (str.substring(0, 4).equals("[제어]")) {
 						str = str.substring(4);
 						String[] str2 = str.split(":");
