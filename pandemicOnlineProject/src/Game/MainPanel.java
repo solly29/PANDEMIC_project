@@ -53,7 +53,10 @@ public class MainPanel extends JLayeredPane implements KeyListener, MouseListene
 	String myjob;
 	String[] otherjob;
 	Count count = new Count();
-	static int InfectionCount = 0;// count에서 사용한다
+	static int InfectionCount = 0;// 전염카운터이다.
+	static int DiffusionCount = 0;// 확산카운터이다. 7이 될시 패배
+	static ImageIcon Diffusion = new ImageIcon(Map.class.getResource("../Image/Diffusion.png"));// 확산카운터 이미지
+	static JLabel Diffusion_label = new JLabel(Diffusion);// 확산 라벨;
 
 	Hashtable<String, Character> characterList = new Hashtable<String, Character>();
 
@@ -150,44 +153,34 @@ public class MainPanel extends JLayeredPane implements KeyListener, MouseListene
 		}
 	}
 
-	class Count extends JPanel {
+		class Count extends JPanel {
+		ImageIcon Infection = new ImageIcon(Map.class.getResource("../Image/Infection.png"));
+		// 전염카운터 이미지
+		
 
-		String Infectioncnt = "4";
+		ImageIcon RedCureIcon = new ImageIcon(Map.class.getResource("../Image/red.png"));// 빨간치료제아이콘
+		ImageIcon DevelopeRedCureIcon = new ImageIcon(Map.class.getResource("../Image/red2.png"));// 빨간치료제아이콘개발시
+		ImageIcon BlueCureIcon = new ImageIcon(Map.class.getResource("../Image/blue.png"));// 파란치료재아이콘
+		ImageIcon DevelopeBlueCureIcon = new ImageIcon(Map.class.getResource("../Image/blue2.png"));// 파란치료제아이콘개발시
+		ImageIcon YellowCureIcon = new ImageIcon(Map.class.getResource("../Image/yellow.png"));// 노란치료제아이콘
+		ImageIcon DevelopeYellowCureIcon = new ImageIcon(Map.class.getResource("../Image/yellow2.png"));// 노란치료제개발시아이콘
+		ImageIcon BlackCureIcon = new ImageIcon(Map.class.getResource("../Image/black.png"));// 검은치료제아이콘
+		ImageIcon DevelopeBlackCureIcon = new ImageIcon(Map.class.getResource("../Image/black2.png"));// 검은치료제개발시아이콘
 
-		String Diffusioncnt = "5";
-
-		ImageIcon Infection = new ImageIcon(Map.class.getResource("../Image/Infection.png"));// 전염카드 자체적인 카운터가있다. 차면
-		// 카드뽑히는 갯수가 올라간다
-		ImageIcon Diffusion = new ImageIcon(Map.class.getResource("../Image/Diffusion.png"));// 7개 되면 게임패배
-
-		ImageIcon RedCureIcon = new ImageIcon(Map.class.getResource("../Image/red.png"));
-		ImageIcon DevelopeRedCureIcon = new ImageIcon(Map.class.getResource("../Image/red2.png"));
-
-		ImageIcon BlueCureIcon = new ImageIcon(Map.class.getResource("../Image/blue.png"));
-		ImageIcon DevelopeBlueCureIcon = new ImageIcon(Map.class.getResource("../Image/blue2.png"));
-
-		ImageIcon YellowCureIcon = new ImageIcon(Map.class.getResource("../Image/yellow.png"));
-		ImageIcon DevelopeYellowCureIcon = new ImageIcon(Map.class.getResource("../Image/yellow2.png"));
-
-		ImageIcon BlackCureIcon = new ImageIcon(Map.class.getResource("../Image/black.png"));
-		ImageIcon DevelopeBlackCureIcon = new ImageIcon(Map.class.getResource("../Image/black2.png"));
-
-		JLabel RedCureIcon_label = new JLabel(RedCureIcon);
-		JLabel BlueCureIcon_label = new JLabel(BlueCureIcon);
-		JLabel BlackCureIcon_label = new JLabel(BlackCureIcon);
-		JLabel YellowCureIcon_label = new JLabel(YellowCureIcon);
-		JLabel Infection_label;
+		JLabel RedCureIcon_label = new JLabel(RedCureIcon);// 빨간치료제기본아이콘설정
+		JLabel BlueCureIcon_label = new JLabel(BlueCureIcon);// 파란치료제기본아이콘설정
+		JLabel BlackCureIcon_label = new JLabel(BlackCureIcon);// 검은치료제기본아이콘설정
+		JLabel YellowCureIcon_label = new JLabel(YellowCureIcon);// 노란치료제기본아이콘설정
+		JLabel Infection_label = new JLabel(Infection);// 전염 라벨
+		
 
 		public Count() {
 
-			JLabel Diffusion_label = new JLabel(Diffusion);
-			Diffusion_label.setText(Infectioncnt);
+			Diffusion_label.setText(" : 0");// 확산라벨의 카운터. 처음 확산라벨은 0이다.
 			Diffusion_label.setFont(new Font("굴림", Font.BOLD, 20));
 			Diffusion_label.setForeground(Color.white);
 
-			Infection_label = new JLabel(Infection);
-			Infection_label.setText(Diffusioncnt);
-			Infection_label.setText(Infectioncnt);
+			Infection_label.setText(" : 2");// 전염라벨의 카운터 전염라벨의 의미는 뽑히는 전염카드숫자다.
 			Infection_label.setFont(new Font("굴림", Font.BOLD, 20));
 			Infection_label.setForeground(Color.white);
 
@@ -199,16 +192,6 @@ public class MainPanel extends JLayeredPane implements KeyListener, MouseListene
 			add(YellowCureIcon_label);
 
 			setOpaque(false);
-
-		}
-
-		public void getInfection() {
-			InfectionCount++;
-			if (InfectionCount > 4) {
-				Infection_label.setText(" : "+InfectionCount);
-			} else if (InfectionCount > 6) {
-				Infection_label.setText(" : 5");
-			}
 		}
 
 		public void DevelopeRedCure() {
@@ -228,6 +211,21 @@ public class MainPanel extends JLayeredPane implements KeyListener, MouseListene
 		}
 
 	}
+
+	public void setInfection() {// 전염이벤트 발생시 ClientGameReciverThread에서 실행
+		++InfectionCount;
+		if (InfectionCount > 1) {
+			count.Infection_label.setText(" : 3");
+		} else if (InfectionCount > 3) {
+			count.Infection_label.setText(" : 4");
+		}
+	}
+
+	public static void setDiffusion() {
+		++DiffusionCount;
+		Diffusion_label.setText(" : " + DiffusionCount);
+	}
+
 
 	public ArrayList returnCity() {
 		ArrayList<String> list = citys.AdjacencyCitys(characterList.get(Client.name).CurrentPositon);
