@@ -128,13 +128,11 @@ public class GameRoom {
 					output.writeUTF("[제어]stop");
 					break;
 				}
-				System.out.println("username==============");
-				System.out.println(MyRoom.getUserNameList().toString());
 
 				// 직업 확인 후 샌드올
 				for (int i = 0; i < 9; i++) {
 					if (userjob.equals(job[i])) {
-						System.out.println(usernumber + userjob + " 113");
+						System.out.println(usernumber + userjob);
 						sendAll(usernumber + userjob);
 						MyRoom.setUserSelect(usernumber, userjob);
 					}
@@ -158,6 +156,10 @@ public class GameRoom {
 					System.out.println(nickname + "Ready");
 					MyRoom.setStartState2(usernumber);
 					int sum = MyRoom.getStartState();
+					// MyRoom.getStartState(usernumber) 의 10의 자리 수는 총 유저의 수를
+					// MyRoom.getStartState(usernumber) 의 1의 자리 수는 레디를 한 유저의 수입니다.
+					// MyRoom.getStartState(usernumber) % 10 가 0이면 Ready를 하지 않은 상태이며
+					// MyRoom.getStartState(usernumber) % 10 가 1이면 Ready를 한 상태입니다.
 					if (MyRoom.getStartState(usernumber) % 10 == 0) {
 						System.out.println("RDOF" + usernumber + username.get(Integer.parseInt(usernumber)));
 						sendAll("RDOF" + usernumber + username.get(Integer.parseInt(usernumber)));
@@ -167,6 +169,7 @@ public class GameRoom {
 					}
 
 					System.out.println("레디 " + sum);
+					//2명이상이고 모든 방에 있는 모든 유저가 레디를 하면 게임스타트를 모든유저에게 보냅니다.
 					if (sum / 10 >= 2 && sum / 10 == sum % 10) {
 						sendAll("gameStart");
 					}
