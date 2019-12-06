@@ -133,7 +133,7 @@ public class ClientGameReceiverThread implements Runnable {
 
 						if (str2[0].equals(Client.name))
 							panelRepaint();
-
+						MainPanel.setVirusCount();
 						mainPanel.Controlpanel.Mainpanel.repaint();
 
 					} else if (str.substring(0, 4).equals("[감염]")) {
