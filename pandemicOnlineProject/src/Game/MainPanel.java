@@ -68,6 +68,15 @@ public class MainPanel extends JLayeredPane implements KeyListener, MouseListene
 	static int YellowVirus = 0;
 	static int BlackVirus = 0;
 	
+	static ImageIcon RedCube = new ImageIcon(Map.class.getResource("../Image/RedCube.png"));
+	static JLabel RedVirus_Count = new JLabel(RedCube);
+	static ImageIcon BlueCube = new ImageIcon(Map.class.getResource("../Image/BlueCube.png"));
+	static JLabel BlueVirus_Count = new JLabel(BlueCube);
+	static ImageIcon YellowCube = new ImageIcon(Map.class.getResource("../Image/YellowCube.png"));
+	static JLabel YellowVirus_Count = new JLabel(YellowCube);
+	static ImageIcon BlackCube = new ImageIcon(Map.class.getResource("../Image/BlackCube.png"));
+	static JLabel BlackVirus_Count = new JLabel(BlackCube);
+	
 	Hashtable<String, Character> characterList = new Hashtable<String, Character>();
 
 	public MainPanel(Socket gSocket, Socket cSocket, ClientReceiverThread ChatClass, String myjob, String[] otherjob) {
@@ -194,13 +203,29 @@ public class MainPanel extends JLayeredPane implements KeyListener, MouseListene
 			Infection_label.setFont(new Font("굴림", Font.BOLD, 20));
 			Infection_label.setForeground(Color.white);
 
+			RedVirus_Count.setText(" : " + RedVirus);
+			RedVirus_Count.setFont(new Font("굴림", Font.BOLD, 20));
+			RedVirus_Count.setForeground(Color.white);
+			BlueVirus_Count.setText(" : " + BlueVirus);
+			BlueVirus_Count.setFont(new Font("굴림", Font.BOLD, 20));
+			BlueVirus_Count.setForeground(Color.white);
+			YellowVirus_Count.setText(" : " + YellowVirus);
+			YellowVirus_Count.setFont(new Font("굴림", Font.BOLD, 20));
+			YellowVirus_Count.setForeground(Color.white);
+			BlackVirus_Count.setText(" : " + BlackVirus);
+			BlackVirus_Count.setFont(new Font("굴림", Font.BOLD, 20));
+			BlackVirus_Count.setForeground(Color.white);
+			
 			add(Diffusion_label);
 			add(Infection_label);
 			add(RedCureIcon_label);
 			add(BlueCureIcon_label);
 			add(BlackCureIcon_label);
 			add(YellowCureIcon_label);
-
+			add(RedVirus_Count);
+			add(BlueVirus_Count);
+			add(BlackVirus_Count);
+			add(YellowVirus_Count);
 			setOpaque(false);
 		}
 
@@ -220,6 +245,13 @@ public class MainPanel extends JLayeredPane implements KeyListener, MouseListene
 			BlackCureIcon_label.setIcon(DevelopeBlackCureIcon);
 		}
 
+	}
+	
+	public static void setVirusCount() {
+		RedVirus_Count.setText(" : " + RedVirus);
+		BlueVirus_Count.setText(" : " + BlueVirus);
+		BlackVirus_Count.setText(" : " + BlackVirus);
+		YellowVirus_Count.setText(" : " + YellowVirus);
 	}
 
 	public void setInfection() {// 전염이벤트 발생시 ClientGameReciverThread에서 실행
