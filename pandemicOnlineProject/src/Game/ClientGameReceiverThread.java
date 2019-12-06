@@ -232,6 +232,7 @@ public class ClientGameReceiverThread implements Runnable {
 						String[] str2 = str.split(":");
 						
 						if (str2[0].equals("turnStart")) {
+							// 아래의 조건은 승리조건으로 승리조건을 만족할 경우 서버에 [제어]win 을 보낸다.
 							if(str2[1].equals(Client.name)) {
 								if (Game.BlackCure && Game.BlueCure && Game.RedCure && Game.YellowCure) {
 									System.out.println("승리 - 클라1 ");
@@ -244,6 +245,7 @@ public class ClientGameReceiverThread implements Runnable {
 								turnStart = true;
 							}
 							turnUser = str2[1];
+						// 아래의 조건은 승리조건으로 승리조건을 만족할 경우 서버에 [제어]win 을 보낸다.
 						} else if (str2[0].equals("turnStop") && str2[1].equals(Client.name)) {
 							if (Game.BlackCure && Game.BlueCure && Game.RedCure && Game.YellowCure) {
 								out.writeUTF("[제어]win");
@@ -256,11 +258,11 @@ public class ClientGameReceiverThread implements Runnable {
 							turnUser = "";
 							Client.CardPrint = true;
 							turnStart = false;
-						} else if (str2[0].equals("승리")) {			//22222222222222
+						} else if (str2[0].equals("승리")) {			
 							System.out.println("승리");
 							mainPanel.add(new win(), new Integer(50));
 						}
-						else if (str.equals("패배")) {//////////////////////
+						else if (str.equals("패배")) {
 							System.out.println("패배");
 							mainPanel.add(new fail(), new Integer(50));
 							
