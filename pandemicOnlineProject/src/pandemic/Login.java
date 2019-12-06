@@ -143,7 +143,7 @@ public class Login extends JPanel implements ActionListener {
 		exit.addActionListener(this);
 		join.addActionListener(this);
 		find.addActionListener(this);
-
+		pwdtext.addActionListener(this);
 		setVisible(true);
 		
 		
@@ -228,6 +228,8 @@ public class Login extends JPanel implements ActionListener {
 			j = new JoinWindow(gsocket);
 		} else if (e.getSource() == find) { // ID, PWD 찾기 버튼 누르면 FindWindow 클래스로 감
 			f = new FindWindow(gsocket);
+		}else if (e.getSource() == pwdtext) { // 엔터 누르면 로그인 됨
+			login.doClick();
 		} else if (e.getSource() == login) { // 로그인 버튼 누르면 ID, PWD 확인 후, 맞으면 로비로 틀리면 경고
 			String str = null;
 			try {
