@@ -52,30 +52,30 @@ public class ClientGameReceiverThread implements Runnable {
 	public void colorSelect(String color, String cityName, String soilder) {
 		City city = mainPanel.Controlpanel.Mainpanel.citys.returnCity(cityName);
 		String tempjob = mainPanel.myjob;// 상상지역변수 찬영이가 이어줄꺼야
-		if (color.equals("Red") && (Game.RedCure || soilder.equals("soilder"))) {
-			Game.RedVirus -= city.Red;
+		if (color.equals("Red") && (Mainpanel.RedCure || soilder.equals("soilder"))) {
+			Mainpanel.RedVirus -= city.Red;
 			city.Red = 0;
-		} else if (color.equals("Red") && !Game.RedCure) {
+		} else if (color.equals("Red") && !Mainpanel.RedCure) {
 			--city.Red;
-			Game.RedVirus--;
-		} else if (color.equals("Black") && (Game.BlackCure || soilder.equals("soilder"))) {
-			Game.BlackVirus -= city.Black;
+			Mainpanel.RedVirus--;
+		} else if (color.equals("Black") && (Mainpanel.BlackCure || soilder.equals("soilder"))) {
+			Mainpanel.BlackVirus -= city.Black;
 			city.Black = 0;
-		} else if (color.equals("Black") && !Game.BlackCure) {
+		} else if (color.equals("Black") && !Mainpanel.BlackCure) {
 			--city.Black;
-			Game.BlackVirus--;
-		} else if (color.equals("Blue") && (Game.BlueCure || soilder.equals("soilder"))) {
-			Game.BlueVirus -= city.Blue;
+			Mainpanel.BlackVirus--;
+		} else if (color.equals("Blue") && (Mainpanel.BlueCure || soilder.equals("soilder"))) {
+			Mainpanel.BlueVirus -= city.Blue;
 			city.Blue = 0;
-		} else if (color.equals("Blue") && !Game.BlueCure) {
+		} else if (color.equals("Blue") && !Mainpanel.BlueCure) {
 			--city.Blue;
-			Game.BlueVirus--;
-		} else if (color.equals("Yellow") && (Game.YellowCure || soilder.equals("soilder"))) {
-			Game.YellowVirus -= city.Yellow;
+			Mainpanel.BlueVirus--;
+		} else if (color.equals("Yellow") && (Mainpanel.YellowCure || soilder.equals("soilder"))) {
+			Mainpanel.YellowVirus -= city.Yellow;
 			city.Yellow = 0;
-		} else if (color.equals("Yellow") && !Game.YellowCure) {
+		} else if (color.equals("Yellow") && !Mainpanel.YellowCure) {
 			--city.Yellow;
-			Game.YellowVirus--;
+			Mainpanel.YellowVirus--;
 		}
 	}
 
@@ -207,16 +207,16 @@ public class ClientGameReceiverThread implements Runnable {
 					} else if (str.substring(0, 4).equals("[개발]")) {
 						str = str.substring(4);
 						if (str.equals("Red")) {
-							Game.RedCure = true;
+							Mainpanel.RedCure = true;
 							mainPanel.count.DevelopeRedCure();
 						} else if (str.equals("Blue")) {
-							Game.BlueCure = true;
+							Mainpanel.BlueCure = true;
 							mainPanel.count.DevelopeBlueCure();
 						} else if (str.equals("Yellow")) {
-							Game.YellowCure = true;
+							Mainpanel.YellowCure = true;
 							mainPanel.count.DevelopeYellowCure();
 						} else {
-							Game.BlackCure = true;
+							Mainpanel.BlackCure = true;
 							mainPanel.count.DevelopeBlackCure();
 						}
 					} else if (str.substring(0, 4).equals("[제어]")) {
@@ -226,7 +226,7 @@ public class ClientGameReceiverThread implements Runnable {
 						if (str2[0].equals("turnStart")) {
 							// 아래의 조건은 승리조건으로 승리조건을 만족할 경우 서버에 [제어]win 을 보낸다.
 							if (str2[1].equals(Client.name)) {
-								if (Game.BlackCure && Game.BlueCure && Game.RedCure && Game.YellowCure) {
+								if (Mainpanel.BlackCure && Mainpanel.BlueCure && Mainpanel.RedCure && Mainpanel.YellowCure) {
 									System.out.println("승리 - 클라1 ");
 									out.writeUTF("[제어]win");
 									state = true;
@@ -239,7 +239,7 @@ public class ClientGameReceiverThread implements Runnable {
 							turnUser = str2[1];
 							// 아래의 조건은 승리조건으로 승리조건을 만족할 경우 서버에 [제어]win 을 보낸다.
 						} else if (str2[0].equals("turnStop") && str2[1].equals(Client.name)) {
-							if (Game.BlackCure && Game.BlueCure && Game.RedCure && Game.YellowCure) {
+							if (Mainpanel.BlackCure && Mainpanel.BlueCure && Mainpanel.RedCure && Mainpanel.YellowCure) {
 								out.writeUTF("[제어]win");
 								System.out.println("승리 - 클라2 ");
 							} else if (Citys.fail) {
