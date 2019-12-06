@@ -19,7 +19,7 @@ public class ClientGameReceiverThread implements Runnable {
 	private MainPanel mainPanel;
 	private cardLabel labelTh;// 화면위에 잠깐 띄어줄 카드 라벨이다.
 	private boolean turnStart = false;// 자기가 현제 턴인지 확인한다.
-	private String turnUser = Client.name;
+	static public String turnUser = Client.name;
 	static boolean state = false;
 
 	public ClientGameReceiverThread(Socket socket, MainPanel mainPanel) {
