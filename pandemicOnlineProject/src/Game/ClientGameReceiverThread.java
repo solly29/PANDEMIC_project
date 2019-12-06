@@ -52,12 +52,16 @@ public class ClientGameReceiverThread implements Runnable {
 	public void colorSelect(String color, String cityName, String soilder) {
 		City city = mainPanel.Controlpanel.Mainpanel.citys.returnCity(cityName);
 		if (color.equals("Red")) {
+			Game.RedVirus -= city.Red;
 			city.Red = 0;
 		} else if (color.equals("Black")) {
+			Game.BlackVirus -= city.Black;
 			city.Black = 0;
 		} else if (color.equals("Blue")) {
+			Game.BlueVirus -= city.Blue;
 			city.Blue = 0;
 		} else if (color.equals("Yellow")) {
+			Game.YellowVirus -= city.Yellow;
 			city.Yellow = 0;
 		}
 	}
@@ -216,17 +220,21 @@ public class ClientGameReceiverThread implements Runnable {
 
 						if (str2[0].equals(Client.name))
 							panelRepaint();
-					} else if (str.substring(0, 4).equals("[개발]")) {
-						str = str.substring(4);
-						if (str.equals("Red")) {
-							Game.RedCure = true;
-						} else if (str.equals("Blue")) {
-							Game.BlueCure = true;
-						} else if (str.equals("Yellow")) {
-							Game.YellowCure = true;
-						} else {
-							Game.BlackCure = true;
-						}
+					}else if (str.substring(0, 4).equals("[개발]")) {
+		                  str = str.substring(4);
+		                  if (str.equals("Red")) {
+		                     Game.RedCure = true;
+		                     mainPanel.count.DevelopeRedCure();
+		                  } else if (str.equals("Blue")) {
+		                     Game.BlueCure = true;
+		                     mainPanel.count.DevelopeBlueCure();
+		                  } else if (str.equals("Yellow")) {
+		                     Game.YellowCure = true;
+		                     mainPanel.count.DevelopeYellowCure();
+		                  } else {
+		                     Game.BlackCure = true;
+		                     mainPanel.count.DevelopeBlackCure();
+		                  }
 					} else if (str.substring(0, 4).equals("[제어]")) {
 						str = str.substring(4);
 						String[] str2 = str.split(":");
