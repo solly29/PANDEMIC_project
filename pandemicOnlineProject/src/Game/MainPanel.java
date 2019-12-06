@@ -53,11 +53,21 @@ public class MainPanel extends JLayeredPane implements KeyListener, MouseListene
 	String myjob;
 	String[] otherjob;
 	Count count = new Count();
+	
 	static int InfectionCount = 0;// 전염카운터이다.
 	static int DiffusionCount = 0;// 확산카운터이다. 7이 될시 패배
 	static ImageIcon Diffusion = new ImageIcon(Map.class.getResource("../Image/Diffusion.png"));// 확산카운터 이미지
 	static JLabel Diffusion_label = new JLabel(Diffusion);// 확산 라벨;
 
+	public static boolean RedCure = false;//빨간 치료제
+	public static boolean BlueCure = false;//파란 치료제
+	public static boolean YellowCure = false;//노란 치료제
+	public static boolean BlackCure = false;//검은 치료제
+	static int RedVirus = 0;
+	static int BlueVirus = 0;
+	static int YellowVirus = 0;
+	static int BlackVirus = 0;
+	
 	Hashtable<String, Character> characterList = new Hashtable<String, Character>();
 
 	public MainPanel(Socket gSocket, Socket cSocket, ClientReceiverThread ChatClass, String myjob, String[] otherjob) {
