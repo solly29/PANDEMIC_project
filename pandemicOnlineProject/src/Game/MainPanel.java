@@ -130,7 +130,7 @@ public class MainPanel extends JLayeredPane implements KeyListener, MouseListene
 		// addFocusListener(new MyFocuseListener());//현재 패널이 키보드 포커싱을 알아먹는지 못 알아 먹는지
 		// 알아보기 위하여
 		this.add(count, new Integer(50));// 확산, 감염, 백신개발 여부 알림판
-		count.setBounds(0, 0, 70, 130);
+		count.setBounds(10, 0, 87, 400);
 
 		this.add(history, new Integer(10));
 		history.setBounds(0, 400, history.getHeight(), history.getWidth());
@@ -173,10 +173,8 @@ public class MainPanel extends JLayeredPane implements KeyListener, MouseListene
 	}
 
 		class Count extends JPanel {
-		ImageIcon Infection = new ImageIcon(Map.class.getResource("../Image/Infection.png"));
 		// 전염카운터 이미지
-		
-
+		ImageIcon Infection = new ImageIcon(Map.class.getResource("../Image/Infection.png"));
 		ImageIcon RedCureIcon = new ImageIcon(Map.class.getResource("../Image/red.png"));// 빨간치료제아이콘
 		ImageIcon DevelopeRedCureIcon = new ImageIcon(Map.class.getResource("../Image/red2.png"));// 빨간치료제아이콘개발시
 		ImageIcon BlueCureIcon = new ImageIcon(Map.class.getResource("../Image/blue.png"));// 파란치료재아이콘
@@ -212,7 +210,7 @@ public class MainPanel extends JLayeredPane implements KeyListener, MouseListene
 			YellowVirus_Count.setText(" : " + YellowVirus);
 			YellowVirus_Count.setFont(new Font("굴림", Font.BOLD, 20));
 			YellowVirus_Count.setForeground(Color.white);
-			BlackVirus_Count.setText(" : " + BlackVirus);
+			BlackVirus_Count.setText(": " + BlackVirus);
 			BlackVirus_Count.setFont(new Font("굴림", Font.BOLD, 20));
 			BlackVirus_Count.setForeground(Color.white);
 			
@@ -250,7 +248,7 @@ public class MainPanel extends JLayeredPane implements KeyListener, MouseListene
 	public static void setVirusCount() {
 		RedVirus_Count.setText(" : " + RedVirus);
 		BlueVirus_Count.setText(" : " + BlueVirus);
-		BlackVirus_Count.setText(" : " + BlackVirus);
+		BlackVirus_Count.setText(": " + BlackVirus);
 		YellowVirus_Count.setText(" : " + YellowVirus);
 	}
 
