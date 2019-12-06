@@ -278,6 +278,7 @@ public class ClientGameReceiverThread implements Runnable {
 						mainPanel.repaint();
 						mainPanel.revalidate();
 						Thread.sleep(500);
+						mainPanel.setInfection();
 					} else if (str.substring(0, 4).equals("[공유]")) {
 						str = str.substring(4);
 						String[] str2 = str.split(":");
