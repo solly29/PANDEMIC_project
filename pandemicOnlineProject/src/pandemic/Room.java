@@ -60,6 +60,7 @@ public class Room extends JPanel {
       
       
       try {
+         // 룸에 입장할 때 다른 사람의 직업, 레디 여부를 알리고 알리기 위한 부분
          gameOutput = new DataOutputStream(gsocket.getOutputStream());
          gameOutput.writeUTF(Client.name);
          gameOutput.writeUTF("random");
@@ -152,7 +153,7 @@ public class Room extends JPanel {
          
          for (int i = 0; i < 9; i++) {
             list[i] = new JButton(getCharacterImage(job[i]));
-            
+            // 캐릭터 카드에 마우스를 올리면 설명하는 부분
             switch(i){
                case 0 : 
                   list[i].setToolTipText("<html>" + "<h1>비상 대책 설계자<h1/><h2>·  한 번의 행동으로, 버려진 이벤트 카드 중 한장을 골라<h2/> "
@@ -209,6 +210,7 @@ public class Room extends JPanel {
                }
 
                @Override
+               // 클릭한 직업을 모든 사람에게 알리는 부분
                public void mousePressed(MouseEvent e) {
                   temp.setIcon(getCharacterImage(tjob, "push"));
                   try {
@@ -365,6 +367,7 @@ public class Room extends JPanel {
                }
 
                public void mousePressed(MouseEvent e) {
+                  // 나가기 버튼을 누르면 서버로 exit 를 보내고 로비로 이동하는 부분
                   if (e.getSource() == buttons[1]) {
                      buttons[1].setIcon(exitpush);
                      try {
@@ -382,6 +385,7 @@ public class Room extends JPanel {
 
                      top.revalidate();
                      top.repaint();
+                  // start 부분을 누르면 서버로 누가 Ready 를 했는지 알리는 부분
                   } else {
                      buttons[0].setIcon(startpush);
                      try {
