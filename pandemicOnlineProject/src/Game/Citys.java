@@ -368,51 +368,51 @@ class City {// 도시 클래스
 			return;
 		
 		if (color.equals("Red")) {
-			if (Game.RedVirus == 0 && Game.RedCure) {
+			if (MainPanel.RedVirus == 0 && MainPanel.RedCure) {
 				return;
 			}
-			Game.RedVirus = Game.RedVirus + i;
+			MainPanel.RedVirus = MainPanel.RedVirus + i;
 			if ((Red = Red + i) > 3) {
 				System.out.println("확산이벤트는 아직 안넣었다.");
 				Red = Red - i;
-				Game.RedVirus = Game.RedVirus - i;
+				MainPanel.RedVirus = MainPanel.RedVirus - i;
 				diffusionVirus(color);
 			}
 		} else if (color.equals("Blue")) {
-			if (Game.BlueVirus == 0 && Game.BlueCure) {
+			if (MainPanel.BlueVirus == 0 && MainPanel.BlueCure) {
 				return;
 			}
-			Game.BlueVirus = Game.BlueVirus + i;
+			MainPanel.BlueVirus = MainPanel.BlueVirus + i;
 			if ((Blue = Blue + i) > 3) {
 				Blue = Blue - i;
-				Game.BlueVirus = Game.BlueVirus + i;
+				MainPanel.BlueVirus = MainPanel.BlueVirus + i;
 				diffusionVirus(color);
 			}
 		} else if (color.equals("Yellow")) {
-			if (Game.YellowVirus == 0 && Game.YellowCure) {
+			if (MainPanel.YellowVirus == 0 && MainPanel.YellowCure) {
 				return;
 			}
-			Game.YellowVirus = Game.YellowVirus + i;
+			MainPanel.YellowVirus = MainPanel.YellowVirus + i;
 			if ((Yellow = Yellow + i) > 3) {
 				Yellow = Yellow - i;
-				Game.YellowVirus = Game.YellowVirus - i;
+				MainPanel.YellowVirus = MainPanel.YellowVirus - i;
 				diffusionVirus(color);
 			}
 		} else if (color.equals("Black")) {
-			if (Game.BlackVirus == 0 && Game.BlackCure) {
+			if (MainPanel.BlackVirus == 0 && MainPanel.BlackCure) {
 				return;
 			}
-			Game.BlackVirus = Game.BlackVirus + i;
+			MainPanel.BlackVirus = MainPanel.BlackVirus + i;
 			if ((Black = Black + i) > 3) {
 				Black = Black - i;
-				Game.BlackVirus = Game.BlackVirus - i;
+				MainPanel.BlackVirus = MainPanel.BlackVirus - i;
 				diffusionVirus(color);
 			}
 		} else {
 			System.out.println("Citys PlusVirus에 잘못된 문자가 입력 되었다.");
 		}
 		// 패배 조건 중 하나인 바이러스 큐브가 24개 이상일 때 실패하는 부분
-		if(Game.RedVirus >= 24 || Game.BlueVirus >= 24 || Game.YellowVirus >= 24 || Game.BlackVirus>= 24) {
+		if(MainPanel.RedVirus >= 24 || MainPanel.BlueVirus >= 24 || MainPanel.YellowVirus >= 24 || MainPanel.BlackVirus>= 24) {
 			System.out.println(" 바이러스 큐브 24개 오버");
 			try {
 				MainPanel.GameOutStream.writeUTF("[제어]fail");
@@ -433,10 +433,10 @@ class City {// 도시 클래스
 				adCity.get(j).PlusVirus(color, 1);
 		}
 		
-		Game.diffusionToken++;
-		System.out.println(" 확산마커 수 : " + Game.diffusionToken );
+		MainPanel.setDiffusion();
+	
 		// 패배 조건 중 하나인 확산이 7번 일어날 때 실패하는 부분
-		if(Game.diffusionToken == 7 ) {
+		if(MainPanel.DiffusionCount == 7 ) {
 			try {
 				MainPanel.GameOutStream.writeUTF("[제어]fail");
 			} catch (IOException e) {
@@ -446,7 +446,7 @@ class City {// 도시 클래스
 			System.out.println(" 확산 마커 패배");
 			Citys.fail = true;			
 		}
-		MainPanel.setDiffusion();
+		
 	}
 
 	public void drawCube(Graphics g) {
