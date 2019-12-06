@@ -4,6 +4,8 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.JOptionPane;
 
+import pandemic.Login;
+
 public class ESC extends JOptionPane {
 
 	public ESC() {
