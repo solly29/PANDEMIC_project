@@ -411,7 +411,7 @@ class City {// 도시 클래스
 		} else {
 			System.out.println("Citys PlusVirus에 잘못된 문자가 입력 되었다.");
 		}
-		
+		// 패배 조건 중 하나인 바이러스 큐브가 24개 이상일 때 실패하는 부분
 		if(Game.RedVirus >= 24 || Game.BlueVirus >= 24 || Game.YellowVirus >= 24 || Game.BlackVirus>= 24) {
 			System.out.println(" 바이러스 큐브 24개 오버");
 			try {
@@ -423,7 +423,8 @@ class City {// 도시 클래스
 			}
 		}
 	}
-
+	
+	
 	public void diffusionVirus(String color) {
 		City.visit.add(name);
 		ArrayList<City> adCity = Citys.AdjacencyCity(name);
@@ -434,7 +435,7 @@ class City {// 도시 클래스
 		
 		Game.diffusionToken++;
 		System.out.println(" 확산마커 수 : " + Game.diffusionToken );
-		
+		// 패배 조건 중 하나인 확산이 7번 일어날 때 실패하는 부분
 		if(Game.diffusionToken == 7 ) {
 			try {
 				MainPanel.GameOutStream.writeUTF("[제어]fail");
