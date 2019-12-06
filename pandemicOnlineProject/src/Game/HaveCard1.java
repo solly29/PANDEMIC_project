@@ -94,16 +94,16 @@ public class HaveCard1 {
 				String job = Controlpanel.Mainpanel.myjob;// 현재 임의의 값이다. 이 job은 캐릭터의 직업을 받아와야하는 데 쓰여야할 String값이다/
 				if (Cure_Source >= 4 && job.equals("scientist")) {// 만약 과학자가 Cure_Source가 4이상 즉 과학자가 같은 카드를 4장이상 모았다.
 					if (Color.equals("Red")) {
-						Mainpanel.RedCure = true;
+						MainPanel.RedCure = true;
 						color = "Red";
 					} else if (Color.equals("Blue")) {
-						Mainpanel.BlueCure = true;
+						MainPanel.BlueCure = true;
 						color = "Blue";
 					} else if (Color.equals("Yellow")) {
-						Mainpanel.YellowCure = true;
+						MainPanel.YellowCure = true;
 						color = "Yellow";
 					} else if (Color.equals("Black")) {
-						Mainpanel.BlackCure = true;
+						MainPanel.BlackCure = true;
 						color = "Black";
 					}
 					for (int i = 0; i < 4; i++)
@@ -118,16 +118,16 @@ public class HaveCard1 {
 		
 		if (Cure_Source == 5) {
 			if (Color.equals("Red")) {
-				Mainpanel.RedCure = true;
+				MainPanel.RedCure = true;
 				color = "Red";
 			} else if (Color.equals("Blue")) {
-				Mainpanel.BlueCure = true;
+				MainPanel.BlueCure = true;
 				color = "Blue";
 			} else if (Color.equals("Yellow")) {
-				Mainpanel.YellowCure = true;
+				MainPanel.YellowCure = true;
 				color = "Yellow";
 			} else if (Color.equals("Black")){
-				Mainpanel.BlackCure = true;
+				MainPanel.BlackCure = true;
 				color = "Black";
 			}
 			removeCards(PreditedRemove);// 5장의 카드를 한번에 삭제
