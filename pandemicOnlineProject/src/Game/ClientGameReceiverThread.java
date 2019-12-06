@@ -52,30 +52,30 @@ public class ClientGameReceiverThread implements Runnable {
 	public void colorSelect(String color, String cityName, String soilder) {
 		City city = mainPanel.Controlpanel.Mainpanel.citys.returnCity(cityName);
 		String tempjob = mainPanel.myjob;// 상상지역변수 찬영이가 이어줄꺼야
-		if (color.equals("Red") && (Mainpanel.RedCure || soilder.equals("soilder"))) {
-			Mainpanel.RedVirus -= city.Red;
+		if (color.equals("Red") && (MainPanel.RedCure || soilder.equals("soilder"))) {
+			MainPanel.RedVirus -= city.Red;
 			city.Red = 0;
-		} else if (color.equals("Red") && !Mainpanel.RedCure) {
+		} else if (color.equals("Red") && !MainPanel.RedCure) {
 			--city.Red;
-			Mainpanel.RedVirus--;
-		} else if (color.equals("Black") && (Mainpanel.BlackCure || soilder.equals("soilder"))) {
-			Mainpanel.BlackVirus -= city.Black;
+			MainPanel.RedVirus--;
+		} else if (color.equals("Black") && (MainPanel.BlackCure || soilder.equals("soilder"))) {
+			MainPanel.BlackVirus -= city.Black;
 			city.Black = 0;
-		} else if (color.equals("Black") && !Mainpanel.BlackCure) {
+		} else if (color.equals("Black") && !MainPanel.BlackCure) {
 			--city.Black;
-			Mainpanel.BlackVirus--;
-		} else if (color.equals("Blue") && (Mainpanel.BlueCure || soilder.equals("soilder"))) {
-			Mainpanel.BlueVirus -= city.Blue;
+			MainPanel.BlackVirus--;
+		} else if (color.equals("Blue") && (MainPanel.BlueCure || soilder.equals("soilder"))) {
+			MainPanel.BlueVirus -= city.Blue;
 			city.Blue = 0;
-		} else if (color.equals("Blue") && !Mainpanel.BlueCure) {
+		} else if (color.equals("Blue") && !MainPanel.BlueCure) {
 			--city.Blue;
-			Mainpanel.BlueVirus--;
-		} else if (color.equals("Yellow") && (Mainpanel.YellowCure || soilder.equals("soilder"))) {
-			Mainpanel.YellowVirus -= city.Yellow;
+			MainPanel.BlueVirus--;
+		} else if (color.equals("Yellow") && (MainPanel.YellowCure || soilder.equals("soilder"))) {
+			MainPanel.YellowVirus -= city.Yellow;
 			city.Yellow = 0;
-		} else if (color.equals("Yellow") && !Mainpanel.YellowCure) {
+		} else if (color.equals("Yellow") && !MainPanel.YellowCure) {
 			--city.Yellow;
-			Mainpanel.YellowVirus--;
+			MainPanel.YellowVirus--;
 		}
 	}
 
@@ -207,16 +207,16 @@ public class ClientGameReceiverThread implements Runnable {
 					} else if (str.substring(0, 4).equals("[개발]")) {
 						str = str.substring(4);
 						if (str.equals("Red")) {
-							Mainpanel.RedCure = true;
+							MainPanel.RedCure = true;
 							mainPanel.count.DevelopeRedCure();
 						} else if (str.equals("Blue")) {
-							Mainpanel.BlueCure = true;
+							MainPanel.BlueCure = true;
 							mainPanel.count.DevelopeBlueCure();
 						} else if (str.equals("Yellow")) {
-							Mainpanel.YellowCure = true;
+							MainPanel.YellowCure = true;
 							mainPanel.count.DevelopeYellowCure();
 						} else {
-							Mainpanel.BlackCure = true;
+							MainPanel.BlackCure = true;
 							mainPanel.count.DevelopeBlackCure();
 						}
 					} else if (str.substring(0, 4).equals("[제어]")) {
@@ -226,7 +226,7 @@ public class ClientGameReceiverThread implements Runnable {
 						if (str2[0].equals("turnStart")) {
 							// 아래의 조건은 승리조건으로 승리조건을 만족할 경우 서버에 [제어]win 을 보낸다.
 							if (str2[1].equals(Client.name)) {
-								if (Mainpanel.BlackCure && Mainpanel.BlueCure && Mainpanel.RedCure && Mainpanel.YellowCure) {
+								if (MainPanel.BlackCure && MainPanel.BlueCure && MainPanel.RedCure && MainPanel.YellowCure) {
 									System.out.println("승리 - 클라1 ");
 									out.writeUTF("[제어]win");
 									state = true;
@@ -239,7 +239,7 @@ public class ClientGameReceiverThread implements Runnable {
 							turnUser = str2[1];
 							// 아래의 조건은 승리조건으로 승리조건을 만족할 경우 서버에 [제어]win 을 보낸다.
 						} else if (str2[0].equals("turnStop") && str2[1].equals(Client.name)) {
-							if (Mainpanel.BlackCure && Mainpanel.BlueCure && Mainpanel.RedCure && Mainpanel.YellowCure) {
+							if (MainPanel.BlackCure && MainPanel.BlueCure && MainPanel.RedCure && MainPanel.YellowCure) {
 								out.writeUTF("[제어]win");
 								System.out.println("승리 - 클라2 ");
 							} else if (Citys.fail) {
