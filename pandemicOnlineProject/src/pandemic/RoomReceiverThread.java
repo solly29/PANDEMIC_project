@@ -61,7 +61,8 @@ class RoomReceiverThread implements Runnable{
 				} else {
 					usernumber = str.charAt(0)-48;
 				}
-				
+				// 서버로 부터 몇번째 유저인지 아이디가 무엇인지 받고
+				// 화면에 표시하는 부분
 				if( str.substring(0,4).equals("[ID]") ) {
 					int num = str.charAt(4)-48;
 					System.out.println(num);
@@ -74,7 +75,7 @@ class RoomReceiverThread implements Runnable{
 					
 				}
 				
-				
+				// 서버로 게임스타트를 받으면 다시 게임스타트를 보내고 게임화면으로 넘어가는 부분
 				if(str.equals("gameStart")) {
 					gameOutput.writeUTF("gameStart");
 					gameOutput.writeUTF("");
@@ -93,7 +94,7 @@ class RoomReceiverThread implements Runnable{
 					System.out.println("RRT end");
 					break;
 				}
-				
+				// 몇번째 유저의 직업이 무엇인지 서버로 받고 화면에 표시하는 부분
 				if(usernumber == 0) {
 					System.out.println(usernumber + "번 쨰 ");
 					for(int i =0; i< job.length; i++) {
