@@ -446,6 +446,7 @@ class City {// 도시 클래스
 			System.out.println(" 확산 마커 패배");
 			Citys.fail = true;			
 		}
+		MainPanel.setDiffusion();
 	}
 
 	public void drawCube(Graphics g) {
