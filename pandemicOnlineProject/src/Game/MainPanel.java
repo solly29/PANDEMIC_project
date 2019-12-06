@@ -111,7 +111,7 @@ public class MainPanel extends JLayeredPane implements KeyListener, MouseListene
 		// addFocusListener(new MyFocuseListener());//현재 패널이 키보드 포커싱을 알아먹는지 못 알아 먹는지
 		// 알아보기 위하여
 		this.add(count, new Integer(50));// 확산, 감염, 백신개발 여부 알림판
-	      count.setBounds(0, 0, 85, 130);
+	      count.setBounds(0, 0, 70, 130);
 	      
 	      this.add(history, new Integer(10));
 	      history.setBounds(0, 400, history.getHeight(), history.getWidth());
