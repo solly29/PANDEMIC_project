@@ -23,7 +23,7 @@ public class AirplanePanel extends ControlShape {
 	JPanel Scrollin;//스크롤 안에 넣을 패널
 	JScrollPane scroll;//스크롤
 
-	ImageIcon button = new ImageIcon(AirplanePanel.class.getResource("../Image/button.png"));//버튼용 이미지
+	ImageIcon button = new ImageIcon(AirplanePanel.class.getResource("../Image/airplane2.png"));//버튼용 이미지
 	String CharacterCurrentCity;
 
 	public AirplanePanel(ControlPanel Controlpanel) {
