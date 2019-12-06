@@ -114,7 +114,7 @@ public class CardList {
 
 		for (int i = infAbandonCard.size() - 1; i >= 0; i--)
 			infectionCardQue.addFirst(infAbandonCard.get(i));
-
+		infAbandonCard.removeAll(infAbandonCard);
 		return card;
 	}
 	
