@@ -422,6 +422,7 @@ class City {// 도시 클래스
 				e.printStackTrace();
 			}
 		}
+		MainPanel.setVirusCount();
 	}
 	
 	
