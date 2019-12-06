@@ -1,5 +1,7 @@
 package Game;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
@@ -11,7 +13,7 @@ import pandemic.Client;
 
 public class MoveLabatoryPanel extends ControlShape {
 	ControlPanel Controlpanel;
-	ImageIcon button = new ImageIcon(AirplanePanel.class.getResource("../Image/button.png"));
+	ImageIcon button = new ImageIcon(AirplanePanel.class.getResource("../Image/back.png"));
 
 	public MoveLabatoryPanel(ControlPanel Controlpanel) {
 		this.Controlpanel = Controlpanel;
@@ -22,16 +24,23 @@ public class MoveLabatoryPanel extends ControlShape {
 				if (Controlpanel.Mainpanel.citys.returnCity(text[i]).getLabatory()) {
 					JLabel t = new JLabel("", button, JLabel.CENTER);
 					t.setText(text[i]);
-					t.setVerticalTextPosition(JLabel.CENTER);
+					t.setVerticalTextPosition(JLabel.BOTTOM);
 					t.setHorizontalTextPosition(JLabel.CENTER);
 					t.addMouseListener(new MoveLabatoryLabel());
 					add(t);
+					Font font = new Font("HY헤드라인M", Font.PLAIN, 20);
+					t.setFont(font);
+					t.setForeground(Color.white);
 				}
 			}
 		}
+		JLabel Back = new JLabel("뒤로", button, JLabel.CENTER);
+		
+		Font font = new Font("HY헤드라인M", Font.PLAIN, 20);
+		Back.setFont(font);
+		Back.setForeground(Color.white);
 
-		JLabel Back = new JLabel("Back", button, JLabel.CENTER);
-		Back.setVerticalTextPosition(JLabel.CENTER);
+		Back.setVerticalTextPosition(JLabel.BOTTOM);
 		Back.setHorizontalTextPosition(JLabel.CENTER);
 		Back.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {

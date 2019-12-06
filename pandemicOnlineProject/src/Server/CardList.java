@@ -55,10 +55,12 @@ public class CardList {
 	}
 
 	// 도시카드 세팅(난이도별로)
-	private void cityCardStting() {
+	public void cityCardStting() {
+		int size = cityCard.size();
 		for (int i = 0; i < difficulty; i++) {
-			int rom = (int) (Math.random() * (53 / difficulty));
-			cityCard.add(((53 / difficulty) * i) + rom, "전염");
+			int rom = (int) (Math.random() * (size / difficulty));
+			System.out.println("12313213");
+			cityCard.add(((size / difficulty) * i) + rom, "전염");
 		}
 	}
 
@@ -86,16 +88,13 @@ public class CardList {
 	}
 
 	// 도시카드 뽑기
-	public String[] cityCardHamdling() {
-		String[] str = new String[2];
-		for (int i = 0; i < 2; i++) {
+	public String[] cityCardHamdling(int num) {
+		String[] str = new String[num];
+		for (int i = 0; i < num; i++) {
 			String card = cityCardQue.poll();
 			str[i] = card;
 			System.out.println(card+"오류오류오");
-			for (int j = 0; j < specialCardList.length; j++) {
-				if (card.equals(specialCardList[j]))
-					cityAbandonCard.add(card);
-			}
+			cityAbandonCard.add(card);
 			if(cityCardQue.size() <= 1) {
 				state = false;
 			}

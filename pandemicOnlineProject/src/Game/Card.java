@@ -71,7 +71,7 @@ public class Card extends JLabel {
 				 * pos.getY());
 				 * Controlpanel.Mainpanel.characterList.get(Client.name).setCC(CityName, color);
 				 */
-				
+
 				/*
 				 * Controlpanel.invalidate(); Controlpanel.removeAll(); Controlpanel.add(new
 				 * BasicSelect(Controlpanel)); Controlpanel.Mainpanel.Controlpanel.setBounds(0,
@@ -158,13 +158,19 @@ class PeaceNightCard extends Card {
 				// 평온한 하룻밤의 이벤트 같은 경우에는 서버에서 이벤트를 처리해줘야한다.
 				// 서버에다가 이번에는 전염카드 이벤트 발생시키지 않는 메시지를 보내면 될꺼 같다.
 				if (!Client.CardPrint) {
-					Controlpanel.Havecard.removeCard(CityName);
-					Controlpanel.invalidate();
-					Controlpanel.removeAll();
-					Controlpanel.add(new BasicSelect(Controlpanel));
-					Controlpanel.Mainpanel.Controlpanel.setBounds(0, 840, 1920, 240);
-					Controlpanel.revalidate();
-					Controlpanel.repaint();
+					try {
+						Controlpanel.Havecard.removeCard(CityName);
+						Controlpanel.invalidate();
+						Controlpanel.removeAll();
+						Controlpanel.add(new BasicSelect(Controlpanel));
+						Controlpanel.Mainpanel.Controlpanel.setBounds(0, 840, 1920, 240);
+						Controlpanel.revalidate();
+						Controlpanel.repaint();
+						Controlpanel.Mainpanel.GameOutStream.writeUTF("[특수]평온한 하룻밤");
+					} catch (Exception e1) {
+						// TODO: handle exception
+						e1.printStackTrace();
+					}
 				}
 			}
 		});
@@ -191,7 +197,7 @@ class PredictCard extends Card {// 예측
 
 			public void mousePressed(MouseEvent e) {
 				// 이것도 서버가 처리해줘야한다 전염카드 덱위에서 6장을 뽑아
-				// 뽑아서 이것도 JOptionPane을 사용하자.			
+				// 뽑아서 이것도 JOptionPane을 사용하자.
 				if (!Client.CardPrint) {
 					try {
 						Controlpanel.Havecard.removeCard(CityName);
@@ -278,18 +284,18 @@ class EmergencyAirCard extends Card {// 긴급공중수송
 			public void mousePressed(MouseEvent e) {
 				JLabel label = (JLabel) e.getSource();
 				String Choicecity = label.getText();
-				/*Point ChoicePoint = Controlpanel.Mainpanel.citys.CityPosition(Choicecity);
-				Controlpanel.Mainpanel.characterList.get(Client.name).setXY(ChoicePoint.x, ChoicePoint.y);
-				Controlpanel.Mainpanel.characterList.get(Client.name).setCC(Choicecity,
-						Controlpanel.Mainpanel.citys.returnCity(Choicecity).getColor());
+				/*
+				 * Point ChoicePoint = Controlpanel.Mainpanel.citys.CityPosition(Choicecity);
+				 * Controlpanel.Mainpanel.characterList.get(Client.name).setXY(ChoicePoint.x,
+				 * ChoicePoint.y);
+				 * Controlpanel.Mainpanel.characterList.get(Client.name).setCC(Choicecity,
+				 * Controlpanel.Mainpanel.citys.returnCity(Choicecity).getColor());
+				 * 
+				 * Controlpanel.invalidate(); Controlpanel.removeAll(); Controlpanel.add(new
+				 * BasicSelect(Controlpanel)); Controlpanel.revalidate();
+				 * Controlpanel.repaint(); Controlpanel.Mainpanel.repaint();
+				 */
 
-				Controlpanel.invalidate();
-				Controlpanel.removeAll();
-				Controlpanel.add(new BasicSelect(Controlpanel));
-				Controlpanel.revalidate();
-				Controlpanel.repaint();
-				Controlpanel.Mainpanel.repaint();*/
-				
 				if (!Client.CardPrint) {
 					try {
 						Controlpanel.Mainpanel.GameOutStream.writeUTF("[이동]" + Client.name + ":" + Choicecity);
@@ -373,59 +379,60 @@ class GrandOfMoneyCard extends Card {// 정부보조금
 				JLabel label = (JLabel) e.getSource();
 				String Choicecity = label.getText();
 				City choice = Controlpanel.Mainpanel.citys.returnCity(Choicecity);
-				/*choice.setLabatory();
+				/*
+				 * choice.setLabatory();
+				 * 
+				 * Controlpanel.invalidate(); Controlpanel.removeAll(); Controlpanel.add(new
+				 * BasicSelect(Controlpanel)); Controlpanel.revalidate();
+				 * Controlpanel.repaint(); Controlpanel.Mainpanel.repaint();
+				 */
 
-				Controlpanel.invalidate();
-				Controlpanel.removeAll();
-				Controlpanel.add(new BasicSelect(Controlpanel));
-				Controlpanel.revalidate();
-				Controlpanel.repaint();
-				Controlpanel.Mainpanel.repaint();*/
-				
 				try {
 					Controlpanel.Mainpanel.GameOutStream.writeUTF("[건설]" + Client.name + ":" + Choicecity);
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				
+
 			}
 		}
 	}
 }
 
+class PowerUp extends Card {// 파워업 카드
 
-class PowerUp extends Card {//파워업 카드
+	public PowerUp(ControlPanel Controlpanel, String CityName) {
+		super(CityName);
+		this.CityName = "파워업";
+		this.color = "special";
 
-   public PowerUp(ControlPanel Controlpanel, String CityName) {
-      super(CityName);
-      this.CityName = "파워업";
-      this.color = "special";
-      
-      ImageIcon Card = new ImageIcon(Card.class.getResource("../Image/" + CityName + ".png"));
-      ImageIcon CardPush = new ImageIcon(Card.class.getResource("../Image/" + CityName + "Push.png"));
+		ImageIcon Card = new ImageIcon(Card.class.getResource("../Image/" + CityName + ".png"));
+		ImageIcon CardPush = new ImageIcon(Card.class.getResource("../Image/" + CityName + "Push.png"));
 
-      setIcon(Card);
-      this.addMouseListener(new MouseAdapter() {
-         public void mouseEntered(MouseEvent e) {
-            setIcon((CardPush));// 마우스가 카드 위에 올라갔을 때 색상이 바뀌게.
-         }
+		setIcon(Card);
+		this.addMouseListener(new MouseAdapter() {
+			public void mouseEntered(MouseEvent e) {
+				setIcon((CardPush));// 마우스가 카드 위에 올라갔을 때 색상이 바뀌게.
+			}
 
-         public void mouseExited(MouseEvent e) {
-            setIcon((Card));// 마우스가 떼졌을 때 카드의 색상이 원래대로
-         }
+			public void mouseExited(MouseEvent e) {
+				setIcon((Card));// 마우스가 떼졌을 때 카드의 색상이 원래대로
+			}
 
-         public void mousePressed(MouseEvent e) {
-            Controlpanel.Havecard.removeCard(CityName);
-            String WillCard=Controlpanel.Mainpanel.characterList.get(Client.name).getCurrentposition();
-            String Color=Controlpanel.Mainpanel.citys.returnCity(WillCard).getColor();
-            Controlpanel.Havecard.insertCard(Controlpanel, WillCard, Color);
-            Controlpanel.invalidate();
-            Controlpanel.removeAll();
-            Controlpanel.Mainpanel.Controlpanel.setBounds(0, 840, 1920, 240);
-            Controlpanel.revalidate();
-            Controlpanel.repaint();
-         }
-      });
-   }
+			public void mousePressed(MouseEvent e) {
+				if (!Client.CardPrint) {
+					Controlpanel.Havecard.removeCard(CityName);
+					String WillCard = Controlpanel.Mainpanel.characterList.get(Client.name).getCurrentposition();
+					String Color = Controlpanel.Mainpanel.citys.returnCity(WillCard).getColor();
+					Controlpanel.Havecard.insertCard(Controlpanel, WillCard, Color);
+					Controlpanel.invalidate();
+					Controlpanel.removeAll();
+					Controlpanel.Mainpanel.Controlpanel.setBounds(0, 840, 1920, 240);
+					Controlpanel.add(new BasicSelect(Controlpanel));
+					Controlpanel.revalidate();
+					Controlpanel.repaint();
+				}
+			}
+		});
+	}
 }

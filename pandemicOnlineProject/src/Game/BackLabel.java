@@ -1,5 +1,7 @@
 package Game;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -17,6 +19,9 @@ class BackLabel extends JLabel {
 		this.setText("뒤로");
 		this.setIcon(BackIcon);
 		this.Controlpanel = Controlpanel;
+		Font font = new Font("HY헤드라인M", Font.PLAIN, 20);
+		this.setFont(font);
+		this.setForeground(Color.white);
 		this.setVerticalTextPosition(JLabel.BOTTOM);
 		this.setHorizontalTextPosition(JLabel.CENTER);
 		this.addMouseListener(new MouseAdapter() {

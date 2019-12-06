@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.LinkedHashMap;
 
 /*
  * 룸에 있는 모든 유저를 담고있다. 그리고 그 유저의 정보, 제어권을 가지고있다
@@ -15,7 +16,7 @@ import java.util.Hashtable;
 public class UserList{
 	//dataOutputStream은 다른 스트림과는 다르게 자료형 그대로 가지고온다.
 	//ex) int형으로 데이터를 보내면 int형으로 받을수 있다.
-	private Hashtable<String, DataOutputStream> userGameList = new Hashtable<String, DataOutputStream>();//게임 스트림
+	private LinkedHashMap<String, DataOutputStream> userGameList = new LinkedHashMap<String, DataOutputStream>();//게임 스트림
 	private Hashtable<String, DataOutputStream> userChatList = new Hashtable<String, DataOutputStream>();//채팅 스트림
 	private Hashtable<String, Socket[]> totalUserList = LobbyServer.userList;
 	private ArrayList<String> userName = new ArrayList<String>();
@@ -71,7 +72,7 @@ public class UserList{
 	}
 	
 	//방의 유저의 게임 스트림을 반환
-	public Hashtable<String, DataOutputStream> getUserListGame(){
+	public LinkedHashMap<String, DataOutputStream> getUserListGame(){
 		return userGameList;
 	}
 	

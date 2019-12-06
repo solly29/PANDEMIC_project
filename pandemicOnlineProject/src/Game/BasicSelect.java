@@ -1,5 +1,6 @@
 package Game;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -19,13 +20,15 @@ import Game.MoveLabatoryPanel;
 import pandemic.Client;
 
 public class BasicSelect extends ControlShape {// 기본선택 사항
-	ImageIcon temp = new ImageIcon(Map.class.getResource("../Image/temp.png"));// 임시이미지아이콘
+	ImageIcon special = new ImageIcon(Map.class.getResource("../Image/special.png"));// 임시이미지아이콘
 	ImageIcon Protection = new ImageIcon(Map.class.getResource("../Image/Protection.png"));// 치료 이미지
-	ImageIcon move = new ImageIcon(Map.class.getResource("../Image/move.png"));// 이동 이미지아이콘
+	ImageIcon move = new ImageIcon(Map.class.getResource("../Image/move-1.png"));// 이동 이미지아이콘
 	ImageIcon cure = new ImageIcon(Map.class.getResource("../Image/Cure.png"));// 치료 이미지아이콘
 	ImageIcon build = new ImageIcon(Map.class.getResource("../Image/build.png"));// 건설 이미지아이콘
 	ImageIcon share = new ImageIcon(Map.class.getResource("../Image/share.png"));// 공유 이미지아이콘
 	ImageIcon develop = new ImageIcon(Map.class.getResource("../Image/developCure.png"));// 백신개발 이미지아이콘
+	ImageIcon airplane = new ImageIcon(Map.class.getResource("../Image/airplane.png"));// 백신개발 이미지아이콘
+	ImageIcon movelabatory = new ImageIcon(Map.class.getResource("../Image/labatorymove.png"));
 	
 	String[] texts = { "이동", "치료", "건설", "공유", "개발", "카드", "능력" };
 	JLabel[] labels = new JLabel[9];
@@ -42,14 +45,15 @@ public class BasicSelect extends ControlShape {// 기본선택 사항
 		labels[3] = new JLabel("공유", share, JLabel.CENTER);
 		labels[4] = new JLabel("개발", develop, JLabel.CENTER);
 		labels[5] = new JLabel("카드", share, JLabel.CENTER);
-		labels[6] = new JLabel("항공기이동", move, JLabel.CENTER);
-		labels[7] = new JLabel("연구소 이동", build, JLabel.CENTER);
+		labels[6] = new JLabel("항공기이동", airplane, JLabel.CENTER);
+		labels[7] = new JLabel("연구소 이동", movelabatory, JLabel.CENTER);
 		
-		Font font = new Font("굴림", Font.BOLD, 20);
+		Font font = new Font("HY헤드라인M", Font.PLAIN, 20);
 		for (int i = 0; i < 8; i++) {// Active능력을 가진 캐릭터가 상속받을 시에는 수정해준다.
 			labels[i].setVerticalTextPosition(JLabel.BOTTOM);
 			labels[i].setHorizontalTextPosition(JLabel.CENTER);
 			labels[i].setFont(font);
+			labels[i].setForeground(Color.white);
 			// 라벨내에서 글자를 맨 밑 텍스트는 정중앙으로
 			add(labels[i]);
 		}
@@ -144,13 +148,12 @@ public class BasicSelect extends ControlShape {// 기본선택 사항
 		});
 		
 		String tempjob = Controlpanel.Mainpanel.myjob;
-		System.out.println(Controlpanel.Mainpanel.myjob);
-		System.out.println(tempjob+"+++++");
 		if (tempjob.equals("builder")) {
-			labels[8] = new JLabel("특수능력", temp, JLabel.CENTER);
+			labels[8] = new JLabel("특수능력", special, JLabel.CENTER);
 			labels[8].setVerticalTextPosition(JLabel.BOTTOM);
 			labels[8].setHorizontalTextPosition(JLabel.CENTER);
 			labels[8].setFont(font);
+			labels[8].setForeground(Color.white);
 			add(labels[8]);
 			labels[8].addMouseListener(new MouseAdapter() {
 				public void mousePressed(MouseEvent e) {

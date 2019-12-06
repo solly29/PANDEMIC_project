@@ -2,8 +2,8 @@ package Server;
 
 import java.io.DataOutputStream;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.LinkedHashMap;
 
 /*
  * 방에 대한 클래스이다.
@@ -17,11 +17,13 @@ public class Room {
 	private String kingName = "";
 	private String roomPass = "";
 	private boolean start = false;
-	public CardList cardList=null;
+	public CardList cardList = null;
 	private int nextStart = -1;
 	public String StartUser = "";
 	private Hashtable<String, String> userSelect = new Hashtable<String, String>();
-	private int[] startState = { 0 , 0, 0, 0,};
+	private int[] startState = { 0, 0, 0, 0 };
+	private int[] InfTrack = {2,2,3,3,4,4};
+	private int InfNum = 0;
 
 	public Room() {
 		// TODO Auto-generated constructor stub
@@ -32,9 +34,9 @@ public class Room {
 		// TODO Auto-generated constructor stub
 		kingName = name;
 		user = new UserList(name);// 유저 객체를 생성
-		cardList = new CardList(4);//일단 난이도는 4장으로 고정 나중에 바꿀꺼당
+		cardList = new CardList(4);// 일단 난이도는 4장으로 고정 나중에 바꿀꺼당
 	}
-	
+
 	public void cardReset() {
 		cardList.cardSetting();
 	}
@@ -49,17 +51,17 @@ public class Room {
 		try {
 			user.userDel(name);
 			kingName = user.getUserListChat().keys().nextElement();
-		}catch (Exception e) {
+		} catch (Exception e) {
 			// TODO: handle exception
 			kingName = "";
 			System.out.println("유저 없음");
 		}
 	}
-	
+
 	public void setStart(boolean start) {
 		this.start = start;
 	}
-	
+
 	public boolean getStart() {
 		return start;
 	}
@@ -73,7 +75,7 @@ public class Room {
 	public String getRoomName() {
 		return roomName;
 	}
-	
+
 	public void setRoomPass(String str) {
 		roomPass = str;
 	}
@@ -87,14 +89,14 @@ public class Room {
 	public String GetKing() {
 		return kingName;
 	}
-	
-	//방 인원수 반환
+
+	// 방 인원수 반환
 	public int getRoomSize() {
 		return user.getUserListChat().size();
 	}
 
 	// 내 방에 있는 유저들의 게임소켓의 스트림을 가져옴
-	public Hashtable<String, DataOutputStream> getUserListGame() {
+	public LinkedHashMap<String, DataOutputStream> getUserListGame() {
 		return user.getUserListGame();
 	}
 
@@ -112,62 +114,76 @@ public class Room {
 	public DataOutputStream getUserListChat(String name) {
 		return user.getUserListChat(name);
 	}
-	
-	//총 유저의 리스트 반환
-	public ArrayList<String> getUserNameList(){
+
+	// 총 유저의 리스트 반환
+	public ArrayList<String> getUserNameList() {
 		return user.getUserNameList();
 	}
-	
+
 	public String toString() {
-		if(!getRoomPass().equals("")) 
+		if (!getRoomPass().equals(""))
 			return String.format("****");
 		else
 			return String.format(" ");
 	}
-	
+
 	public String getNextStartUser() {
 		nextStart++;
-		if(nextStart == getRoomSize()) {
+		if (nextStart == getRoomSize()) {
 			nextStart = 0;
 		}
 		return user.getUserName(nextStart);
 	}
-	
+
 	public void setUserSelect(String num, String job) {
-		   userSelect.put(num, job);
-	   }
-	   
-	   public Hashtable<String, String> getUserSelect() {
-		   return userSelect;
-	   }
-	   
-	   public void setStartState1(String userNumber) {
-		   int num = Integer.parseInt(userNumber);
-		   
-		   if(startState[num] == 0) {
-			   startState[num] = 10;
-		   }
-	   }
-	   
-	   public void setStartState2(String userNumber) {
-		   int num = Integer.parseInt(userNumber);
-		   
-		   if(startState[num] == 10)
-			   startState[num] = 11;
-		   else if(startState[num] == 11)
-			   startState[num] = 10;
-	   }
-	   
-	   public int getStartState() {
-		   int sum = 0;
-		   for(int i = 0 ; i< 4 ; i++) {
-			   sum += startState[i];
-		   }
-		   return sum;
-	   }
-	   
-	   public int getStartState(String str) {
-		   int i = Integer.parseInt(str);
-		   return startState[i];
-	   }
+		userSelect.put(num, job);
+	}
+	
+	public String getUserJob(String num) {
+		return userSelect.get(num);
+	}
+
+	public Hashtable<String, String> getUserSelect() {
+		return userSelect;
+	}
+
+	public void setStartState1(String userNumber) {
+		int num = Integer.parseInt(userNumber);
+
+		if (startState[num] == 0) {
+			startState[num] = 10;
+		}
+	}
+
+	public void setStartState2(String userNumber) {
+		int num = Integer.parseInt(userNumber);
+
+		if (startState[num] == 10)
+			startState[num] = 11;
+		else if (startState[num] == 11)
+			startState[num] = 10;
+	}
+
+	public int getStartState() {
+		int sum = 0;
+		for (int i = 0; i < 4; i++) {
+			sum += startState[i];
+		}
+		return sum;
+	}
+
+	public int getStartState(String str) {
+		int i = Integer.parseInt(str);
+		return startState[i];
+	}
+	
+	public void InfTrackNum() {
+		InfNum++;
+		if(InfNum==7)
+			InfNum--;
+	}
+	
+	public int InfTrackCount() {
+		return InfTrack[InfNum];
+	}
 }
