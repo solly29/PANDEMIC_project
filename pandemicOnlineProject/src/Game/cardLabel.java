@@ -2,6 +2,9 @@ package Game;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -69,11 +72,13 @@ public class cardLabel extends Thread{
 				City city = t.citys.returnCity(cityName);
 				t.map.setLocation(-city.getX()+(1960/2), -city.getY()+(1020/2)-120);
 				String color = t.citys.returnCity(cityName).color;
-				l.setText(cityName);
+				/*l.setText(cityName);
 				l.setFont(new Font("바탕",Font.BOLD,30));
-				l.setForeground(Color.white);
+				l.setForeground(Color.white);*/
+				CardPrint(color,cityName);
 				t.add(l, new Integer(20));
-				l.setBounds(700, 400, 500, 100);
+				l.setBounds(500, 300, 335, 245);
+				l.setBackground(null);
 				
 				Thread.sleep(1000);
 				
@@ -91,5 +96,21 @@ public class cardLabel extends Thread{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public void CardPrint(String color, String CityName) {
+		Image Card = new ImageIcon(Card.class.getResource("../Image/" + color + "InfCard.png")).getImage();
+		// Image CardPush = new ImageIcon(Card.class.getResource("../Image/CityCard" +
+		// color + "Push.png")).getImage();
+		BufferedImage BufferedCard = new BufferedImage(Card.getWidth(null), Card.getHeight(null),
+				BufferedImage.TYPE_3BYTE_BGR);// 주의! 이미지에서 바로 getGraphics이 먹히지 않으므로 버퍼드이미지에서 글자를 그린다.
+		Graphics2D g = (Graphics2D) BufferedCard.getGraphics();
+		g.drawImage(Card, 0, 0, null);
+		g.setFont(new Font("굴림", Font.BOLD, 25));
+		g.setColor(Color.BLACK);
+		g.drawString(CityName, 65, 50);
+		//g.drawString(CityName, 7, 260);
+
+		l.setIcon(new ImageIcon(BufferedCard));
 	}
 }

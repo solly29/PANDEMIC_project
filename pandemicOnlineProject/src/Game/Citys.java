@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -15,6 +16,8 @@ import Game.MainPanel.Map;
 import pandemic.Client;
 
 public class Citys {
+	static boolean fail = false;
+	
 	public static String[][] ad = new String[49][49];// 인접시 o 소문자 o가 넣어진다 아닐시에는"", 도시의 인접상만 판단
 	String[] name = { "", "애틀란타", "워싱턴", "시카고", "마이애미", "멕시코 시티", "몬트리올", "뉴욕", "보고타", "리마", "로스앤젤레스", "샌프란시스코", "런던",
 			"마드리드", "산티아고", "상파울루", "부에노스아이레스", "도쿄", "마닐라", "시드니", "에센", "파리", "알제", "라고스", "오사카", "서울", "상하이", "홍콩",
@@ -61,7 +64,7 @@ public class Citys {
 		ad[8][15] = ad[15][8] = "o";
 		ad[9][14] = ad[14][9] = "o";
 		ad[10][11] = ad[11][10] = "o";
-		ad[10][19] = ad[19][19] = "o";
+		ad[10][19] = ad[19][10] = "o";
 		ad[11][17] = ad[17][11] = "o";
 		ad[11][18] = ad[18][11] = "o";
 		ad[12][13] = ad[13][12] = "o";
@@ -365,56 +368,64 @@ class City {// 도시 클래스
 			return;
 		
 		if (color.equals("Red")) {
-			if (Game.RedVirus == 0 && Game.RedCure) {
+			if (MainPanel.RedVirus == 0 && MainPanel.RedCure) {
 				return;
 			}
-			Game.RedVirus = Game.RedVirus + i;
+			MainPanel.RedVirus = MainPanel.RedVirus + i;
 			if ((Red = Red + i) > 3) {
 				System.out.println("확산이벤트는 아직 안넣었다.");
 				Red = Red - i;
-				Game.RedVirus = Game.RedVirus - i;
+				MainPanel.RedVirus = MainPanel.RedVirus - i;
 				diffusionVirus(color);
 			}
 		} else if (color.equals("Blue")) {
-			if (Game.BlueVirus == 0 && Game.BlueCure) {
+			if (MainPanel.BlueVirus == 0 && MainPanel.BlueCure) {
 				return;
 			}
-			Game.BlueVirus = Game.BlueVirus + i;
+			MainPanel.BlueVirus = MainPanel.BlueVirus + i;
 			if ((Blue = Blue + i) > 3) {
 				Blue = Blue - i;
-				Game.BlueVirus = Game.BlueVirus + i;
+				MainPanel.BlueVirus = MainPanel.BlueVirus + i;
 				diffusionVirus(color);
 			}
 		} else if (color.equals("Yellow")) {
-			if (Game.YellowVirus == 0 && Game.YellowCure) {
+			if (MainPanel.YellowVirus == 0 && MainPanel.YellowCure) {
 				return;
 			}
-			Game.YellowVirus = Game.YellowVirus + i;
+			MainPanel.YellowVirus = MainPanel.YellowVirus + i;
 			if ((Yellow = Yellow + i) > 3) {
 				Yellow = Yellow - i;
-				Game.YellowVirus = Game.YellowVirus - i;
+				MainPanel.YellowVirus = MainPanel.YellowVirus - i;
 				diffusionVirus(color);
 			}
 		} else if (color.equals("Black")) {
-			if (Game.BlackVirus == 0 && Game.BlackCure) {
+			if (MainPanel.BlackVirus == 0 && MainPanel.BlackCure) {
 				return;
 			}
-			Game.BlackVirus = Game.BlackVirus + i;
+			MainPanel.BlackVirus = MainPanel.BlackVirus + i;
 			if ((Black = Black + i) > 3) {
 				Black = Black - i;
-				Game.BlackVirus = Game.BlackVirus - i;
+				MainPanel.BlackVirus = MainPanel.BlackVirus - i;
 				diffusionVirus(color);
 			}
 		} else {
 			System.out.println("Citys PlusVirus에 잘못된 문자가 입력 되었다.");
 		}
-		
-		if(Game.RedVirus >= 24 || Game.BlueVirus >= 24 || Game.YellowVirus >= 24 || Game.BlackVirus>= 24) {
+		// 패배 조건 중 하나인 바이러스 큐브가 24개 이상일 때 실패하는 부분
+		if(MainPanel.RedVirus >= 24 || MainPanel.BlueVirus >= 24 || MainPanel.YellowVirus >= 24 || MainPanel.BlackVirus>= 24) {
 			System.out.println(" 바이러스 큐브 24개 오버");
-			new fail();
+			try {
+				MainPanel.GameOutStream.writeUTF("[제어]fail");
+				Citys.fail = true;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
+		MainPanel.setVirusCount();
 	}
-
+	
+	
 	public void diffusionVirus(String color) {
 		City.visit.add(name);
 		ArrayList<City> adCity = Citys.AdjacencyCity(name);
@@ -423,36 +434,31 @@ class City {// 도시 클래스
 				adCity.get(j).PlusVirus(color, 1);
 		}
 		
-		Game.diffusionToken++;
-		System.out.println(" 확산마커 수 : " + Game.diffusionToken );
-		
-		if(Game.diffusionToken == 7 ) {
+		MainPanel.setDiffusion();
+	
+		// 패배 조건 중 하나인 확산이 7번 일어날 때 실패하는 부분
+		if(MainPanel.DiffusionCount == 7 ) {
+			try {
+				MainPanel.GameOutStream.writeUTF("[제어]fail");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			System.out.println(" 확산 마커 패배");
-			new fail();
+			Citys.fail = true;			
 		}
+		
 	}
 
 	public void drawCube(Graphics g) {
 		int height = RedCube.getHeight(null);
 		int width = RedCube.getWidth(null);
-		int x = this.getX() /*- 20*/;
-		int y = this.getY() /*- 30*/;
+		int x = this.getX() - 20;
+		int y = this.getY() - 30;
 
 		for (int i = 0; i < Red; i++) {
-			/*
-			 * DrawCubeIn("Red", x, y, g); x += width;
-			 */
-			// 일단 영근이 부분 안될수도 있음
-			if (i == 0)
-				DrawCubeIn("Red", x + 10, y - 17, g);
-			else if (i == 1)
-				DrawCubeIn("Red", x - 17, y + 27, g);
-			else if (i == 2)
-				DrawCubeIn("Red", x + 35, y + 30, g);
-			else if (i == 3)
-				DrawDiffusionCubeIn("Blue", x + 30, y + -17, g);
-			else if (i == 4)
-				DrawDiffusionCubeIn("Yellow", x + 15, y + 5, g);
+			DrawCubeIn("Red", x, y, g);
+			x += width;
 		}
 		for (int i = 0; i < Blue; i++) {
 			DrawCubeIn("Blue", x, y, g);

@@ -1,5 +1,7 @@
 package Game;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
@@ -39,6 +41,8 @@ public class ProtectionPanel extends ControlShape {
 		e.setText(color + "제거");
 		e.setVerticalTextPosition(JLabel.BOTTOM);
 		e.setHorizontalTextPosition(JLabel.CENTER);
+		e.setForeground(Color.white);
+		e.setFont(new Font("HY헤드라인M",Font.PLAIN,20));
 		e.addMouseListener(new RemoveVirus(Currentcity, color));
 		return e;
 	}

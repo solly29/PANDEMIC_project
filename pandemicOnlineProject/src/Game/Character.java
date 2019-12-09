@@ -7,6 +7,8 @@ import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 
+import Game.MainPanel.Map;
+
 public class Character {// 유저 자신 캐릭터다
 	String job;
 	String CurrentPositon = "애틀란타";// 제일 처음 시작위치는 애틀란타다. 캐릭터의 이동위치가 바뀔 때 마다 업데이트
@@ -15,6 +17,7 @@ public class Character {// 유저 자신 캐릭터다
 	String name = "";
 	int x = 0, y = 0, plus = 0;// 캐릭터들의 좌표
 	MainPanel Mainpanel;
+	Image turnImage = new ImageIcon(Map.class.getResource("../Image/턴화살표.png")).getImage();// 턴이미지
 
 	public Character(MainPanel Mainpanel, int i, String name, String job) {
 		this.job = job;
@@ -100,8 +103,8 @@ public class Character {// 유저 자신 캐릭터다
 
 	public void draw(Graphics g) {
 		g.drawImage(CharacterIcon, x, y, CharacterIcon.getWidth(null), CharacterIcon.getHeight(null), null);
-		Mainpanel.characterList.keys();
-		g.drawImage(CharacterIcon, x, y, CharacterIcon.getWidth(null), CharacterIcon.getHeight(null), null);
+		if(ClientGameReceiverThread.turnUser.equals(name))
+			g.drawImage(turnImage, x, y-50, turnImage.getWidth(null), turnImage.getHeight(null), null);
 		g.setColor(java.awt.Color.white);
 		g.setFont(new Font("굴림", 30, 30));
 		g.drawString(name + "/" + job, x - 40, y - 5);

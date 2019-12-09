@@ -3,10 +3,8 @@ package Server;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.Set;
 
-import DB.DOA;
+import DB.DAO;
 
 public class Login {
 	private DataInputStream input = null;
@@ -16,13 +14,13 @@ public class Login {
 	private String PW;
 	private String NAME;
 	private String NUMBER;
-	DOA db;
+	DAO db;
 
 	public Login(Socket s1, Socket s2) {
 		// TODO Auto-generated constructor stub
 		gameSocket = s1;
 		chatSocket = s2;
-		db = new DOA(gameSocket);
+		db = new DAO(gameSocket);
 		// 임의의 유저
 		/*
 		 * MainServer.IdPassword.put("admin","1234");

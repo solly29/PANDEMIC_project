@@ -1,5 +1,7 @@
 package Game;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
@@ -31,6 +33,8 @@ public class CurePanel extends ControlShape {
 		e.setText(color + "치료제 개발");
 		e.setVerticalTextPosition(JLabel.BOTTOM);
 		e.setHorizontalTextPosition(JLabel.CENTER);
+		e.setForeground(Color.white);
+		e.setFont(new Font("HY헤드라인M",Font.PLAIN,20));
 		e.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				if(!Client.CardPrint) {

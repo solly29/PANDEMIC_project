@@ -5,6 +5,9 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -22,14 +25,30 @@ import javax.swing.SwingUtilities;
 
 public class Login extends JPanel implements ActionListener {
 
-	private Image background = new ImageIcon(Client.class.getResource("../Login_Image/background.png")).getImage(); //배경화면
-	private JButton login = new JButton(new ImageIcon(Client.class.getResource("../Login_Image/Login.png"))); // 로그인 버튼
-	private JButton exit = new JButton(new ImageIcon(Client.class.getResource("../Login_Image/Exit.png"))); // 나가기 버튼
-	private JButton join = new JButton(new ImageIcon(Client.class.getResource("../Login_Image/Join.png"))); // 회원가입 버튼
-	private JButton find = new JButton(new ImageIcon(Client.class.getResource("../Login_Image/Find.png"))); // ID/PWD 찾기 버튼
-	private static JFrame top;
+	//차례대로 배경화면, 로그인버튼, 나가기버튼, 회원가입 버튼, ID/PWD찾기 버튼에 넣을 이미지 생성
+	
+	private Image background = new ImageIcon(Client.class.getResource("../Login_Image/background.png")).getImage();
+	private ImageIcon loginpush = new ImageIcon(Client.class.getResource("../Login_Image/Login2.png"));
+	private ImageIcon exitpush = new ImageIcon(Client.class.getResource("../Login_Image/Exit2.png"));
+	private ImageIcon joinpush = new ImageIcon(Client.class.getResource("../Login_Image/Join2.png"));
+	private ImageIcon findpush = new ImageIcon(Client.class.getResource("../Login_Image/Find2.png"));
+	private ImageIcon loginimage = new ImageIcon(Client.class.getResource("../Login_Image/Login.png"));
+	private ImageIcon exitimage = new ImageIcon(Client.class.getResource("../Login_Image/Exit.png"));
+	private ImageIcon joinimage = new ImageIcon(Client.class.getResource("../Login_Image/Join.png"));
+	private ImageIcon findimage = new ImageIcon(Client.class.getResource("../Login_Image/Find.png"));
+	
+	//차례대로 로그인, 나가기, 회원가입, 찾기 버튼 생성
+
+	private JButton login = new JButton(loginimage);
+	private JButton exit = new JButton(exitimage); 
+	private JButton join = new JButton(joinimage);
+	private JButton find = new JButton(findimage);
+	
+	private static JFrame top; //Client의 FFrame
 	private JTextField idtext;
 	private JPasswordField pwdtext;
+	
+	
 
 	DataInputStream input;
 	DataOutputStream output;
@@ -38,13 +57,15 @@ public class Login extends JPanel implements ActionListener {
 
 	Socket gsocket, socket2;
 
-	joinE j;
-	findE f;
+	JoinWindow j;
+	FindWindow f;
 
+	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		g.drawImage(background, 0, 0, null);
 	}
+	
 
 	public Login(Socket gsocket, Socket socket2) {
 		System.out.println("Login 소켓연결 전");
@@ -57,6 +78,8 @@ public class Login extends JPanel implements ActionListener {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		
 		System.out.println("Login 소켓연결 후");
 		JLabel id = new JLabel(new ImageIcon(Client.class.getResource("../Login_Image/ID.png")));
 		JLabel pwd = new JLabel(new ImageIcon(Client.class.getResource("../Login_Image/PWD.png")));
@@ -64,12 +87,11 @@ public class Login extends JPanel implements ActionListener {
 		idtext = new JTextField();
 		pwdtext = new JPasswordField();
 
-		Font RLfont, ChatFont, PFfont; // 폰트 추가 차례대로 방목록,채팅,내정보
-
-		RLfont = new Font("Serif", Font.BOLD, 50);
 
 		setLayout(null);
 
+		//버튼들 정렬하는 부분
+		
 		login.setBounds(1153, 500, 150, 170);
 		exit.setBounds(1050, 710, 140, 50);
 		join.setBounds(750, 710, 140, 50);
@@ -77,30 +99,35 @@ public class Login extends JPanel implements ActionListener {
 
 		id.setBounds(695, 495, 100, 100);
 		pwd.setBounds(690, 555, 100, 100);
+		
+		idtext.setFont(new Font("HY헤드라인M",Font.PLAIN,20));
+		pwdtext.setFont(new Font("굴림",Font.PLAIN,20));
 
 		idtext.setBounds(790, 530, 300, 30);
 		pwdtext.setBounds(790, 590, 300, 30);
+		
+		//차례대로 버튼을 투명하게, 외각선을 없애기, 내용영역 채우기 없애기, 테두리 사용안함.
 
-		login.setOpaque(false); // 투명하게
-		 login.setBorderPainted(false);// 외곽선없애기
-		 login.setContentAreaFilled(false);// 내용영역 채우기 없애기
-		 login.setFocusPainted(false);// 테두리 사용 안함
+		login.setOpaque(false);
+		 login.setBorderPainted(false); 
+		 login.setContentAreaFilled(false);
+		 login.setFocusPainted(false);
 
 		exit.setOpaque(false);
-		 exit.setBorderPainted(false);// 외곽선없애기
-		// exit.setContentAreaFilled(false);// 내용영역 채우기 없애기
-		// exit.setFocusPainted(false);// 테두리 사용 안함
+		 exit.setBorderPainted(false);
+
 
 		join.setOpaque(false);
 		join.setBorderPainted(false);
-		// join.setContentAreaFilled(false);
 		join.setFocusPainted(false);
 
 		find.setOpaque(false);
 		find.setBorderPainted(false);
-		// find.setContentAreaFilled(false);
 		find.setFocusPainted(false);
 
+		
+		// 버튼을 패널에 넣기
+		
 		add(login);
 		add(exit);
 		add(join);
@@ -109,28 +136,100 @@ public class Login extends JPanel implements ActionListener {
 		add(pwd);
 		add(idtext);
 		add(pwdtext);
+		
+		//각 버튼들의 액션리스너 생성
+		
 		login.addActionListener(this);
 		exit.addActionListener(this);
 		join.addActionListener(this);
 		find.addActionListener(this);
+		pwdtext.addActionListener(this);
+		setVisible(true);
+		
+		
+		
+		// 차례대로 해당 버튼에 커서 닿으면 이미지 변경, 떼어졌을때 원래대로, 클릭했을때 이미지 변경
+		
+		  login.addMouseListener(new MouseAdapter() { 
+		         public void mouseEntered(MouseEvent e) {
+		        	 login.setIcon(loginpush);
+		         }
 
-		setVisible(true); // 해결과제 채팅창 크기조절, 배경사진넣기(전부)
+		         public void mouseExited(MouseEvent e) {
+		        	 login.setIcon(loginimage);
+		         }
+
+		         public void mousePressed(MouseEvent e) {
+		        	 login.setIcon(loginpush);
+		         }
+
+		      });
+		  
+		  exit.addMouseListener(new MouseAdapter() { 
+		         public void mouseEntered(MouseEvent e) {
+		        	 exit.setIcon(exitpush);
+		         }
+
+		         public void mouseExited(MouseEvent e) {
+		        	 exit.setIcon(exitimage);
+		         }
+
+		         public void mousePressed(MouseEvent e) {
+		        	 exit.setIcon(exitpush);
+		         }
+
+		      });
+		  
+		  find.addMouseListener(new MouseAdapter() { 
+		         public void mouseEntered(MouseEvent e) {
+		        	 find.setIcon(findpush);
+		         }
+
+		         public void mouseExited(MouseEvent e) {
+		        	 find.setIcon(findimage);
+		         }
+
+		         public void mousePressed(MouseEvent e) {
+		        	 find.setIcon(findpush);
+		         }
+
+		      });
+		  
+		  join.addMouseListener(new MouseAdapter() {
+		         public void mouseEntered(MouseEvent e) {
+		        	 join.setIcon(joinpush);
+
+		         }
+		         public void mouseExited(MouseEvent e) {
+		        	 join.setIcon(joinimage);
+		         }
+
+		         public void mousePressed(MouseEvent e) {
+		        	 join.setIcon(joinpush);
+		         }
+
+		      });
+		  
 
 	}
+	
+	
+	// 해당 버튼을 눌렀을때 이벤트 처리
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
+		//나가기 버튼 -> 게임 꺼짐
 		if (e.getSource() == exit) {
 			System.exit(0);
-			/*
-			 * c.dispose(); j.dispose(); f.dispose(); 이상하게 안됨... 그래서 일단 System.exit(0) 씀
-			 */
 
-		} else if (e.getSource() == join) { // 회원가입 버튼 누르면 joinE 클래스로 감
-			j = new joinE(gsocket);
-		} else if (e.getSource() == find) { // ID, PWD 찾기 버튼 누르면 findE 클래스로 감
-			f = new findE(gsocket);
+
+		} else if (e.getSource() == join) { // 회원가입 버튼 누르면 JoinWindow 클래스로 감
+			j = new JoinWindow(gsocket);
+		} else if (e.getSource() == find) { // ID, PWD 찾기 버튼 누르면 FindWindow 클래스로 감
+			f = new FindWindow(gsocket);
+		}else if (e.getSource() == pwdtext) { // 엔터 누르면 로그인 됨
+			login.doClick();
 		} else if (e.getSource() == login) { // 로그인 버튼 누르면 ID, PWD 확인 후, 맞으면 로비로 틀리면 경고
 			String str = null;
 			try {
@@ -165,259 +264,5 @@ public class Login extends JPanel implements ActionListener {
 
 	public static JFrame getTop() {
 		return top;
-	}
-}
-
-class joinE extends JFrame // 회원가입 창 만드는 클래스
-
-{
-	private Image Jback = new ImageIcon(Client.class.getResource("../Login_Image/Jback.png")).getImage();
-	private DataOutputStream output;
-	private DataInputStream input;
-	
-
-
-	public joinE(Socket socket) {
-		
-		
-		
-
-		Client c;
-
-		Socket gsocket, socket2;
-
-		try {
-			output = new DataOutputStream(socket.getOutputStream());
-			input = new DataInputStream(socket.getInputStream());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		;
-		
-		
-
-		JButton Jexit = new JButton(new ImageIcon(Client.class.getResource("../Login_Image/Exit.PNG")));
-		JButton Jjoin = new JButton(new ImageIcon(Client.class.getResource("../Login_Image/Join.PNG")));
-		JButton Duple = new JButton(new ImageIcon(Client.class.getResource("../Login_Image/duple.PNG")));
-
-		JLabel ID = new JLabel(new ImageIcon(Client.class.getResource("../Login_Image/JID.PNG")));
-		JLabel PWD = new JLabel(new ImageIcon(Client.class.getResource("../Login_Image/JPWD.png")));
-		JLabel Name = new JLabel(new ImageIcon(Client.class.getResource("../Login_Image/Jname.png")));
-		JLabel Number = new JLabel(new ImageIcon(Client.class.getResource("../Login_Image/Jnumber.png")));
-
-		JTextField Name_text = new JTextField();
-		JTextField Number_text = new JTextField();
-		JTextField ID_text = new JTextField();
-		JPasswordField PWD_text = new JPasswordField();
-
-		setSize(500, 750);
-		setTitle("회원가입");
-		setLocation(300, 120);
-		getContentPane().setLayout(null);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	
-		setUndecorated(true); // 작업표시줄 없애기
-		
-		Jexit.setOpaque(false);
-		Jjoin.setOpaque(false);
-		Duple.setOpaque(false);
-		
-		Jexit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				dispose();
-			}
-		});// 회원가입 창에 있는 버튼 누르면 창 종료
-		Duple.addActionListener(new ActionListener() { // 중복확인 버튼 누르면 같은 ID가 있는지 확인 함
-			public void actionPerformed(ActionEvent arg0) {
-				try {
-
-					output.writeUTF("duple");
-					output.writeUTF(ID_text.getText());
-
-					if (input.readUTF().equals("false")) { // ID가 같으면 경고 메세지
-						JOptionPane.showMessageDialog(null, "다른 ID를 사용해주세요", "오류", JOptionPane.WARNING_MESSAGE);
-
-					} else
-						JOptionPane.showMessageDialog(null, "사용가능한 ID입니다");
-
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
-
-		Jjoin.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				try {
-
-					output.writeUTF("join");
-					output.writeUTF(ID_text.getText());
-					output.writeUTF(PWD_text.getText());
-					output.writeUTF(Name_text.getText());
-					output.writeUTF(Number_text.getText());
-					if (input.readUTF().equals("true")) {
-						JOptionPane.showMessageDialog(null, "회원가입 성공! 축하드립니다~");
-						dispose();
-					} else
-						JOptionPane.showMessageDialog(null, "회원가입 실패", "오류", JOptionPane.WARNING_MESSAGE);
-
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-
-			}
-		});
-
-		this.add(ID);
-		this.add(ID_text);
-		this.add(PWD);
-		this.add(Jjoin);
-		this.add(PWD_text);
-		this.add(Number_text);
-		this.add(Name_text);
-		this.add(Name);
-		this.add(Number);
-		this.add(Duple);
-	
-		Name.setBounds(100, 75, 100, 30);
-		Name_text.setBounds(200, 80, 100, 20);
-
-		Number.setBounds(100, 145, 100, 30);
-		Number_text.setBounds(200, 150, 100, 20);
-
-		ID.setBounds(100, 215, 100, 30);
-		ID_text.setBounds(200, 220, 100, 20);
-
-		PWD.setBounds(100, 285, 100, 30);
-		PWD_text.setBounds(200, 290, 100, 20);
-
-		Jexit.setBounds(250, 400, 140, 50);
-		Jjoin.setBounds(80, 400, 140, 50);
-
-		Duple.setBounds(310, 200, 100, 50);
-		
-		/*ID.setFont(new Font("HY헤드라인M",Font.PLAIN,15));
-		PWD.setFont(new Font("HY헤드라인M",Font.PLAIN,15));
-		Name.setFont(new Font("HY헤드라인M",Font.PLAIN,15));
-		Number.setFont(new Font("HY헤드라인M",Font.PLAIN,15));
-*/
-		getContentPane().add(Jexit);
-		getContentPane().add(Jjoin);
-		setVisible(true);
-		
-		
-		JPanel jback = new JPanel() {
-			public void paintComponent(Graphics g) {
-
-				g.drawImage(Jback, 0, 0, null);
-				setOpaque(false);
-				super.paintComponent(g);
-			}
-		};
-		jback.setBounds(0, 0, 500, 750);
-		this.add(jback);
-		
-	}
-}
-
-class findE extends JFrame // ID/PWD 찾기 창 만드는 클래스
-{
-	
-	private Image Jback = new ImageIcon(Client.class.getResource("../Login_Image/Jback.png")).getImage();
-	private DataOutputStream output;
-	private DataInputStream input;
-
-	public findE(Socket socket) {
-
-		Client c;
-
-		Socket gsocket, socket2;
-
-		try {
-			output = new DataOutputStream(socket.getOutputStream());
-			input = new DataInputStream(socket.getInputStream());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		;
-
-		JButton FEXIT = new JButton(new ImageIcon(Client.class.getResource("../Login_Image/Exit.PNG")));
-		JButton ID_Find = new JButton(new ImageIcon(Client.class.getResource("../Login_Image/Find.PNG")));
-
-		JLabel Name = new JLabel(new ImageIcon(Client.class.getResource("../Login_Image/JID.PNG")));
-		JLabel Number = new JLabel(new ImageIcon(Client.class.getResource("../Login_Image/Jnumber.PNG")));
-
-		JTextField Name_text = new JTextField();
-		JTextField Number_text = new JTextField();
-
-		setTitle("ID/PWD 찾기");
-		setSize(500, 750);
-		setLocation(300, 120);
-
-		
-		
-		Name.setBounds(120, 75, 100, 30);
-		Name_text.setBounds(200, 80, 100, 20);
-
-		Number.setBounds(100, 145, 100, 30);
-		Number_text.setBounds(200, 150, 100, 20);
-
-		FEXIT.setBounds(250, 400, 140, 50);
-		ID_Find.setBounds(80, 400, 140, 50);
-
-		this.add(Number_text);
-		this.add(Name_text);
-		this.add(Name);
-		this.add(Number);
-		this.add(ID_Find);
-		getContentPane().setLayout(null);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	
-		setUndecorated(true); // 작업표시줄 없애기
-
-		ID_Find.addActionListener(new ActionListener() { // ID, PWD 찾기를 눌렀을때
-			public void actionPerformed(ActionEvent arg0) {
-
-				try {
-					output.writeUTF("find");
-					output.writeUTF(Name_text.getText());
-					output.writeUTF(Number_text.getText());
-					if (input.readUTF().equals("true")) { // 학번과 이름이 맞다면 ID,PWD 보여줌
-						String in = input.readUTF();
-						JOptionPane.showMessageDialog(null, in);
-						dispose();
-					} else
-						JOptionPane.showMessageDialog(null, "이름 또는 학번을 잘못 입력 하셨습니다.", "오류",
-								JOptionPane.WARNING_MESSAGE);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
-		FEXIT.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				dispose();
-			}
-		});// 버튼 누르면 창 종료
-
-		getContentPane().add(FEXIT);
-		setVisible(true);
-		
-		JPanel fback = new JPanel() {
-			public void paintComponent(Graphics g) {
-
-				g.drawImage(Jback, 0, 0, null);
-				setOpaque(false);
-				super.paintComponent(g);
-			}
-		};
-		fback.setBounds(0, 0, 500, 750);
-		this.add(fback);
-		
 	}
 }
