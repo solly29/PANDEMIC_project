@@ -3,6 +3,7 @@ package Game;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -10,6 +11,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -18,33 +20,39 @@ import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
 import Game.Point;
+import Game.AirplanePanel.AirplaneEvent;
 import pandemic.Client;
 
-//유저가 들고있는 손패카드들이다.
+//카드의 사용처
+//1. 같은 색상 다섯장을 모아 백신을 만들수있다.
+//2. 카드를 사용하여 능력을 쓸수있다. 일반카드의 경우 해당도시로 이동하고 special카드일 경우 쓰여져있는 텍스트의 기능을 발휘한다.
 public class Card extends JLabel {
-	String CityName;// 도시 이름은 알아야 도시 이름을 적지. 그리고 어디어디서 교환이 가능한지 알지
-	String color;// 색깔을 판별해야지
+	// 일반적이 카드다. 카드 사용시 CityName 도시로 이동할수있다.
+	String CityName;// 도시이름
+	String color;// 도시색깔 빨강,파랑,노랑,검
 	ControlPanel Controlpanel;
-	String filename;
-	Point pos = new Point(0, 0);// 현재 그 도시카드의 좌표를 받아온다.
+	String filename;// 불러올 이미지 파일 이름
+	Point pos = new Point(0, 0);// 현재 그 도시카드의 좌표를 받아온다. 도시카드의 이름으로 알수있다.
 
 	public Card(ControlPanel Controlpanel, String CityName, String color) {
 		this.Controlpanel = Controlpanel;
-		this.CityName = CityName;// 카드 이름
-		this.color = color;// 카드 색상
+		this.CityName = CityName;
+		this.color = color;
 		pos = Controlpanel.Mainpanel.citys.CityPosition(CityName);// 그 도시의 위치를 받아온다
 
-		Image Card = new ImageIcon(Card.class.getResource("../Image/CityCard" + color + ".png")).getImage();
-		Image CardPush = new ImageIcon(Card.class.getResource("../Image/CityCard" + color + "Push.png")).getImage();
+		Image Card = new ImageIcon(Card.class.getResource("../Image/CityCard" + color + ".png")).getImage();// 카드의 일반이미지
+		Image CardPush = new ImageIcon(Card.class.getResource("../Image/CityCard" + color + "Push.png")).getImage();// 카드눌릴시이미지
 		BufferedImage BufferedCard = new BufferedImage(Card.getWidth(null), Card.getHeight(null),
 				BufferedImage.TYPE_3BYTE_BGR);// 주의! 이미지에서 바로 getGraphics이 먹히지 않으므로 버퍼드이미지에서 글자를 그린다.
-		Graphics2D g = (Graphics2D) BufferedCard.getGraphics();
-		g.drawImage(Card, 0, 0, null);
-		g.setFont(new Font("굴림", Font.BOLD, 30));
-		g.setColor(Color.BLACK);
-		g.drawString(CityName, 7, 41);
+		// 카드를 합성하기 위해 먼저 버퍼드이미지로 기존 카드 크기만큼 그린뒤
+		Graphics2D g = (Graphics2D) BufferedCard.getGraphics();// 그 그래픽을 빼온다.
+		g.drawImage(Card, 0, 0, null);// 그 후 거기 카드이미지를 그린다
+		g.setFont(new Font("굴림", Font.BOLD, 30));// 폰트를 설정하고
+		g.setColor(Color.BLACK);// 색상을 설정하고
+		g.drawString(CityName, 7, 41);// 도시의 이름을 카드에 적는다.
 		g.drawString(CityName, 7, 260);
 
+		// 카드를 위해 올렸을 때의 이미지
 		BufferedImage BufferedCardPush = new BufferedImage(CardPush.getWidth(null), CardPush.getHeight(null),
 				BufferedImage.TYPE_3BYTE_BGR);
 		Graphics2D gp = (Graphics2D) BufferedCardPush.getGraphics();
@@ -54,7 +62,7 @@ public class Card extends JLabel {
 		gp.drawString(CityName, 7, 41);
 		gp.drawString(CityName, 7, 260);
 
-		this.setIcon(new ImageIcon(BufferedCard));
+		this.setIcon(new ImageIcon(BufferedCard));// 카드(라벨)의 기본 이미지 설정
 
 		this.addMouseListener(new MouseAdapter() {
 			public void mouseEntered(MouseEvent e) {
@@ -66,23 +74,12 @@ public class Card extends JLabel {
 			}
 
 			public void mousePressed(MouseEvent e) {
-				/*
-				 * Controlpanel.Mainpanel.characterList.get(Client.name).setXY(pos.getX(),
-				 * pos.getY());
-				 * Controlpanel.Mainpanel.characterList.get(Client.name).setCC(CityName, color);
-				 */
-
-				/*
-				 * Controlpanel.invalidate(); Controlpanel.removeAll(); Controlpanel.add(new
-				 * BasicSelect(Controlpanel)); Controlpanel.Mainpanel.Controlpanel.setBounds(0,
-				 * 840, 1920, 240); Controlpanel.revalidate(); Controlpanel.repaint();
-				 */
 				if (!Client.CardPrint) {
 					try {
-						Controlpanel.Havecard.removeCard(CityName);
+						Controlpanel.Havecard.removeCard(CityName);// 해당카드를 손패에서 제거한다
 						Controlpanel.Mainpanel.GameOutStream.writeUTF("[이동]" + Client.name + ":" + CityName);
+						// 일반카드의 쓰임새인 이동이다
 					} catch (IOException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 				}
@@ -90,7 +87,7 @@ public class Card extends JLabel {
 		});
 	}
 
-	public Card(String CityName, String color) {
+	public Card(String CityName, String color) {// 특수 카드를 사용하기 위해 만들어진 생성자이다.
 		this.CityName = CityName;// 카드 이름
 		this.color = color;// 카드 색상
 
@@ -98,9 +95,8 @@ public class Card extends JLabel {
 			filename = CityName;
 		else
 			filename = "CityCard" + color;
+		
 		Image Card = new ImageIcon(Card.class.getResource("../Image/" + filename + ".png")).getImage();
-		// Image CardPush = new ImageIcon(Card.class.getResource("../Image/CityCard" +
-		// color + "Push.png")).getImage();
 		BufferedImage BufferedCard = new BufferedImage(Card.getWidth(null), Card.getHeight(null),
 				BufferedImage.TYPE_3BYTE_BGR);// 주의! 이미지에서 바로 getGraphics이 먹히지 않으므로 버퍼드이미지에서 글자를 그린다.
 		Graphics2D g = (Graphics2D) BufferedCard.getGraphics();
@@ -111,13 +107,6 @@ public class Card extends JLabel {
 			g.drawString(CityName, 7, 41);
 			g.drawString(CityName, 7, 260);
 		}
-		/*
-		 * BufferedImage BufferedCardPush = new BufferedImage(CardPush.getWidth(null),
-		 * CardPush.getHeight(null), BufferedImage.TYPE_3BYTE_BGR); Graphics2D gp =
-		 * (Graphics2D) BufferedCardPush.getGraphics(); gp.drawImage(CardPush, 0, 0,
-		 * null); gp.setFont(new Font("굴림", Font.BOLD, 30)); gp.setColor(Color.BLACK);
-		 * gp.drawString(CityName, 7, 41); gp.drawString(CityName, 7, 260);
-		 */
 
 		this.setIcon(new ImageIcon(BufferedCard));
 	}
@@ -135,16 +124,20 @@ public class Card extends JLabel {
 	}
 }
 
+//기존 카드를 상속받는 특수카드들이다.
+
 class PeaceNightCard extends Card {
-	// 여기서 CityName은 "평온한 하룻밤" 다음 도시 감연 단계를 생략합니다
+	// 여기서 CityName은 "평온한 하룻밤". 다음 도시 감연 단계를 생략합니다
 	public PeaceNightCard(ControlPanel Controlpanel, String CityName) {
 		super(CityName);
 		this.CityName = "평온한 하룻밤";
 		this.color = "special";
 
-		ImageIcon Card = new ImageIcon(Card.class.getResource("../Image/" + CityName + ".png"));
-		ImageIcon CardPush = new ImageIcon(Card.class.getResource("../Image/" + CityName + "Push.png"));
-		setIcon(Card);
+		ImageIcon Card = new ImageIcon(Card.class.getResource("../Image/" + CityName + ".png"));// 도시의 일반 이미지
+		ImageIcon CardPush = new ImageIcon(Card.class.getResource("../Image/" + CityName + "Push.png"));// 커서가위에 올라갔을때
+																										// 이미지
+		setIcon(Card);// 기본아이콘 설정
+
 		this.addMouseListener(new MouseAdapter() {
 			public void mouseEntered(MouseEvent e) {
 				setIcon((CardPush));// 마우스가 카드 위에 올라갔을 때 색상이 바뀌게.
@@ -155,15 +148,13 @@ class PeaceNightCard extends Card {
 			}
 
 			public void mousePressed(MouseEvent e) {
-				// 평온한 하룻밤의 이벤트 같은 경우에는 서버에서 이벤트를 처리해줘야한다.
-				// 서버에다가 이번에는 전염카드 이벤트 발생시키지 않는 메시지를 보내면 될꺼 같다.
+				// 평온한 하룻밤의 이벤트의 경우 서버에서 처리해준다.
 				if (!Client.CardPrint) {
 					try {
 						Controlpanel.Havecard.removeCard(CityName);
 						Controlpanel.invalidate();
 						Controlpanel.removeAll();
 						Controlpanel.add(new BasicSelect(Controlpanel));
-						Controlpanel.Mainpanel.Controlpanel.setBounds(0, 840, 1920, 240);
 						Controlpanel.revalidate();
 						Controlpanel.repaint();
 						Controlpanel.Mainpanel.GameOutStream.writeUTF("[특수]평온한 하룻밤");
@@ -175,9 +166,9 @@ class PeaceNightCard extends Card {
 			}
 		});
 	}
-}// 평온한 하룻밤 카드
+}
 
-class PredictCard extends Card {// 예측
+class PredictCard extends Card {// 예측 전염카드 덱위에서 6장을 뽑아서 유저가 원하는 순서대로 덱위에 엎을수있다.
 	public PredictCard(ControlPanel Controlpanel, String CityName) {
 		super(CityName);
 		this.CityName = "예측";
@@ -196,14 +187,12 @@ class PredictCard extends Card {// 예측
 			}
 
 			public void mousePressed(MouseEvent e) {
-				// 이것도 서버가 처리해줘야한다 전염카드 덱위에서 6장을 뽑아
-				// 뽑아서 이것도 JOptionPane을 사용하자.
+				// 이것도 서버가 처리해줘야한다 전염카드 덱위에서 6장을 뽑아서 유저가 원하는 순서대로 덱위에 엎을수있다.
 				if (!Client.CardPrint) {
 					try {
 						Controlpanel.Havecard.removeCard(CityName);
 						Controlpanel.Mainpanel.GameOutStream.writeUTF("[예측]사용");
 					} catch (IOException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 				}
@@ -212,9 +201,12 @@ class PredictCard extends Card {// 예측
 	}
 }
 
-class EmergencyAirCard extends Card {// 긴급공중수송
+class EmergencyAirCard extends Card {// 긴급공중수송 원하는 도시로 이동 가능
+	ControlPanel Controlpanel;
+
 	public EmergencyAirCard(ControlPanel Controlpanel, String CityName) {
 		super(CityName);
+		this.Controlpanel = Controlpanel;
 		this.CityName = "긴급공중수송";
 		this.color = "special";
 
@@ -232,11 +224,12 @@ class EmergencyAirCard extends Card {// 긴급공중수송
 			}
 
 			public void mousePressed(MouseEvent e) {
+				// 긴급공중수송의 경우 원하는 지역으로 이동할수있다.
 				if (!Client.CardPrint) {
-					Controlpanel.Havecard.removeCard(CityName);
+					Controlpanel.Havecard.removeCard(CityName);// 긴급공중수송을 삭제하고
 					Controlpanel.invalidate();
 					Controlpanel.removeAll();
-					Controlpanel.add(new EmergencyAirPanel(Controlpanel));
+					Controlpanel.add(new EmergencyAirPanel());//내부클래스 EmergencyAirPanel을 불러온다.
 					Controlpanel.revalidate();
 					Controlpanel.repaint();
 				}
@@ -244,63 +237,54 @@ class EmergencyAirCard extends Card {// 긴급공중수송
 		});
 	}
 
-	class EmergencyAirPanel extends ControlShape {
-		ControlPanel Controlpanel;
-		JScrollPane scroll;
-		JPanel panel;
-		ImageIcon button = new ImageIcon(AirplanePanel.class.getResource("../Image/button.png"));
+	public class EmergencyAirPanel extends ControlShape {
+		JPanel Scrollin;// 스크롤 안에 넣을 패널
+		JScrollPane scroll;// 스크롤
+		ImageIcon button = new ImageIcon(AirplanePanel.class.getResource("../Image/airplane2.png"));// 버튼용 이미지
+		String CharacterCurrentCity;// 캐릭터의 현재 위치 즉 현재 도시를 나타낸다.
 
-		EmergencyAirPanel(ControlPanel Controlpanel) {
-			this.setLayout(new BorderLayout());
-			this.Controlpanel = Controlpanel;
-			panel = new JPanel();
-			// panel.setLayout(new GridLayout(8, 7, 0, 0));
+		public EmergencyAirPanel() {
+		
+			Scrollin = new ControlShape();// 스크롤 안에 이미지를 넣으려니 스크롤이 이미지를 가려서 아예 스크롤안에넣는 패널에 이런 이미지를달았다.
+			Scrollin.setLayout(new FlowLayout(FlowLayout.CENTER, 50, 20));
+			Scrollin.setPreferredSize(new Dimension(1920, 600));// 스크롤 안 패널 크기 설정
+			scroll = new JScrollPane(Scrollin);// 스크롤 안에 스크롤인패널을 넣는다.
+			scroll.setPreferredSize(new Dimension(1920,600));// 스크롤도 사이즈를 설정해준다
+			scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);// 열로는 항상설정
+			scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);// 행으로는 절대 안설정
+			
+			setLayout(new BorderLayout());
+			setPreferredSize(new Dimension(1920, 600));	
+			
+			String[] text = Controlpanel.Mainpanel.citys.returntext();// 시티명은 앞의 한글자는 공백. 총 49개다
+			JLabel[] lcity = new JLabel[48];// 선택할 도시들의 이름 라벨(버튼역할)
+			CharacterCurrentCity = Controlpanel.Mainpanel.characterList.get(Client.name).getCurrentposition();
+			// 캐릭터 현재 위치 도시
 
-			panel.setPreferredSize(new Dimension(1920, 600));
-			scroll = new JScrollPane(panel);
-			// scroll.setSize(new Dimension(1920, 300));
-			// scroll.setPreferredSize(new Dimension(1920, 1080));
-			scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-			scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-			String[] text = Controlpanel.Mainpanel.citys.returntext();
-			JLabel[] lcity = new JLabel[48];
+			Font font = new Font("HY헤드라인M", Font.PLAIN, 20);// 폰트
 
-			for (int i = 0; i < 48; i++) {
-				lcity[i] = new JLabel(button);
-				lcity[i].setText(text[i + 1]);
-				lcity[i].setVerticalTextPosition(JLabel.CENTER);
-				lcity[i].setHorizontalTextPosition(JLabel.CENTER);
-				lcity[i].addMouseListener(new MoveCity());
-				panel.add(lcity[i]);
+			// 캐릭터의 손패와 현재위치한 도시가 같은지 확인 만약 일치하다면 이제 항공기로 플레이어가 어디든 갈수있게 해야한다.
+			for (int j = 0; j < 48; j++) {
+				lcity[j] = new JLabel(text[j + 1], button, JLabel.CENTER);// 라벨에 이미지,텍스트 설정 중앙
+				lcity[j].setVerticalTextPosition(JLabel.BOTTOM);// 텍스트 설정
+				lcity[j].addMouseListener(new AirplaneEvent());// 라벨(버튼)에 마우스 액션 추가
+				lcity[j].setFont(font);// 폰트 설정
+				lcity[j].setForeground(Color.white);// 글자색 설정
+				Scrollin.add(lcity[j]);
 			}
-
-			for (int i = 0; i < 18; i++)
-				// panel.add(new JLabel());
-
-				add(scroll);
+			add(scroll);
 		}
 
-		class MoveCity extends MouseAdapter {
+		// 마우스 어뎁터
+		class AirplaneEvent extends MouseAdapter {
 			public void mousePressed(MouseEvent e) {
-				JLabel label = (JLabel) e.getSource();
-				String Choicecity = label.getText();
-				/*
-				 * Point ChoicePoint = Controlpanel.Mainpanel.citys.CityPosition(Choicecity);
-				 * Controlpanel.Mainpanel.characterList.get(Client.name).setXY(ChoicePoint.x,
-				 * ChoicePoint.y);
-				 * Controlpanel.Mainpanel.characterList.get(Client.name).setCC(Choicecity,
-				 * Controlpanel.Mainpanel.citys.returnCity(Choicecity).getColor());
-				 * 
-				 * Controlpanel.invalidate(); Controlpanel.removeAll(); Controlpanel.add(new
-				 * BasicSelect(Controlpanel)); Controlpanel.revalidate();
-				 * Controlpanel.repaint(); Controlpanel.Mainpanel.repaint();
-				 */
-
-				if (!Client.CardPrint) {
+				if (!Client.CardPrint) {// 만약 현재 유저 턴이라면
+					JLabel label = (JLabel) e.getSource();// 라벨의 값을 가지고 온다
+					String Choicecity = label.getText();// 그 라벨의 텍스트 즉 유저가 가고 싶은 도시명을 읽은 후
 					try {
 						Controlpanel.Mainpanel.GameOutStream.writeUTF("[이동]" + Client.name + ":" + Choicecity);
+						// 게임소켓을 통해 유저가 해당 위치로 이동했다고 알린다.
 					} catch (IOException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 				}
@@ -310,9 +294,12 @@ class EmergencyAirCard extends Card {// 긴급공중수송
 }
 
 class GrandOfMoneyCard extends Card {// 정부보조금
-	public GrandOfMoneyCard(ControlPanel Controlpanel, String CityName) {
+	// 원하는 위치에 실험실을 지을 수 있다.
+	ControlPanel Controlpanel;
 
+	public GrandOfMoneyCard(ControlPanel Controlpanel, String CityName) {
 		super(CityName);
+		this.Controlpanel = Controlpanel;
 		this.CityName = "정부보조금";
 		this.color = "special";
 
@@ -329,14 +316,11 @@ class GrandOfMoneyCard extends Card {// 정부보조금
 			}
 
 			public void mousePressed(MouseEvent e) {
-				// 이것도 서버가 처리해줘야한다 전염카드 덱위에서 6장을 뽑아
-				// 뽑아서 이것도 JOptionPane을 사용하자.
-				if (!Client.CardPrint) {
-					Controlpanel.Havecard.removeCard(CityName);
+				if (!Client.CardPrint) {// 만약 클라의 턴이라면
+					Controlpanel.Havecard.removeCard(CityName);// 해당 카드를 제거하고
 					Controlpanel.invalidate();
 					Controlpanel.removeAll();
-					Controlpanel.add(new GrantOfMoneyPanel(Controlpanel));
-					Controlpanel.Mainpanel.Controlpanel.setBounds(0, 840, 1920, 240);
+					Controlpanel.add(new GrantOfMoneyPanel(Controlpanel));// 정부보조금 패널을 추가한다
 					Controlpanel.revalidate();
 					Controlpanel.repaint();
 				}
@@ -346,30 +330,33 @@ class GrandOfMoneyCard extends Card {// 정부보조금
 
 	class GrantOfMoneyPanel extends ControlShape {
 		ControlPanel Controlpanel;
-		JScrollPane scroll;
-		JPanel panel;
-		ImageIcon button = new ImageIcon(AirplanePanel.class.getResource("../Image/button.png"));
+		JPanel Scrollin;// 스크롤 안에 넣을 패널
+		JScrollPane scroll;// 스크롤
+		ImageIcon button = new ImageIcon(AirplanePanel.class.getResource("../Image/airplane2.png"));// 버튼용 이미지
 
 		GrantOfMoneyPanel(ControlPanel Controlpanel) {
-			this.setLayout(new BorderLayout());
+			setLayout(new BorderLayout());
 			this.Controlpanel = Controlpanel;
-			panel = new JPanel();
+		
+			Scrollin = new ControlShape();// 스크롤 안에 이미지를 넣으려니 스크롤이 이미지를 가려서 아예 스크롤안에넣는 패널에 이런 이미지를달았다.
+			Scrollin.setLayout(new FlowLayout(FlowLayout.CENTER, 50, 20));
+			Scrollin.setPreferredSize(new Dimension(1920, 600));// 스크롤 안 패널 크기 설정
+			scroll = new JScrollPane(Scrollin);// 스크롤 안에 스크롤인패널을 넣는다.
+			scroll.setPreferredSize(new Dimension(1920, 600));// 스크롤도 사이즈를 설정해준다
+			scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);// 열로는 항상설정
+			scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);// 행으로는 절대 안설정
 
-			panel.setPreferredSize(new Dimension(1920, 600));
-			scroll = new JScrollPane(panel);
-
-			scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-			scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 			String[] text = Controlpanel.Mainpanel.citys.returntext();
 			JLabel[] lcity = new JLabel[48];
+			Font font = new Font("HY헤드라인M", Font.PLAIN, 20);// 폰트
 
 			for (int i = 0; i < 48; i++) {
-				lcity[i] = new JLabel(button);
-				lcity[i].setText(text[i + 1]);
-				lcity[i].setVerticalTextPosition(JLabel.CENTER);
-				lcity[i].setHorizontalTextPosition(JLabel.CENTER);
+				lcity[i] = new JLabel(text[i + 1], button, JLabel.CENTER);// 라벨에 이미지,텍스트 설정 중앙
+				lcity[i].setVerticalTextPosition(JLabel.BOTTOM);// 텍스트 설정
 				lcity[i].addMouseListener(new GrantOfMoneyControl());
-				panel.add(lcity[i]);
+				lcity[i].setFont(font);// 폰트 설정
+				lcity[i].setForeground(Color.white);// 글자색 설정
+				Scrollin.add(lcity[i]);
 			}
 			add(scroll);
 		}
@@ -379,28 +366,18 @@ class GrandOfMoneyCard extends Card {// 정부보조금
 				JLabel label = (JLabel) e.getSource();
 				String Choicecity = label.getText();
 				City choice = Controlpanel.Mainpanel.citys.returnCity(Choicecity);
-				/*
-				 * choice.setLabatory();
-				 * 
-				 * Controlpanel.invalidate(); Controlpanel.removeAll(); Controlpanel.add(new
-				 * BasicSelect(Controlpanel)); Controlpanel.revalidate();
-				 * Controlpanel.repaint(); Controlpanel.Mainpanel.repaint();
-				 */
-
 				try {
 					Controlpanel.Mainpanel.GameOutStream.writeUTF("[건설]" + Client.name + ":" + Choicecity);
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-
 			}
 		}
 	}
 }
 
 class PowerUp extends Card {// 파워업 카드
-
+//현재 캐릭터가 위치한 도시 카드를 얻는다.
 	public PowerUp(ControlPanel Controlpanel, String CityName) {
 		super(CityName);
 		this.CityName = "파워업";
@@ -423,11 +400,11 @@ class PowerUp extends Card {// 파워업 카드
 				if (!Client.CardPrint) {
 					Controlpanel.Havecard.removeCard(CityName);
 					String WillCard = Controlpanel.Mainpanel.characterList.get(Client.name).getCurrentposition();
-					String Color = Controlpanel.Mainpanel.citys.returnCity(WillCard).getColor();
-					Controlpanel.Havecard.insertCard(Controlpanel, WillCard, Color);
+					// WillCard는 현재 유저의 위치 도시이다.
+					String Color = Controlpanel.Mainpanel.citys.returnCity(WillCard).getColor();// 현재 위치 도시의 색을 얻어낸다
+					Controlpanel.Havecard.insertCard(Controlpanel, WillCard, Color);// 손패에 해당카드를 추가한다
 					Controlpanel.invalidate();
 					Controlpanel.removeAll();
-					Controlpanel.Mainpanel.Controlpanel.setBounds(0, 840, 1920, 240);
 					Controlpanel.add(new BasicSelect(Controlpanel));
 					Controlpanel.revalidate();
 					Controlpanel.repaint();

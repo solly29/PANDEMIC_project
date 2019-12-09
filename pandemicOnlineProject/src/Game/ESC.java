@@ -7,7 +7,7 @@ import javax.swing.JOptionPane;
 import pandemic.Login;
 
 public class ESC extends JOptionPane {
-
+//게임플레이시 게임 종료 창
 	public ESC() {
 
 		int i = JOptionPane.showConfirmDialog(null,

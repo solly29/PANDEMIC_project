@@ -11,15 +11,12 @@ import javax.swing.JPanel;
 import Game.MainPanel.Map;
 
 public class ControlShape extends JPanel {
-	
+	//컨트롤 패널들의 모양 및 뒷배경
 	Image shape = new ImageIcon(Map.class.getResource("../Image/buttonzone.png")).getImage();
 
 	public ControlShape() {
-		//setSize(1920,300);
 		setOpaque(false);
-		setBackground(Color.CYAN);
-		//setPreferredSize(new Dimension(1920, 300));
-		
+		setPreferredSize(new Dimension(1920, 300));	
 	}
 
 	public void paintComponent(Graphics g) {
