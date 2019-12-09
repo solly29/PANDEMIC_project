@@ -1,11 +1,6 @@
 package Server;
 
 import java.io.DataInputStream;
-
-/*
- * 게임을 제어하고 채팅을 할수있게 한다.
- */
-
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
@@ -29,15 +24,11 @@ public class GameRoom {
 	private boolean PeaceNightCard = false;
 	private boolean end = false;
 	private Hashtable<String, String> userSelect = new Hashtable<String, String>();
+	private String cardList;
 
 	public GameRoom() {
 		// TODO Auto-generated constructor stub
 	}
-
-	/*
-	 * 여기서는 룸의 번호와 닉네임을 받고 전체 룸 리스트에서 룸 번호에 대한 룸 객체를 가지고 오고 전체 유저 리스트 객체에서 닉네임에 대한
-	 * 소켓을 가지고 온다.
-	 */
 
 	public GameRoom(String num, String name, ChatServer Chat) {
 		// TODO Auto-generated constructor stub
@@ -169,7 +160,7 @@ public class GameRoom {
 					}
 
 					System.out.println("레디 " + sum);
-					//2명이상이고 모든 방에 있는 모든 유저가 레디를 하면 게임스타트를 모든유저에게 보냅니다.
+					// 2명이상이고 모든 방에 있는 모든 유저가 레디를 하면 게임스타트를 모든유저에게 보냅니다.
 					if (sum / 10 >= 2 && sum / 10 == sum % 10) {
 						sendAll("gameStart");
 					}
@@ -206,181 +197,112 @@ public class GameRoom {
 		}
 	}
 
+	private void cityCardHamdling() throws IOException { // 초반 도시카드를 배부한다.
+		synchronized (this) {
+			if (MyRoom.getRoomSize() == 2)
+				cardList = Arrays.toString(MyRoom.cardList.cityCardHamdling(4));
+			else if (MyRoom.getRoomSize() == 3)
+				cardList = Arrays.toString(MyRoom.cardList.cityCardHamdling(3));
+			else
+				cardList = Arrays.toString(MyRoom.cardList.cityCardHamdling(2));
+			output.writeUTF("[도시]" + cardList.substring(1, cardList.length() - 1));
+		}
+	}
+
+	public void nextTurn() { // 턴을 다음 사람에게 넘긴다.
+		String startuser = MyRoom.getNextStartUser();
+		sendAll("[제어]turnStart:" + startuser);// 턴 시작 유저가 누구인지 보낸다.
+		ChatRun.sendAll(startuser + "님의 턴입니다.");// 채팅으로도 보냄
+		MyRoom.StartUser = startuser;// room에도 시작유저가 누구인지 저장한다.
+	}
+
+	public void gameSetting() throws Exception {
+		String Myjob = MyRoom.getUserJob(usernumber);
+
+		// 직업이 traffic이면 행동 5개이다.
+		if (Myjob.equals("traffic")) {
+			maxTurnNumber = 5;
+		}
+
+		// 현제 방에있는 모든 유저들의 이름을 목록으로 보내준다.
+		// 왜냐 그 이름을 가지고 클라이언트는 케릭터 클래스를 map에 넣는다.
+		output.writeUTF("[목록]" + MyRoom.getUserListGame().keySet());
+
+		cityCardHamdling();
+
+		input.readUTF();
+
+		if (name.equals(MyRoom.GetKing())) {
+			// 초기 감염상황 발생
+			Thread.sleep(2000);
+			ChatRun.sendAll("감염카드 배부 중입니다.");
+			for (int i = 3; i >= 1; i--) { // 초기 감염상황은 3장씩 총 3번 일어나기 때문에 반복문을 썼다.
+				cardList = Arrays.toString(MyRoom.cardList.infCardHandling(3)); // 감염카드를 인수(3)만큼 받는다.
+				sendAll("[감염]" + cardList.substring(1, cardList.length() - 1) + ", " + i);// 받은 감염카드를 클라에게 뿌려준다.
+				// 이때 뒤에 i(숫자)는 해당 도시에 놓이는 토큰의 개수이다.
+			}
+
+			nextTurn(); // 처음 시작유저를 불러온다.(일단은 방장이 처음 시작 유저이다.)
+		}
+		input.readUTF();
+	}
+
+	// 게임이 시작되는 부분이다.
 	public void gameStart() {
 		try {
-			System.out.println("시작");
+			System.out.println("게임시작");
 			MyRoom.setStart(true);// 게임이 시작됬다는걸 나타낸다.
 
-			String Myjob = MyRoom.getUserJob(usernumber);
-			if (Myjob.equals("traffic")) {
-				maxTurnNumber = 5;
-			}
+			// 초반 게임 셋팅을 한다.
+			gameSetting();
 
-			// System.out.println(usernumber+" 시작시 나의 직업은 : "+Myjob);
-
-			// 현제 방에있는 모든 유저들의 이름을 목록으로 보내준다.
-			// 왜냐 그 이름을 가지고 클라이언트는 케릭터 클래스를 map에 넣는다.
-			output.writeUTF("[목록]" + MyRoom.getUserListGame().keySet());
-			String cardList;
-			// 도시카드를 받는다.(동기화를 시켜야한다.)
-			synchronized (this) {
-				if (MyRoom.getRoomSize() == 2)
-					cardList = Arrays.toString(MyRoom.cardList.cityCardHamdling(4));
-				else if (MyRoom.getRoomSize() == 3)
-					cardList = Arrays.toString(MyRoom.cardList.cityCardHamdling(3));
-				else
-					cardList = Arrays.toString(MyRoom.cardList.cityCardHamdling(2));
-				output.writeUTF("[도시]" + cardList.substring(1, cardList.length() - 1));
-			}
-
-			input.readUTF(); // 클라가 도시카드를 받았으면 전염 또는 공백을 보낸다.
-								// 여기서는 가장 처음 손패를 받는 과정이기 때문에 전염 이벤트가 발생하지 않는다.
-								// 이벤트 발생은 고민중..
-
-			if (name.equals(MyRoom.GetKing())) {
-				// 현제 유저가 방장일경우 밑의 문장을 수행한다. 나머지는 밑에 반복문에서 기다리게 된다.
-				// 초기 감염상황 발생
-				Thread.sleep(2000);
-				ChatRun.sendAll("감염카드 배부 중입니다.");// 감염카드를 배부 중이라고 채팅으로 뿌려준다.
-				for (int i = 3; i >= 1; i--) {// 초기 감염상황은 3장씩 총 3번 일어나기 때문에 반복문을 썼다.
-					cardList = Arrays.toString(MyRoom.cardList.infCardHandling(3));// 감염카드를 인수(3)만큼 받는다.
-					sendAll("[감염]" + cardList.substring(1, cardList.length() - 1) + ", " + i);// 받은 감염카드를 클라에게 뿌려준다.
-					// 이때 뒤에 i(숫자)는 해당 도시에 놓이는 토큰의 개수이다.
-				}
-				// 처음 시작유저를 불러온다.(일단은 방장이 처음 시작 유저이다.)
-				String startuser = MyRoom.getNextStartUser();
-				sendAll("[제어]turnStart:" + startuser);// 턴 시작 유저가 누구인지 보낸다.
-				ChatRun.sendAll(startuser + "님의 턴입니다.");// 채팅으로도 보냄
-				MyRoom.StartUser = startuser;// room에도 시작유저가 누구인지 저장한다.
-			}
-			input.readUTF();
 			while (true) {
 				String str = input.readUTF(); // 클라이언트로부터 행동을 입력 받는다
 				if (str.equals("a"))
 					continue;
 
-				if(str.equals("[Exit]")) {
-					System.out.println("exit");
+				if (str.equals("[Exit]")) { // 게임이 끝났을때 [Exit]를 받는다.
 					output.writeUTF("[제어]stop");
-					System.out.println("exit 부분");
-					end=true;
+					end = true;
 					break;
 				}
-				
+
 				if (MyRoom.StartUser.equals(name))// 현제유저의 턴일경우 countTurn을 증가시킨다.
 					countTurn++;
-				
 
 				if (input == null || str == null)
 					break; // 입력이 아무것도 들어오지 않으면 탈출
-				if(str.substring(0,4).equals("[제어]")) {
+				if (str.substring(0, 4).equals("[제어]")) { // 승패여부
 					str = str.substring(4);
-					if(str.equals("win")) {
+					if (str.equals("win")) {
 						ChatRun.sendAll("승리~~~");
 						sendAll("[제어]승리");
-						System.out.println(" 게임 승리 1");
 						output.writeUTF("[제어]stop");
-						end=true;
+						end = true;
 						break;
-					}else if(str.equals("fail")) {
+					} else if (str.equals("fail")) {
 						ChatRun.sendAll("패배~~~");
 						sendAll("[제어]패배");
-						System.out.println(" 게임 패배 ");
 						input.readUTF();
 						output.writeUTF("[제어]stop");
-						end=true;
+						end = true;
 						break;
 					}
-					//게임에서 서버가 관여 함
-					//예를들어 승패 여부
 				}
 
+				// 이벤트카드 사용
 				if (str.equals("[특수]평온한 하룻밤")) {
 					PeaceNightCard = true;
 				} else if (str.substring(0, 4).equals("[예측]")) {
-					String str3 = str.substring(4);
-					if (str3.equals("사용")) {
-						String card = Arrays.toString(MyRoom.cardList.getPredictCardList());
-						System.out.println(card);
-						output.writeUTF("[예측]" + card.substring(1, card.length() - 1));
-						countTurn--;
-						continue;
-					} else {
-						str3 = str3.substring(1, str3.length() - 1);
-						String[] str2 = str3.split(", ");
-						MyRoom.cardList.addinfCard(str2);
-					}
+					PredictEvent(str);
 				} else if (str.substring(0, 4).equals("[공유]")) {
-					str = str.substring(4);
-					String[] str2 = str.split(":");
-					System.out.println(Arrays.toString(str2));
-					if (str2[2].equals("안됨")) {
-						if (MyRoom.StartUser.equals(name)) {
-							countTurn--;
-						} else {
-							System.out.println("안됨 보냄");
-							list.get(str2[0]).writeUTF("[공유]" + name + ":" + str2[1] + ":안됨");
-						}
-					} else if (str2[2].equals("전달")) {// 카드를 받는다
-						if (MyRoom.StartUser.equals(name))
-							countTurn--;
-						list.get(str2[0]).writeUTF("[공유]" + name + ":" + str2[1] + ":전달");
-					} else if (str2[2].equals("보냄")) {
-						list.get(str2[0]).writeUTF("[공유]" + name + ":" + str2[1] + ":보냄");// 카드를 보낸다.
-					}
+					ShareEvent(str);
 				} else
 					sendAll(str);// 행동을 입력 받으면 모두에게 보내준다.
 
-				if (countTurn == maxTurnNumber) {// 턴이 끝났을때(countTurn이 4일경우) 밑에 문장을
-					output.writeUTF("[제어]turnStop:" + name);// 턴이 끝났다는걸 보낸다.(이때 클라는 모든 인터페이스를
-					// 비활성화한다.)
-
-					// 다음 턴이 누구인지 알려준다.(이거는 메소드로 만들어도 될듯?)
-					String startuser = MyRoom.getNextStartUser();
-					sendAll("[제어]turnStart:" + startuser);
-					ChatRun.sendAll(startuser + "님의 턴입니다.");
-					MyRoom.StartUser = startuser;
-					System.out.println("시작:" + startuser);
-					countTurn = 0;// 초기화한다.
-
-					str = input.readUTF(); // 정상적인 도시카드인지 전염카드가 섞여있는지 판단하기위해
-
-					if(str.equals("[제어]win")) {
-						ChatRun.sendAll("승리~~~");
-						sendAll("[제어]승리");
-						System.out.println(" 게임 승리 1");
+				if (countTurn == maxTurnNumber) {// 턴이 끝났을때(countTurn이 4일경우)
+					if (TurnEnd())
 						continue;
-					}
-
-					//도시카드를 배부 받는다.(해당)
-					String[] a = MyRoom.cardList.cityCardHamdling(2);
-					
-					
-					if(a==null) {
-						ChatRun.sendAll("패배~~~");
-						sendAll("[제어]패배");
-						System.out.println(" 게임 패배 ");
-						continue;
-					}else {
-						cardList = Arrays.toString(a);
-						output.writeUTF("[도시]"+cardList.substring(1,cardList.length()-1));
-					}
-
-					str = input.readUTF(); // 정상적인 도시카드인지 전염카드가 섞여있는지 판단하기위해
-
-					if (str.equals("[제어]전염")) {// 전염이 일어나면
-						sendAll("[전염]");
-						sendAll("[감염]" + MyRoom.cardList.Infection() + ", 3"); // 전염 로직을 실행(마지막카드 한장, 쓴카드 섞어서 올리기)
-						MyRoom.InfTrackNum();
-					}
-
-					// 감염카드를 배부한다.(모든 유저)
-					if (!PeaceNightCard) {
-						cardList = Arrays.toString(MyRoom.cardList.infCardHandling(MyRoom.InfTrackCount()));
-						sendAll("[감염]" + cardList.substring(1, cardList.length() - 1) + ", 1");
-					}
-					PeaceNightCard = false;
-
 				}
 			}
 		} catch (Exception e) {
@@ -388,12 +310,87 @@ public class GameRoom {
 			e.printStackTrace();
 		} finally {
 			if (MyRoom.StartUser.equals(name) && !end) {
-				String startuser = MyRoom.getNextStartUser();
-				sendAll("[제어]turnStart:" + startuser);
-				ChatRun.sendAll(startuser + "님의 턴입니다.");
-				MyRoom.StartUser = startuser;
-				System.out.println("시작:" + startuser);
+				nextTurn();
 			}
+		}
+	}
+
+	// 턴이 끝나면 해당 메소드를 호출한다.
+	public boolean TurnEnd() throws IOException {
+		output.writeUTF("[제어]turnStop:" + name);// 턴이 끝났다는걸 보낸다.(이때 클라는 모든 인터페이스를 비활성화한다.)
+
+		nextTurn();
+		countTurn = 0;// 초기화한다.
+
+		String str = input.readUTF(); // 정상적인 도시카드인지 전염카드가 섞여있는지 판단하기위해
+
+		if (str.equals("[제어]win")) {
+			ChatRun.sendAll("승리~~~");
+			sendAll("[제어]승리");
+			return true;
+		}
+
+		// 도시카드를 배부 받는다.
+		String[] card = MyRoom.cardList.cityCardHamdling(2);
+
+		if (card == null) {
+			ChatRun.sendAll("패배~~~");
+			sendAll("[제어]패배");
+			return true;
+		} else {
+			cardList = Arrays.toString(card);
+			output.writeUTF("[도시]" + cardList.substring(1, cardList.length() - 1));
+		}
+
+		str = input.readUTF(); // 정상적인 도시카드인지 전염카드가 섞여있는지 판단하기위해
+
+		if (str.equals("[제어]전염")) {// 전염이 일어나면
+			sendAll("[전염]");
+			sendAll("[감염]" + MyRoom.cardList.Infection() + ", 3"); // 전염 로직을 실행(마지막카드 한장, 쓴카드 섞어서 올리기)
+			MyRoom.InfTrackNum();
+		}
+
+		// 감염카드를 배부한다.(모든 유저)
+		if (!PeaceNightCard) { // 평온한 하룻밤 이벤트카드를 쓰지 않으면 배부한다.
+			cardList = Arrays.toString(MyRoom.cardList.infCardHandling(MyRoom.InfTrackCount()));
+			sendAll("[감염]" + cardList.substring(1, cardList.length() - 1) + ", 1");
+		}
+		PeaceNightCard = false;
+
+		return false;
+	}
+
+	// 예측 이벤트카드 사용 메소드
+	public void PredictEvent(String str) throws IOException {
+		str = str.substring(4);
+		if (str.equals("사용")) { // 이벤트 카드를 사용했을때
+			String card = Arrays.toString(MyRoom.cardList.getPredictCardList()); // 감염카드 6장을 받아온다.
+			output.writeUTF("[예측]" + card.substring(1, card.length() - 1)); // 카드 리스트를 보낸다.
+			countTurn--; // 이 과정에서는 턴을 카운트 하지 않는다.
+		} else { // 순서대로 감염 카드 덱에 올린다.
+			str = str.substring(1, str.length() - 1);
+			String[] str2 = str.split(", ");
+			MyRoom.cardList.addinfCard(str2);
+		}
+	}
+
+	// 공유 메소드 턴인 유저가 카드를 받을때는 "전달", 카드를 보낼때는 "보냄", 만약 보내는 사람이 거절하거나 카드가 없으면 "안됨"
+	// "전달"로 보내면 상대방이 해당 카드 "보냄"으로 다시 보낸다.
+	public void ShareEvent(String str) throws IOException {
+		str = str.substring(4);
+		String[] str2 = str.split(":");
+		// 거절했거나 카드가 없으면 안됨을 보냄
+		if (str2[2].equals("안됨")) {
+			if (MyRoom.StartUser.equals(name))
+				countTurn--;
+			else
+				list.get(str2[0]).writeUTF("[공유]" + name + ":" + str2[1] + ":안됨");
+		} else if (str2[2].equals("전달")) {// 카드를 받는다
+			if (MyRoom.StartUser.equals(name))
+				countTurn--;
+			list.get(str2[0]).writeUTF("[공유]" + name + ":" + str2[1] + ":전달");
+		} else if (str2[2].equals("보냄")) {// 카드를 보낸다.
+			list.get(str2[0]).writeUTF("[공유]" + name + ":" + str2[1] + ":보냄");
 		}
 	}
 

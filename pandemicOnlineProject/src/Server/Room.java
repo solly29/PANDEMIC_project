@@ -22,17 +22,26 @@ public class Room {
 	public String StartUser = "";
 	private Hashtable<String, String> userSelect = new Hashtable<String, String>();
 	private int[] startState = { 0, 0, 0, 0 };
-	private int[] InfTrack = {2,2,3,3,4,4};
+	private int[] InfTrack = { 2, 2, 3, 3, 4, 4 };
 	private int InfNum = 0;
 
 	public Room() {
 		// TODO Auto-generated constructor stub
 	}
 
-	// 해당 닉네임 또는 아이디의 유저를 유저 클레스로 추가한다.(방을 생성을 할경우)
 	public Room(String name) {
 		// TODO Auto-generated constructor stub
 		kingName = name;
+		user = new UserList(name);// 유저 객체를 생성
+		cardList = new CardList(4);// 일단 난이도는 4장으로 고정 나중에 바꿀꺼당
+	}
+
+	// 해당 닉네임 또는 아이디의 유저를 유저 클레스로 추가한다.(방을 생성을 할경우)
+	public Room(String name, String rName, String rPW) {
+		// TODO Auto-generated constructor stub
+		kingName = name;
+		roomName = rName;
+		roomPass = rPW;
 		user = new UserList(name);// 유저 객체를 생성
 		cardList = new CardList(4);// 일단 난이도는 4장으로 고정 나중에 바꿀꺼당
 	}
@@ -138,7 +147,7 @@ public class Room {
 	public void setUserSelect(String num, String job) {
 		userSelect.put(num, job);
 	}
-	
+
 	public String getUserJob(String num) {
 		return userSelect.get(num);
 	}
@@ -176,13 +185,13 @@ public class Room {
 		int i = Integer.parseInt(str);
 		return startState[i];
 	}
-	
+
 	public void InfTrackNum() {
 		InfNum++;
-		if(InfNum==7)
+		if (InfNum == 7)
 			InfNum--;
 	}
-	
+
 	public int InfTrackCount() {
 		return InfTrack[InfNum];
 	}

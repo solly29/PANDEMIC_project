@@ -13,9 +13,7 @@ public class MainThread implements Runnable {
 	private DataInputStream input = null;
 	private DataOutputStream output = null;
 	private Login LoginServer = null;
-	private LobbyServer lobbyServer = null;
 
-	
 	public MainThread() {
 		// TODO Auto-generated constructor stub
 
@@ -45,45 +43,39 @@ public class MainThread implements Runnable {
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-		LoginServer = new Login(gameSocket, chatSocket); // 로그인 객체 생성
+		LoginServer = new Login(gameSocket); // 로그인 객체 생성
 		while (true) {
-			System.out.println("확인");
-
 			try {
 				String str1 = input.readUTF();
-				System.out.println(str1);
 				if (str1.equals("login")) {// 로그인 체크
-					// 성공
 					if (LoginServer.loginCheck()) {
 						output.writeUTF("true");
 						name = LoginServer.getName();
-						lobbyServer = new LobbyServer(gameSocket, chatSocket, name);// 이부분
+						new LobbyServer(gameSocket, chatSocket, name);// 이부분
 					} else
 						output.writeUTF("false");
-					
-				} else if (str1.equals("join")) {
-					if (LoginServer.join()) {
-						output.writeUTF("true");
-					} else
-						output.writeUTF("false");
-					
-				} else if (str1.equals("find")) {
-					if (!LoginServer.find()) {
-						output.writeUTF("false");
-					}
-				}else if(str1.contentEquals("duple")) {
-					if(LoginServer.duple()) {
-						output.writeUTF("true");
-					}else
-						output.writeUTF("false");
+
+				} else if (str1.equals("join")) {// 회원가입
+					LoginServer.join();
+				} else if (str1.equals("find")) {// 아이디 비번 찾기
+					LoginServer.find();
+				} else if (str1.contentEquals("duple")) {// 중복 체크
+					LoginServer.duple();
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				System.out.println("실패");
+				try {
+					gameSocket.close();
+					chatSocket.close();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				break;
 			}
 		}
-		LobbyServer.userList.remove(name);
+		LobbyServer.userList.remove(name); // 총 유저 리스트에서 해당 유저 삭제
 	}
 
 }

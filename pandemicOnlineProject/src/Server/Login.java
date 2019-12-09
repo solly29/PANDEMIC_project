@@ -1,6 +1,7 @@
 package Server;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
@@ -8,29 +9,22 @@ import DB.DAO;
 
 public class Login {
 	private DataInputStream input = null;
+	private DataOutputStream output = null;
 	private Socket gameSocket = null;
-	private Socket chatSocket = null;
 	private String ID;
 	private String PW;
 	private String NAME;
 	private String NUMBER;
 	DAO db;
 
-	public Login(Socket s1, Socket s2) {
+	public Login(Socket s1) {
 		// TODO Auto-generated constructor stub
 		gameSocket = s1;
-		chatSocket = s2;
 		db = new DAO(gameSocket);
-		// 임의의 유저
-		/*
-		 * MainServer.IdPassword.put("admin","1234");
-		 * MainServer.IdPassword.put("user","1234");
-		 * MainServer.IdPassword.put("user2","1234");
-		 * MainServer.IdPassword.put("user3","1234");
-		 */
 
 		try {
 			input = new DataInputStream(gameSocket.getInputStream());
+			output = new DataOutputStream(gameSocket.getOutputStream());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -41,6 +35,7 @@ public class Login {
 		return ID;
 	}
 
+	//로그인 체크함
 	public boolean loginCheck() {
 
 		ID = null;
@@ -57,11 +52,13 @@ public class Login {
 
 		System.out.println("login");
 
+		//해당 아이디의 유저가 로그인 되어있으면 로그인 실패
 		if (LobbyServer.userList.containsKey(ID)) {
 			System.out.println("유저가 로그인 되어있음");
 			return false;
 		}
 
+		//디비를 확인해서 id, pw가 같으면 로그인 성공
 		if (db.MatchPWD(ID, PW)) {
 			System.out.println("PW 일치");
 			return true;
@@ -70,8 +67,9 @@ public class Login {
 		}
 		return false;
 	}
+	
 	//중복확인
-	public boolean duple() {
+	public void duple() throws IOException {
 		ID = null;
 		try {
 			ID = input.readUTF();
@@ -82,16 +80,16 @@ public class Login {
 
 		}
 
-		if (db.MatchID(ID)) {
-			return true;
-		} else {
-			return false;
-		}
+		//중복을 확인한다.
+		if (db.MatchID(ID))
+			output.writeUTF("true");
+		else
+			output.writeUTF("false");
 
 	}
 
 	// 회원가입
-	public boolean join() {
+	public void join() throws IOException{
 		ID = null;
 		PW = null;
 		NAME = null;
@@ -109,18 +107,20 @@ public class Login {
 
 		}
 
+		//디비에 해당 아이디가 없으면 회원가입 가능
 		if (db.MatchID(ID)) {
-
+			//디비에 추가
 			db.Insert(NAME, NUMBER, ID, PW);
 
-			return true;
+			output.writeUTF("true");
 		} else {
-			return false;
+			output.writeUTF("false");
 		}
 
 	}
 
-	public boolean find() {
+	//id, pw 찾기
+	public void find() throws IOException {
 
 		NAME = null;
 		NUMBER = null;
@@ -135,13 +135,9 @@ public class Login {
 			e.printStackTrace();
 
 		}
-
-		if (db.FindID(NAME, NUMBER)) {
-			
-			return true;
-		} else {
-			return false;
-		}
-
+		
+		//해당되는 아이디가 없으면 오류창뜨게
+		if (!db.FindID(NAME, NUMBER))
+			output.writeUTF("false");
 	}
 }
