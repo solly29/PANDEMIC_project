@@ -16,12 +16,12 @@ public class ControlShape extends JPanel {
 
 	public ControlShape() {
 		setOpaque(false);
-		setPreferredSize(new Dimension(1920, 300));	
+		setPreferredSize(new Dimension(1920, 300));	//크기설정
 	}
 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		g.drawImage(shape, 0, 0, null);
+		g.drawImage(shape, 0, 0, null);//뒷배경을 그린다
 
 	}
 }
