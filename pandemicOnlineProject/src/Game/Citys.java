@@ -421,11 +421,16 @@ class City {// 도시 클래스
 		MainPanel.setVirusCount();// 유저가 현재 진행상황을 쉽게 보도록
 	}
 
+	//확산이 일어 났을때 이벤트 메소드이다. 이때 매개변수로 바이러스의 색깔을 넘겨받는다.
 	public void diffusionVirus(String color) {
+		//한번 확산이 일어난곳은 더이상 확산이 일어나지 않도록 visit라는 리스트를 만들어서 저장한다.
 		City.visit.add(name);
+		//해당 도시 주위의 인접한 도시들의 객체를 가지고온다.
 		ArrayList<City> adCity = Citys.AdjacencyCity(name);
 		for (int j = 0; j < adCity.size(); j++) {
-			if (!City.visit.contains(adCity.get(j).name))
+			//인접되어 있는 도시에 plusVirus()메소드를 호출해서 바이러스를 바이러스를 발생시킨다.
+			//인접된 도시가 방문되지 않았을때 바이러스를 발생시킴
+			if (!City.visit.contains(adCity.get(j).name)) //방문된 도시인지 확인
 				adCity.get(j).PlusVirus(color, 1);
 		}
 
