@@ -10,12 +10,12 @@ import javax.swing.ImageIcon;
 import Game.MainPanel.Map;
 
 public class Character {// 유저 자신 캐릭터다
-	String job;
+	String job;//직업이름
 	String CurrentPositon = "애틀란타";// 제일 처음 시작위치는 애틀란타다. 캐릭터의 이동위치가 바뀔 때 마다 업데이트
-	String Color = "Blue";// 시작색깔
+	String Color = "Blue";// 시작도시 애틀란타의 색깔
 	Image CharacterIcon;
 	String name = "";
-	int x = 0, y = 0, plus = 0;// 캐릭터들의 좌표
+	int x = 0, y = 0, plus = 0;// 캐릭터들의 좌표 plus는 캐릭터들이 겹치지 않게 공간을 주는 것이다.
 	MainPanel Mainpanel;
 	Image turnImage = new ImageIcon(Map.class.getResource("../Image/턴화살표.png")).getImage();// 턴이미지
 
@@ -24,14 +24,14 @@ public class Character {// 유저 자신 캐릭터다
 		CharacterIcon = new ImageIcon(ControlPanel.class.getResource("../Image/" + job + ".png")).getImage();
 		this.Mainpanel = Mainpanel;
 		this.name = name;
-		Point c = Mainpanel.citys.CityPosition(CurrentPositon);
+		Point c = Mainpanel.citys.CityPosition(CurrentPositon);//현재 위치한 도시의 좌표
 		plus = i;
 		x = c.getX() + plus;
 		y = c.getY();
 		
 		if(job.equals("quarantine")) {
 			quarantineSetting(true);
-		}
+		}//만약 캐릭터 직업이 방역업자일시.
 	}
 	
 	public void quarantineSetting(boolean t) {
@@ -41,7 +41,7 @@ public class Character {// 유저 자신 캐릭터다
 			c.setProtection(t);
 		}
 		myCity.setProtection(t);
-	}
+	}//캐릭터가 방역업자일시 주변도시들에는 바이러스가 발생하지 않는다.
 
 	public void setPlus(int i) {
 		this.plus = i;
@@ -99,10 +99,12 @@ public class Character {// 유저 자신 캐릭터다
 		this.CurrentPositon = City;
 		this.Color = Color;
 		System.out.println("메인패널의 캐릭터의 CC메소드" + CurrentPositon + " " + Color);
-	}
+	}//캐릭터 현재 위치및 색깔 설정
 
 	public void draw(Graphics g) {
 		g.drawImage(CharacterIcon, x, y, CharacterIcon.getWidth(null), CharacterIcon.getHeight(null), null);
+		
+		//만약 현재 자신의 턴이라면 위에 삼각형
 		if(ClientGameReceiverThread.turnUser.equals(name))
 			g.drawImage(turnImage, x, y-50, turnImage.getWidth(null), turnImage.getHeight(null), null);
 		g.setColor(java.awt.Color.white);
