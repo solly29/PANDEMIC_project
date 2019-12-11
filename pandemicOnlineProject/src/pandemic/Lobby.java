@@ -350,9 +350,9 @@ class RoomList extends JPanel {
 	public void printListRoom() {
 		/* 
 		방목록을 출력하는 메소드	 
-		list로  {[방이름=비밀번호,방이름=비밀번호,방이름2=비밀번호2]}
-		list2에는 {방이름=비밀번호,방이름2=비밀번호}
-		test에는 {방이름,비밀번호}
+		list로  [방이름=비밀번호,방이름=비밀번호,방이름2=비밀번호2]
+		list2에는 방이름=비밀번호,방이름2=비밀번호
+		test에는 방이름,비밀번호 이렇게 나눠서 룸리스트테이블에 추가한다.
 		이런식으로 저장되어 한줄씩 출력하게한다. *비밀번호=****
 		*/
 		try {
@@ -466,10 +466,10 @@ class checkRoomPassword extends JFrame implements ActionListener {
 					output.writeUTF(str2);
 					output.writeUTF(inputPassword.getText());
 					str = input.readUTF();
-					System.out.println("비밀번호 보내기는 성공함");
+				
 					if (str.equals("false")) {
 						JOptionPane.showMessageDialog(null, "입장불가.");
-						// output1.writeUTF("[제어]stop");
+						
 
 					} else {
 						top.getContentPane().removeAll();
@@ -607,7 +607,6 @@ class makeRoom extends JFrame implements ActionListener {
 			public void mousePressed(MouseEvent e) {
 				String str = null;
 				try {
-					
 					output = new DataOutputStream(gsocket.getOutputStream());
 					output1 = new DataOutputStream(csocket.getOutputStream());
 					input = new DataInputStream(gsocket.getInputStream());
@@ -620,7 +619,7 @@ class makeRoom extends JFrame implements ActionListener {
 					// str으로 방생성가능여부를 받아온다 참이면 생성,그렇지않으면 생성할수없다는 메시지
 					str = input.readUTF();
 					if (str.equals("true")) {
-						// output1.writeUTF("[제어]stop");
+						
 						top.getContentPane().removeAll();
 						top.getContentPane().add(new Room(gsocket, csocket, ChatClass));
 						top.revalidate();
@@ -727,11 +726,14 @@ class Chat extends JPanel {
 
 		// 채팅치는 영역 액션리스터 (엔터)
 		ChatField.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e) {			
+				//채팅텍스트필드를 t라는 텍스트필드로 가져온다						
 				JTextField t = (JTextField) e.getSource();
 
 				try {
+					//엔터쳤을때 스크롤바가 바로 내려가는 설정
 					ChatList.setCaretPosition(ChatList.getDocument().getLength());
+					//서버로 채팅내용을 보낸다.
 					output.writeUTF("[채팅]" + t.getText());
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
