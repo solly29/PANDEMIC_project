@@ -158,6 +158,7 @@ class PeaceNightCard extends Card {
 						Controlpanel.revalidate();
 						Controlpanel.repaint();
 						Controlpanel.Mainpanel.GameOutStream.writeUTF("[특수]평온한 하룻밤");
+						Controlpanel.setBounds(0, 840, 1920, 240);
 					} catch (Exception e1) {
 						// TODO: handle exception
 						e1.printStackTrace();
