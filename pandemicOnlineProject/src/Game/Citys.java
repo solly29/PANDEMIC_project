@@ -17,12 +17,12 @@ import pandemic.Client;
 
 public class Citys {
 	static boolean fail = false;
-	
+
 	public static String[][] ad = new String[49][49];// 인접시 o 소문자 o가 넣어진다 아닐시에는"", 도시의 인접상만 판단
 	String[] name = { "", "애틀란타", "워싱턴", "시카고", "마이애미", "멕시코 시티", "몬트리올", "뉴욕", "보고타", "리마", "로스앤젤레스", "샌프란시스코", "런던",
 			"마드리드", "산티아고", "상파울루", "부에노스아이레스", "도쿄", "마닐라", "시드니", "에센", "파리", "알제", "라고스", "오사카", "서울", "상하이", "홍콩",
 			"호치민 시티", "자카르타", "타이베이", "상트페테르부르크", "밀라노", "이스탄불", "카이로", "카르툼", "킨샤샤", "베이징", "콜카타", "방콕", "첸나이", "모스크바",
-			"바그다드", "리야드", "요하네스버그", "델리", "뭄바이", "카라치", "테헤란" };
+			"바그다드", "리야드", "요하네스버그", "델리", "뭄바이", "카라치", "테헤란" };// 총 49개 첫번째는 공백
 
 	static City[] city = new City[48];// 도시 그 자체의 자원을 나타낸다.
 	// ad배열같은 경우에는 한눈에 알아보기 쉽고, 또 인접성판단을 위해 공백을 넣어 index가 +1 되있지만, city 배열은 그럴
@@ -30,6 +30,7 @@ public class Citys {
 
 	final String[] eventCard = { "평온한 하룻밤", "긴급공중수송", "항체보유자", "예측", "정부보조금", "파워업" };
 	public List<String> EventCard = Arrays.asList(eventCard);
+	// 이벤트카드 항목
 
 	public Citys() {
 		for (int i = 0; i < 49; i++)
@@ -144,7 +145,7 @@ public class Citys {
 
 		// 도시정보 설정
 		city[0] = new City("애틀란타", "Blue", 1, 760, 900);
-		city[0].Labatory = true;
+		city[0].Labatory = true;// 애틀란타에는 실험실이 건설되어있다
 		city[1] = new City("워싱턴", "Blue", 2, 960, 904);
 		city[2] = new City("시카고", "Blue", 3, 648, 700);
 		city[3] = new City("마이애미", "Yellow", 4, 866, 1020);
@@ -196,7 +197,7 @@ public class Citys {
 
 	public String[] returntext() {
 		return name;
-	}
+	}// 도시의 이름을 배열로 넘겨준다.49개첫번째 글자는 공백
 
 	public void draw(Graphics g) {
 		for (int i = 0; i < city.length; i++) {
@@ -235,13 +236,14 @@ public class Citys {
 		for (position = 0; position < 49; position++) {
 			if (ad[0][position].equals(e))
 				break;
-			// 행이 0일 때 즉 e 값이 어딨는지 찾는다.
+			// 행이 0일 때 즉 e값 도시가 그래프에서 어딨는지 찾는다.
 		}
 
 		for (int i = 0; i < 49; i++) {
 			// 위에서 현재도시가 판별됬으니 그 도시를 기준으로 o가 되있는 도시들을 다 Adjacency에 넣는다
 			if (ad[i][position].equals("o")) {
-				Adjacency.add(city[i - 1]);
+				Adjacency.add(city[i - 1]);// 도시리스트에 인접 도시 정보를 넣는다.
+				// 도시 이중배열의 경우 ad인접성 배열고 달리 공백이없어 크기가 48이다.
 			}
 		}
 		return Adjacency;
@@ -259,13 +261,13 @@ public class Citys {
 					VirusList.add("Black");
 				if (city[i].Yellow > 0)
 					VirusList.add("Yellow");
-			}
+			} // 빨파검노순으로 바이러스가 있다면 리스트에 추가시킨다.
 		}
 		return VirusList;
-	}
+	}// 현재 그 도시에 위치하는 바이러스의 갯수들을 알아내는 메소드
 
 	public Point CityPosition(String CurrentCity) {
-		// 현재의 도시명(String)을 입력 받아서 그 도시의 좌표(x,y)를 반환하는 메소드
+		// 현재의 도시명(String)을 입력 받아서 그 도시의 좌표 Point(x,y)를 반환하는 메소드
 		Point current = new Point(0, 0);
 		System.out.println("작동됨");
 		for (int i = 0; i < 48; i++) {
@@ -278,6 +280,7 @@ public class Citys {
 	}
 
 	public City returnCity(String CurrentCity) {
+		// 도시명을 입력받아서 그 도시 객체를 반환하는 메소드
 		City rcity;
 		int num = 0;
 		for (int i = 0; i < 48; i++) {
@@ -292,17 +295,16 @@ public class Citys {
 }
 
 class City {// 도시 클래스
-	String name;
-	String color;
-	private int x, y;
-	int myNum;
-	int Red = 0, Blue = 0, Black = 0, Yellow = 0;
-	boolean Labatory = false;
-	Image CircleBack;
+	String name;// 도시명
+	String color;// 해당도시색
+	private int x, y;// 좌표
+	int myNum;// 해당 도시의 ad그래프 순서
+	int Red = 0, Blue = 0, Black = 0, Yellow = 0;// 바이러스
+	boolean Labatory = false;// 실험실 기본적으로 애틀란타를 제외하고 다 false
 	Image LabatoryImage;
 	Image RedCube = new ImageIcon(Map.class.getResource("../Image/RedCube.png")).getImage();
-	private boolean protection = false;
-	
+	private boolean protection = false;// true일시 바이러스가 놓이지 않는다.
+
 	public static ArrayList<String> visit = new ArrayList<String>();
 
 	public City() {
@@ -314,11 +316,9 @@ class City {// 도시 클래스
 		this.myNum = myNum;
 		this.x = x;
 		this.y = y;
-		// CircleBack = new ImageIcon(Map.class.getResource("../Image/" + color +
-		// "Circle.png")).getImage();
 		LabatoryImage = new ImageIcon(Map.class.getResource("../Image/Labatory.png")).getImage();
 	}
-	
+
 	public void setProtection(boolean t) {
 		this.protection = t;
 	}
@@ -352,35 +352,29 @@ class City {// 도시 클래스
 	}
 
 	public void draw(Graphics g) {
-		if (Labatory)
-			// g.drawImage(CircleBack, x, y, null);
-			// else
+		if (Labatory)//실험실이 true라면 실험실을 그린다
 			g.drawImage(LabatoryImage, x, y, null);
-		// g.setFont(new Font("굴림", Font.BOLD, 30));
-		// g.setColor(Color.white);
-		// g.drawString(name, x - 30, y + 90);
-		drawCube(g);
+		drawCube(g);//도시에 해당되는 바이러스들을 그림다.
 	}
 
 	public void PlusVirus(String color, int i) {
 		// 일단 Red,Black,Yellow,Blue 텍스트를 읽어서 해당 텍스트면 해당 색깔의 바이러스가 그려지도록 만들겠다.
-		if(protection)
+		if (protection)// 방역시 바이러스가 놓일일이 없으니 바로 return
 			return;
-		
-		if (color.equals("Red")) {
+
+		if (color.equals("Red")) {// 빨간색 바이러스
 			if (MainPanel.RedVirus == 0 && MainPanel.RedCure) {
-				return;
+				return;// 빨간치료제가 개발되고 지도에 빨간 바이러스가 없다. 즉 근절상태는 바이러스가 놓이지 않는다.
 			}
 			MainPanel.RedVirus = MainPanel.RedVirus + i;
 			if ((Red = Red + i) > 3) {
-				System.out.println("확산이벤트는 아직 안넣었다.");
 				Red = Red - i;
 				MainPanel.RedVirus = MainPanel.RedVirus - i;
 				diffusionVirus(color);
 			}
-		} else if (color.equals("Blue")) {
+		} else if (color.equals("Blue")) {// 파란색 바이러스
 			if (MainPanel.BlueVirus == 0 && MainPanel.BlueCure) {
-				return;
+				return;// 파란치료제 개발 && 지도에 파란바이러스가 없다. 파란색 바이러스 근절상태 파란색 바이러스는 더 이상 놓이지 않는다.
 			}
 			MainPanel.BlueVirus = MainPanel.BlueVirus + i;
 			if ((Blue = Blue + i) > 3) {
@@ -388,9 +382,9 @@ class City {// 도시 클래스
 				MainPanel.BlueVirus = MainPanel.BlueVirus + i;
 				diffusionVirus(color);
 			}
-		} else if (color.equals("Yellow")) {
+		} else if (color.equals("Yellow")) {// 노란색 바이러스
 			if (MainPanel.YellowVirus == 0 && MainPanel.YellowCure) {
-				return;
+				return;// 노란색치료제개발&&지도에 노란바이러스가 없다. 노란색 바이러스 근절 노란색 바이러스는 더이상 놓이지 않는다.
 			}
 			MainPanel.YellowVirus = MainPanel.YellowVirus + i;
 			if ((Yellow = Yellow + i) > 3) {
@@ -398,9 +392,9 @@ class City {// 도시 클래스
 				MainPanel.YellowVirus = MainPanel.YellowVirus - i;
 				diffusionVirus(color);
 			}
-		} else if (color.equals("Black")) {
+		} else if (color.equals("Black")) {// 검은색 바이러스
 			if (MainPanel.BlackVirus == 0 && MainPanel.BlackCure) {
-				return;
+				return;// 검은색치료제개발&&지도에 검은색바이러스가 없다. 검은색 바이러스근절 검은색 바이러스는 더이상놓이지 않는다.
 			}
 			MainPanel.BlackVirus = MainPanel.BlackVirus + i;
 			if ((Black = Black + i) > 3) {
@@ -408,24 +402,25 @@ class City {// 도시 클래스
 				MainPanel.BlackVirus = MainPanel.BlackVirus - i;
 				diffusionVirus(color);
 			}
-		} else {
+		} else {// 에러!!!!
 			System.out.println("Citys PlusVirus에 잘못된 문자가 입력 되었다.");
 		}
+
 		// 패배 조건 중 하나인 바이러스 큐브가 24개 이상일 때 실패하는 부분
-		if(MainPanel.RedVirus >= 24 || MainPanel.BlueVirus >= 24 || MainPanel.YellowVirus >= 24 || MainPanel.BlackVirus>= 24) {
-			System.out.println(" 바이러스 큐브 24개 오버");
+		if (MainPanel.RedVirus >= 24 || MainPanel.BlueVirus >= 24 || MainPanel.YellowVirus >= 24
+				|| MainPanel.BlackVirus >= 24) {
+			System.out.println("패배 : 바이러스 큐브 24개 오버");
 			try {
-				MainPanel.GameOutStream.writeUTF("[제어]fail");
-				Citys.fail = true;
+				MainPanel.GameOutStream.writeUTF("[제어]fail");// 게임에서 졌다는 문을 서버에 보낸다.
+				Citys.fail = true;// 패배...
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		MainPanel.setVirusCount();
+		MainPanel.setVirusCount();// 유저가 현재 진행상황을 쉽게 보도록
 	}
-	
-	
+
 	public void diffusionVirus(String color) {
 		City.visit.add(name);
 		ArrayList<City> adCity = Citys.AdjacencyCity(name);
@@ -433,11 +428,11 @@ class City {// 도시 클래스
 			if (!City.visit.contains(adCity.get(j).name))
 				adCity.get(j).PlusVirus(color, 1);
 		}
-		
-		MainPanel.setDiffusion();
-	
+
+		MainPanel.setDiffusion();// 메인패널의 유저가 현재상황을보는 Count패널 업데이트
+
 		// 패배 조건 중 하나인 확산이 7번 일어날 때 실패하는 부분
-		if(MainPanel.DiffusionCount == 7 ) {
+		if (MainPanel.DiffusionCount == 7) {
 			try {
 				MainPanel.GameOutStream.writeUTF("[제어]fail");
 			} catch (IOException e) {
@@ -445,14 +440,15 @@ class City {// 도시 클래스
 				e.printStackTrace();
 			}
 			System.out.println(" 확산 마커 패배");
-			Citys.fail = true;			
+			Citys.fail = true;
 		}
-		
+
 	}
 
-	public void drawCube(Graphics g) {
+	public void drawCube(Graphics g) {// 도시에 바이러스를 그린다.
 		int height = RedCube.getHeight(null);
 		int width = RedCube.getWidth(null);
+		// 바이러스 큐브의 너비와 높이 계산
 		int x = this.getX() - 20;
 		int y = this.getY() - 30;
 
@@ -472,16 +468,12 @@ class City {// 도시 클래스
 			DrawCubeIn("Yellow", x, y, g);
 			x += width;
 		}
+		// 큐브들을 그린다
 	}
 
 	public void DrawCubeIn(String color, int x, int y, Graphics g) {
 		Image Cube = new ImageIcon(Map.class.getResource("../Image/" + color + "Cube.png")).getImage();
 		g.drawImage(Cube, x, y, null);
-	}
+	}// x,y좌표에 큐브그린다
 
-	// 영근이 부분
-	public void DrawDiffusionCubeIn(String color, int x, int y, Graphics g) {
-		Image Diffusion = new ImageIcon(Map.class.getResource("../Image/Diffusion_" + color + ".png")).getImage();
-		g.drawImage(Diffusion, x, y, null);
-	}
 }
