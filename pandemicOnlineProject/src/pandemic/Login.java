@@ -26,7 +26,7 @@ import javax.swing.SwingUtilities;
 public class Login extends JPanel implements ActionListener {
 
 	//차례대로 배경화면, 로그인버튼, 나가기버튼, 회원가입 버튼, ID/PWD찾기 버튼에 넣을 이미지 생성
-	
+	public Music_Back bgm=new Music_Back("bgm.mp3", true);
 	private Image background = new ImageIcon(Client.class.getResource("../Login_Image/background.png")).getImage();
 	private ImageIcon loginpush = new ImageIcon(Client.class.getResource("../Login_Image/Login2.png"));
 	private ImageIcon exitpush = new ImageIcon(Client.class.getResource("../Login_Image/Exit2.png"));
@@ -145,7 +145,7 @@ public class Login extends JPanel implements ActionListener {
 		find.addActionListener(this);
 		pwdtext.addActionListener(this);
 		setVisible(true);
-		
+		bgm.start();
 		
 		
 		// 차례대로 해당 버튼에 커서 닿으면 이미지 변경, 떼어졌을때 원래대로, 클릭했을때 이미지 변경
