@@ -135,7 +135,7 @@ public class Room {
 		else
 			return String.format(" ");
 	}
-
+	
 	public String getNextStartUser() {
 		nextStart++;
 		if (nextStart == getRoomSize()) {
@@ -155,7 +155,8 @@ public class Room {
 	public Hashtable<String, String> getUserSelect() {
 		return userSelect;
 	}
-
+	
+	// 방에 입장할 때 불려짐
 	public void setStartState1(String userNumber) {
 		int num = Integer.parseInt(userNumber);
 
@@ -163,7 +164,8 @@ public class Room {
 			startState[num] = 10;
 		}
 	}
-
+	
+	// 레디를 누를 때 불려짐
 	public void setStartState2(String userNumber) {
 		int num = Integer.parseInt(userNumber);
 
@@ -172,7 +174,7 @@ public class Room {
 		else if (startState[num] == 11)
 			startState[num] = 10;
 	}
-
+	
 	public int getStartState() {
 		int sum = 0;
 		for (int i = 0; i < 4; i++) {
